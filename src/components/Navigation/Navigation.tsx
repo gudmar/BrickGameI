@@ -1,12 +1,22 @@
 import React from 'react';
-import NavButton from './NavButton/NavButton';
+import NavWidget from './NavWidget/NavWidget';
 import './styles.css';
+import { WidgetType } from './NavWidget/WidgetPropsInterface';
+
+const LevelSpeed = ['0', '1', '2', '3', '4' ,'5', '6', '7', '8','9', '10']
 
 const buttons = [
-  {label: 'Game', onClick: () => {}, isExpandable: true},
-  {label: 'Speed', onClick: () => {}},
-  {label: 'Level', onClick: () => {}},
-  {label: 'Skin', onClick: () => {}},
+  {
+    widgetType: WidgetType.SELECT, label: 'Game', onClick: () => {},  items: [
+      'Tetris', 'Snake'
+    ]
+  },
+  {
+    label: 'Speed', onClick: () => {}, 
+    items: LevelSpeed,
+  },
+  {label: 'Level', onClick: () => {}, items: LevelSpeed},
+  {label: 'Skin', onClick: () => {}, items: ['Normal']},
   {label: 'About', onClick: () => {}},
 ]
 
@@ -15,10 +25,11 @@ function Navigation() {
     return (
         <div className="bar">
           {buttons.map(
-              button => <NavButton 
+              button => <NavWidget
                 label={button.label}
                 onClick={button.onClick}
-                isExpandable={button.isExpandable || false}
+                items={button.items}
+                key={button.label}
               />
             )
           }
