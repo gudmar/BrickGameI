@@ -1,12 +1,12 @@
 import React from 'react';
 import './styles.css';
 
-function Console() {
+function Brick() {
   
     return (
-        <div className="housing">
+        <div className="border">
         </div>
   );
 }
 
-export default Console;
+export default Brick;

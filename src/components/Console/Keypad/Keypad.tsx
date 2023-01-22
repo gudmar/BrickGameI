@@ -1,12 +1,12 @@
 import React from 'react';
 import './styles.css';
 
-function Console() {
+function Keypad() {
   
     return (
-        <div className="housing">
+        <div className="container">
         </div>
   );
 }
 
-export default Console;
+export default Keypad;

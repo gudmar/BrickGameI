@@ -1,12 +1,12 @@
 import React from 'react';
 import './styles.css';
 
-function Console() {
+function Display() {
   
     return (
-        <div className="housing">
+        <div className="display">
         </div>
   );
 }
 
-export default Console;
+export default Display;

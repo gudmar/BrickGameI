@@ -1,12 +1,12 @@
 import React from 'react';
 import './styles.css';
 
-function Console() {
+function Dojo () {
   
     return (
-        <div className="housing">
+        <div className="line">
         </div>
   );
 }
 
-export default Console;
+export default Dojo;

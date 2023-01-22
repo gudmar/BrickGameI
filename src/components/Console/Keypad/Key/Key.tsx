@@ -1,12 +1,12 @@
 import React from 'react';
 import './styles.css';
 
-function Console() {
+function Key() {
   
     return (
-        <div className="housing">
+        <div className="edge">
         </div>
   );
 }
 
-export default Console;
+export default Key;
