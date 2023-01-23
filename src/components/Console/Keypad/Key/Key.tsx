@@ -1,11 +1,18 @@
 import React from 'react';
-import './styles.css';
+import styles from './styles.module.css';
 
-function Key() {
+interface KeyProps {
+  label: String
+  onClick: () => {}
+}
+
+function Key({label, onClick}: KeyProps) {
   
     return (
-        <div className="edge">
-        </div>
+      <div className={styles.container}>
+        <div className={styles.label}>label</div>
+        <div className={styles.edge} onClick={onClick}></div>
+      </div>
   );
 }
 

@@ -1,0 +1,15 @@
+.arrows {
+    display: grid;
+    grid-template-areas:
+        ". up ."
+        "left . right"
+        ". down ."
+    ;
+    grid-template-rows: 1fr, 1fr, 1fr;
+    grid-template-columns: 1fr, 1fr, 1fr;
+}
+
+.up { grid-area: 'up' }
+.left { grid-area: 'left' }
+.right { grid-area: 'right' }
+.down { grid-area: 'down' }

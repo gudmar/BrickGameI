@@ -8,9 +8,10 @@ function BrickGame() {
     return (
         <div className="root">
             <Navigation />
-            <div className="console-container">
+            <Console />
+            {/* <div className="console-container">
                 <Console />
-            </div>
+            </div> */}
         </div>
   );
 }

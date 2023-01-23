@@ -1,0 +1,46 @@
+.table{
+    display: flex;
+    width: 100vw;
+    height: calc(100vh - 3rem);
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    overflow: auto;
+}
+
+.housing{
+    width: 500px;
+    height: 900px;
+    border-radius: 20px;
+    border: thin solid black;
+    display: grid;
+    grid-template-areas: 
+        "topBar topBar topBar"
+        "leftSideBar display rightSideBar"
+        "bottomBar bottomBar bottomBar"
+        "leftKeypadBar keypad rightKeypadBar"
+        "margin margin margin";
+    grid-template-columns: 2fr 7fr 2fr;
+    grid-template-rows: 1fr 5fr 1fr 4fr 2fr;
+}
+
+.topBar { grid-area: topBar; }
+.leftSideBar { grid-area: leftSideBar; }
+.rightSideBar { grid-area: rightSideBar; }
+.display { 
+    grid-area: display;
+    border: solid thin black;
+}
+.bottomBar { grid-area: bottomBar; }
+.leftKeypadBar { grid-area: leftKeypadBar; }
+.rightKeypadBar { grid-area: rightKeypadBar; }
+.keypad { 
+    grid-area: keypad; 
+    border: solid thin #555;
+}
+.margin { grid-area: margin; }
+
+.grayTheme{
+    background-color: #888;
+    color: black;
+}
