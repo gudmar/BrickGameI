@@ -36,7 +36,7 @@
 .rightKeypadBar { grid-area: rightKeypadBar; }
 .keypad { 
     grid-area: keypad; 
-    border: solid thin #555;
+    /* border: solid thin #555; */
 }
 .margin { grid-area: margin; }
 

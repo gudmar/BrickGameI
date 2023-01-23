@@ -9,8 +9,16 @@
     height: 100%;
 }
 
-.pause { grid-area: 'pause'; }
+.pause { 
+    grid-area: pause; 
+    justify-content: start; 
+    place-items: start;
+    max-width: 50px;
+}
 
-.arrows { grid-area: 'arrows'; }
+.arrows { 
+    margin-top: 20px;
+    grid-area: arrows; 
+}
 
-.rotate { grid-area: 'rotate'; }
+.rotate { grid-area: rotate; }

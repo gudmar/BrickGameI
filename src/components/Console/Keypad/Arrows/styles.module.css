@@ -5,11 +5,13 @@
         "left . right"
         ". down ."
     ;
-    grid-template-rows: 1fr, 1fr, 1fr;
-    grid-template-columns: 1fr, 1fr, 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 140px;
+    height: 140px;
 }
 
-.up { grid-area: 'up' }
-.left { grid-area: 'left' }
-.right { grid-area: 'right' }
-.down { grid-area: 'down' }
+.up { grid-area: up }
+.left { grid-area: left }
+.right { grid-area: right }
+.down { grid-area: down }
