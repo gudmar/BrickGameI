@@ -1,0 +1,59 @@
+.border {
+    --colorGameOn: #333;
+    --colorGameOff: #999;
+    --colorSticker: white;
+    --colorNoBrick: transparent;
+    --gameSize: 12px;
+    --stickerSize: 25px;
+    --borderGameOn: solid var(--colorGameOn) thick;
+    --borderGameOff: solid var(--colorGameOff) thick;
+    --borderSticker: solid var(--colorSticker) thick;
+    --borderNoBrick: solid var(--colorNoBrick) thick;
+    box-sizing: border-box;
+}
+
+.borderGameOn { border: var(--borderGameOn); }
+.borderGameOff { border: var(--borderGameOff); }
+.borderSticker { 
+    box-sizing: border-box;
+    width: var(--stickerSize);
+    height: var(--stickerSize);    
+    border: var(--borderSticker); 
+    padding: 3px;
+    margin: 1px;
+}
+.borderNoBrick { 
+    border: var(--borderNoBrick); 
+    box-sizing: border-box;
+    width: var(--stickerSize);
+    height: var(--stickerSize);    
+    margin: 1px;
+}
+
+.insideGameOn {
+    box-sizing: border-box;
+    border: var(--borderGameOn);
+    background-color: var(--colorGameOn);
+    width: var(--gameSize);
+    height: var(--gameSize);
+    border-radius: 50%;
+}
+.insideGameOff {
+    box-sizing: border-box;
+    border: var(--borderGameOff);
+    background-color: var(--colorGameOff);
+    width: var(--gameSize);
+    height: var(--gameSize);
+    border-radius: 50%;
+}
+.insideSticker {
+    height: 100%;
+    border: var(--colorSticker);
+    background-color: var(--colorSticker);
+    border-radius: 50%;
+}
+.insideNoBrick {
+    border: var(--borderNoBrick);
+    background-color: var(--colorNoBrick);
+}
+

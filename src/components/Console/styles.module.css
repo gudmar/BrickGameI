@@ -25,8 +25,16 @@
 }
 
 .topBar { grid-area: topBar; }
-.leftSideBar { grid-area: leftSideBar; }
-.rightSideBar { grid-area: rightSideBar; }
+.leftSideBar {
+    grid-area: leftSideBar;
+    justify-self: center;
+    align-self: center;
+}
+.rightSideBar {
+    grid-area: rightSideBar;
+    justify-self: center;
+    align-self: center;
+}
 .display { 
     grid-area: display;
     border: solid thin black;

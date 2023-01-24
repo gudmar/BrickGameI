@@ -17,9 +17,11 @@ function Brick({mode}: BrickInterface) {
     return styles.insideSticker;
   }
     return (
+      <div className={styles.border}>
         <div className={getBorder()}>
           <div className={getInside()}></div>
         </div>
+      </div>
   );
 }
 

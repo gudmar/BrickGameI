@@ -1,23 +1,14 @@
 import React from 'react';
-import { BrickInterface, BrickMode } from '../brickInterfaces';
+import { BrickInterface, BrickMode, Row, WallProps } from '../brickInterfaces';
 import Brick from '../Display/Brick/Brick';
 import styles from './styles.module.css';
 
-interface Row {
-    row: number[];
-    brickMode: BrickMode;
-}
-
-interface WallProps {
-    rows: Row[];
-    brickMode: BrickMode;
-}
 
 const mergeBrickModeWithOnOff = (brickMode: BrickMode, onOff: number) => {
     if (brickMode === BrickMode.GameOff || brickMode === BrickMode.GameOn){
         return onOff === 0 ? BrickMode.GameOff : BrickMode.GameOn;
     }
-    return onOff === 0 ? BrickMode.Sticker : BrickMode.NoBrick;
+    return onOff === 0 ? BrickMode.NoBrick : BrickMode.Sticker;
 }
 
 function BricksRow({row, brickMode}: Row) {

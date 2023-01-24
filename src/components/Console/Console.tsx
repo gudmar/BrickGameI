@@ -1,6 +1,8 @@
 import React from 'react';
+import BrickStickers from './BrickStickers/BrickStickers';
 import Keypad from './Keypad/Keypad';
 import styles from './styles.module.css';
+import { StickersVariant } from './brickInterfaces'
 
 function Console() {
   
@@ -11,9 +13,14 @@ function Console() {
             <div className={styles.topBar}></div>
             <div className={styles.topBar}></div>
 
-            <div className={styles.leftSideBar}></div>
+            <div className={styles.leftSideBar}>
+              <BrickStickers variant={StickersVariant.L} />
+            </div>
+
             <div className={styles.display}></div>
-            <div className={styles.rightSideBar}></div>
+            <div className={styles.rightSideBar}>
+              <BrickStickers variant={StickersVariant.R} />
+            </div>
 
             <div className={styles.bottomBar}></div>
             <div className={styles.bottomBar}></div>
