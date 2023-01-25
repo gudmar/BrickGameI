@@ -1,10 +1,10 @@
 import React from 'react';
-import './styles.module.css';
+import styles from './styles.module.css';
 
 function Display() {
   
     return (
-        <div className="display">
+        <div className={styles.display}>
         </div>
   );
 }

@@ -3,6 +3,7 @@ import BrickStickers from './BrickStickers/BrickStickers';
 import Keypad from './Keypad/Keypad';
 import styles from './styles.module.css';
 import { StickersVariant } from './brickInterfaces'
+import Display from './Display/Display';
 
 function Console() {
   
@@ -17,7 +18,9 @@ function Console() {
               <BrickStickers variant={StickersVariant.L} />
             </div>
 
-            <div className={styles.display}></div>
+            <div className={styles.display}>
+              <Display />
+            </div>
             <div className={styles.rightSideBar}>
               <BrickStickers variant={StickersVariant.R} />
             </div>
