@@ -9,9 +9,9 @@ function Console() {
     return (
         <div className={styles.table}>
           <div className={`${styles.housing} ${styles.grayTheme}`}>
-            <div className={styles.topBar}></div>
-            <div className={styles.topBar}></div>
-            <div className={styles.topBar}></div>
+            <div className={styles.topBar}>
+              <span className={styles.stickerLabel}> &gt;&gt;&gt; Brick Game &lt;&lt;&lt;</span>
+            </div>
 
             <div className={styles.leftSideBar}>
               <BrickStickers variant={StickersVariant.L} />
@@ -22,8 +22,6 @@ function Console() {
               <BrickStickers variant={StickersVariant.R} />
             </div>
 
-            <div className={styles.bottomBar}></div>
-            <div className={styles.bottomBar}></div>
             <div className={styles.bottomBar}></div>
 
             <div className={styles.leftKeypadBar}></div>

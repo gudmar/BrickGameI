@@ -24,7 +24,18 @@
     grid-template-rows: 1fr 5fr 1fr 4fr 2fr;
 }
 
-.topBar { grid-area: topBar; }
+.stickerLabel {
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+}
+
+.topBar { 
+    grid-area: topBar; 
+    justify-self: center;
+    align-self: center;
+}
 .leftSideBar {
     grid-area: leftSideBar;
     justify-self: center;
