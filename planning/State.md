@@ -2,7 +2,7 @@
 * BrickGame
     - CurrentGame [Tetris / Snake]
     * Menu 
-        - ShouldDislplay
+        - ShouldDislplay //onHover so not needed
     * Game (Tetris / Snake)
         - Clock
         - Speed
@@ -10,7 +10,6 @@
         - Paused
         - Score
         - Level
-        - Speed
         - NextContent (next block in tetris / nr of lifes)
         * Display
             * ScoreBarr
@@ -26,10 +25,104 @@
             - FigurePosition
             - NextDirection
         * Snake
-            - Coordinances
+            - Coordinances (current length)
             - ToSwallow
             - Direction
+            - NrOfLifes (displayed in next figure)
 
     * Skin (color) // gray, blue, green
     * Should display about // can use Message component
     * Message (shouldDisplay, messageContent)
+
+BrickGame
+    -(s) Games (received on creation from Game component, only Game has all the games)
+    -(s) currentGame (tetris / snake / demo*)
+    -(s) level
+    -(s) speed
+    -(h) setGames(gameName: string[]) passed to Game component
+    -(h) setSpeed
+    -(h) setLevel
+    -(h) setGame
+    -(h) setAvailableGames
+    Navigation(speed, level, games, currentGame, setSpeed, setLevel, setGame)
+    Console(level, speed, currentGame)
+        -(s) paused
+        (-(s) sound)
+        (-(s) onOff)
+        -(h) setPause({on: boolean})
+        (-(h) setSound({on: boolean}))
+        (-(h) setOn({on: boolean}))
+        Kyepad(setPause, setSound, setOn)
+            -(h) up
+            -(h) down
+            -(h) right
+            -(h) left // connected to the mediator keypad pattern
+        Game(level, speed, currentGame, setAvailableGames)
+            -(hardcoded) arrayOfAvaiableGames
+            -(s) clockTicks (clock set by useClock hook)
+            -(s) bricksCoordinates (delivered by useGame)
+            -(s) nextFigureFieldContent (delivered by useGame)
+            -(s) score
+
+            Display(speed, level, score, nextFigureFieldContent)
+
+            <I> CurrentGame (an interface)
+                -(m) init(initLevel, initSpeed, initClockValue) => {
+                    score:0, 
+                    level, 
+                    speed, 
+                    nextFigureFieldContent, 
+                    bricksCoordinantes
+                }
+                -(m) setPaused(value) // just set state to paused or not paused
+
+                -(m) getNextStateTick(clockValue) => {
+                    score,
+                    level, 
+                    speed, 
+                    nextFigureFieldContent, 
+                    bricksCoordinantes
+                } // next tick !== next move, ticks are divided according to current speed
+
+                -(m) getNextStateKeyPress({
+                    up: number, 
+                    down: number, 
+                    left: number, 
+                    right: number // of presses
+                }) => {
+                    score,
+                    leel,
+                    speed,
+                    nextFigureFieldContent,
+                    brickCoordinantes
+                }
+            <C> Tetris (class) //should implement currentGame
+                (-hardcoded) figures
+                (-hardcoded) getInitialCords(level) => staleBricksCoords
+                STATE:
+                    -(s) staleBrickesCoordinantes
+                    -(s) current figure
+                    -(s) figure orientation
+                    -(s) figure coordinantes
+                    -(s) currentClock
+                    -(s) level
+                    -(s) speed
+                    -(s) score
+                    -(s) paused
+                    -(s) isAnimating
+                -(m) shouldDoNextMove(speed, currentClock) => boolean
+                -(m) getNextStateTick(clockValue) {
+                    if (isAnimating) {
+                        do some animations / in tetris current figure may blink
+                    }
+                    ... () // some regular stuff
+                    if (shouldDoNextMove(speed, clockValue)) {
+                        ...
+                    }
+                }
+
+
+
+
+
+*-startState

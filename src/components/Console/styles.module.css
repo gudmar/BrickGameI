@@ -9,8 +9,8 @@
 }
 
 .housing{
-    width: 500px;
-    height: 900px;
+    width: var(--consoleHoudingWidth);
+    height: var(--consoleHousingHeight);
     border-radius: 20px;
     border: thin solid black;
     display: grid;
@@ -49,6 +49,8 @@
 .display { 
     grid-area: display;
     border: solid thin black;
+    width: var(--displayWidth);
+    height: var(--displayHeight);
 }
 .bottomBar { grid-area: bottomBar; }
 .leftKeypadBar { grid-area: leftKeypadBar; }

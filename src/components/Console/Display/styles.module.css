@@ -1,4 +1,22 @@
 .display {
+    /* size set in Console component */
     background-color: var(--displayBackgroundColor);
     height: 100%;
+    padding: 0px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+.dojoSection {
+    box-sizing: border-box;
+    width: var(--dojoWidth);
+    height: var(--dojoHeight);
+    border: solid thin black;
+    margin-left: 2px;
+}
+
+.scoreSection {
+    width: var(--scoreBarWidth);
+    height: var(--dojoHeight);
 }
