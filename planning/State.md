@@ -44,7 +44,7 @@ BrickGame
     -(h) setLevel
     -(h) setGame
     -(h) setAvailableGames
-    Navigation(speed, level, games, currentGame, setSpeed, setLevel, setGame)
+    Navigation(speed, level, games, currentGameName, setSpeed, setLevel, setGame)
     Console(level, speed, currentGame)
         -(s) paused
         (-(s) sound)
@@ -57,7 +57,7 @@ BrickGame
             -(h) down
             -(h) right
             -(h) left // connected to the mediator keypad pattern
-        Game(level, speed, currentGame, setAvailableGames)
+        Game(level, speed, currentGameName, setAvailableGameNames(handler that tells navigation what games are available))
             -(hardcoded) arrayOfAvaiableGames
             -(s) clockTicks (clock set by useClock hook)
             -(s) bricksCoordinates (delivered by useGame)
