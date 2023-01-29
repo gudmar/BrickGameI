@@ -7,7 +7,7 @@ export class Clock {
     private time!: number;
     private counter!: NodeJS.Timeout;
     private INTERVAL: number = 100;
-    private callbacks!: {[key: string]: OnTick }
+    protected callbacks!: {[key: string]: OnTick }
     constructor() {
         if (Clock.instance) return Clock.instance;
         this.time = 0;
