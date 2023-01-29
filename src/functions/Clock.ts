@@ -16,6 +16,11 @@ export class Clock {
         this.start();
         return this;
     }
+    get currentTime () { return this.time };
+
+    setCurrentTimerValue(setterFunction: (timerValue: number)=>void) {
+        setterFunction(this.time);
+    }
 
     start() {
         this.counter = setInterval(() => {
