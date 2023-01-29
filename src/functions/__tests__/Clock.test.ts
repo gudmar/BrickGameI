@@ -1,9 +1,10 @@
+import { forEachChild } from 'typescript';
 import { Clock } from '../Clock'
 
 class TestableClock extends Clock {
     getCallbacks() { return this.callbacks}
 }
-
+jest.useFakeTimers();
 describe('Testing Clock', () => {
 
     beforeEach(() => { delete Clock.instance; })
@@ -33,11 +34,19 @@ describe('Testing Clock', () => {
     })
 
     it('Should start clock', () => {
-
+        const clock = new TestableClock();
+        const mockCallback = jest.fn();
+        clock.addEventListener(mockCallback);
+        jest.runOnlyPendingTimers();
+        expect(mockCallback).toBeCalled();
     })
 
     it('Should run all callbacks', () => {
-        
+        const clock = new TestableClock();
+        const arrOfCallbacks = new Array(5).fill(null).map(_=>jest.fn());
+        arrOfCallbacks.forEach((fn) => clock.addEventListener(fn));
+        jest.runOnlyPendingTimers();
+        arrOfCallbacks.forEach((fn) => expect(fn).toBeCalled());
     })
 
 
