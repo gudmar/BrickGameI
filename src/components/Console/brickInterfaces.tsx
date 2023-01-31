@@ -1,3 +1,6 @@
+import { GameLogic } from "../../cartridges/AbstractGameLogic";
+import { Level, nextFigurePreview, OneToTen, Speed } from "../../types/types";
+
 export enum BrickMode {
     GameOn, GameOff, Sticker, NoBrick
 }
@@ -36,4 +39,10 @@ export interface Navigation {
     level: number,
     games: any[], // TO BE CHANGED
     currentGameName: string;
+}
+
+export interface DisplayProps {
+    speed: Speed,
+    level: Level,
+    currentGame: typeof GameLogic,
 }

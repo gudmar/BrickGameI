@@ -4,8 +4,15 @@ import Keypad from './Keypad/Keypad';
 import styles from './styles.module.css';
 import { StickersVariant } from './brickInterfaces'
 import Display from './Display/Display';
+import { ConsoleArgs } from '../../types/types';
 
-function Console() {
+function Console({ 
+  currentGame,
+  speed,
+  setSpeed,
+  level,
+  setLevel,
+}: ConsoleArgs) {
   
     return (
         <div className={styles.table}>
@@ -19,7 +26,11 @@ function Console() {
             </div>
 
             <div className={styles.display}>
-              <Display />
+              <Display 
+                speed={speed}
+                level={level}
+                currentGame={currentGame}
+              />
             </div>
             <div className={styles.rightSideBar}>
               <BrickStickers variant={StickersVariant.R} />

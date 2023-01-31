@@ -35,7 +35,7 @@
     * Message (shouldDisplay, messageContent)
 
 BrickGame
-    -(s) Games (received on creation from Game component, only Game has all the games)
+    <!-- -(s) Games (received on creation from Game component, only Game has all the games) || NOT NEEDED due to the cartridges/allCartridges that provides all games, and NAME property in each game, telling the name of the game -->
     -(s) currentGame (tetris / snake / demo*)
     -(s) level
     -(s) speed
@@ -44,8 +44,8 @@ BrickGame
     -(h) setLevel
     -(h) setGame
     -(h) setAvailableGames
-    Navigation(speed, level, games, currentGameName, setSpeed, setLevel, setGame)
-    Console(level, speed, currentGame)
+    Navigation(speed, level, currentGameName, setSpeed, setLevel, setGame)
+    Console(level, speed, currentGame, setSpeed, setLevel)
         -(s) paused
         (-(s) sound)
         (-(s) onOff)
@@ -57,14 +57,21 @@ BrickGame
             -(h) down
             -(h) right
             -(h) left // connected to the mediator keypad pattern
-        Game(level, speed, currentGameName, setAvailableGameNames(handler that tells navigation what games are available))
+        Game(level, speed, currentGameName, 
+        <!-- Game will be taken over by Display -->
+        setAvailableGameNames(handler that tells navigation what games are available))
             -(hardcoded) arrayOfAvaiableGames
             -(s) clockTicks (clock set by useClock hook)
             -(s) bricksCoordinates (delivered by useGame)
             -(s) nextFigureFieldContent (delivered by useGame)
             -(s) score
 
-            Display(speed, level, score, nextFigureFieldContent)
+            Display(
+                speed, 
+                level, 
+                currentGame,
+                 <!-- score, nextFigureFieldContent   Not needed, as will be managed internaly by the Display comopnent-->
+                )
 
             <I> CurrentGame (an interface)
                 -(m) init(initLevel, initSpeed, initClockValue) => {

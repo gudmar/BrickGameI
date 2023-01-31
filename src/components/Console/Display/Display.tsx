@@ -1,8 +1,11 @@
 import React from 'react';
+import { DisplayProps } from '../brickInterfaces';
 import Dojo from './Dojo/Dojo';
 import styles from './styles.module.css';
 
-function Display() {
+function Display(
+   {speed, level, currentGame}: DisplayProps
+) {
   
     return (
         <div className={styles.display}>
