@@ -1,4 +1,4 @@
-type MediatorCallback = ((payload: any) => void)
+export type MediatorCallback = ((payload: any) => void)
 
 interface Subscribers {
     [id:string]: MediatorCallback | null,

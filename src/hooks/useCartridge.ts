@@ -8,6 +8,6 @@ const cartridgeLibrary = {
     },
 }
 
-export const useCartridge = () => {
+export const useCartridge = (cartridgeToUseDescription) => {
     return cartridgeLibrary;
 }
