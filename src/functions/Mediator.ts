@@ -42,6 +42,20 @@ export class Mediator {
         delete this.subscribtions[eventType][id];
     }
 
+    private emptyEvents = () => {
+        const events = Object.keys(this.subscribtions)
+        console.log(events)
+        const emptyEventKeys = events.filter(event => Object.keys(this.subscribtions[event]).length === 0);
+        console.log(emptyEventKeys)
+        emptyEventKeys.forEach(key => { delete this.subscribtions[key] })
+    }
+
+    unsubscribeSubscriber(id: string){
+        const events = Object.values(this.subscribtions);
+        events.forEach((event) => delete event[id])
+        this.emptyEvents();
+    }
+
     emit({ eventType, payload }: Emitter) {
         const eventHandlers: (MediatorCallback|null)[] = Object.values(this.subscribtions[eventType]);
         if (!eventHandlers) return null;
