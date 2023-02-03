@@ -9,7 +9,7 @@ export interface Observables {
 }
 
 interface GetObservablesCallbacks {
-    observables: Observables[],
+    observables: Observables[] | null,
     setValueStateFunction: any,
     currentValueState: any[],
 }
@@ -21,13 +21,12 @@ interface GetCallback {
 }
 
 
-const throwIfNoObservables = (observables: Observables[]):void => {
-    if(!Array.isArray(observables)) throw new Error('useMediator: Without observables, useMediator makes no sense')
-}
-
-const getInitialValues = (observables:Observables[]):any[] => observables.map(
-    ({initialValue}) => initialValue
-)
+const getInitialValues = (observables:Observables[] | null):any[] | null => {
+        if (!observables) return null;
+        return observables.map(
+            ({initialValue}) => initialValue
+        )
+    }
 
 const getCallback = ({ index, currentValueState, setStateFunction }: GetCallback) => {
     const cb = (payload: any) => {
@@ -41,6 +40,7 @@ const getCallback = ({ index, currentValueState, setStateFunction }: GetCallback
 const getObservablesWithCallbacks = (
         { observables, setValueStateFunction, currentValueState }: GetObservablesCallbacks
     ) => {
+    if (!observables) return null;
     const newObservables = observables.map((observable, index) => ({
             ...observable,
             setStateFunction: getCallback({index, currentValueState, setStateFunction: setValueStateFunction}),
@@ -52,25 +52,33 @@ const getObservablesWithCallbacks = (
 const thisInstanceId = getUUID();
 const m = new Mediator();
 
-export const useMediator = (observables: Observables[]) => {
-    throwIfNoObservables(observables);
-    const [values, setValues] = useState(getInitialValues(observables));
+export const useMediator = (observables?: Observables[]):any => {
+    
+    const [values, setValues] = useState(getInitialValues(observables || null) || []);
 
     useEffect(() => {
-        const observablesWithCallbacks = getObservablesWithCallbacks({
-            observables, setValueStateFunction: setValues, currentValueState: values,
-        })
-        observablesWithCallbacks.forEach(observable => {
-            m.subscribe(
-                {
-                    id: thisInstanceId,
-                    eventType: observable.eventType,
-                    callback: observable.setStateFunction,
-                }
-            )
-        })
-        return m.unsubscribeSubscriber(thisInstanceId);
+        if (observables !== undefined) {
+            const observablesWithCallbacks = getObservablesWithCallbacks({
+                observables, setValueStateFunction: setValues, currentValueState: values,
+            })
+            observablesWithCallbacks!.forEach(observable => {
+                m.subscribe(
+                    {
+                        id: thisInstanceId,
+                        eventType: observable.eventType,
+                        callback: observable.setStateFunction,
+                    }
+                )
+            })
+            return m.unsubscribeSubscriber(thisInstanceId);
+        }
     }, []);
+
+    if (!observables) {
+        return (eventType: string, payload: any) => {
+            m.emit({ eventType, payload })
+        }
+    }
 
     return values;
 }
