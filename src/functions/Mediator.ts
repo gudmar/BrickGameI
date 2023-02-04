@@ -22,9 +22,11 @@ interface Emitter {
 
 export class Mediator {
     static instance?: any;
-    public subscribtions: Subscribtions = {};
+    public subscribtions: any;
     constructor(){
+        console.log('INSTANCE ', Mediator.instance)
         if (Mediator.instance !== undefined) return Mediator.instance;
+        this.subscribtions = {};
         Mediator.instance = this;
     }
 
@@ -36,9 +38,11 @@ export class Mediator {
     subscribe({ id, eventType, callback }: Subscribtion) {
         this.createPath(eventType, id);
         this.subscribtions[eventType][id] = callback;
+        console.log(this.subscribtions)
     }
 
     unsubscribe({ id, eventType }: Unsubscribtion) {
+        console.log('UNSUBSCRIBE', id)
         delete this.subscribtions[eventType][id];
     }
 
@@ -51,12 +55,14 @@ export class Mediator {
     }
 
     unsubscribeSubscriber(id: string){
-        const events = Object.values(this.subscribtions);
+        const events: Subscribers[] = Object.values(this.subscribtions);
         events.forEach((event) => delete event[id])
         this.emptyEvents();
+        console.log('Unsubscribing subscriber', id)
     }
 
     emit({ eventType, payload }: Emitter) {
+        console.log(this.subscribtions)
         const eventHandlers: (MediatorCallback|null)[] = Object.values(this.subscribtions[eventType]);
         if (!eventHandlers) return null;
         if (eventHandlers) eventHandlers.forEach(

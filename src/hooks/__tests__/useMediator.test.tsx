@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useMediator } from "../useMediator";
 
@@ -66,7 +66,7 @@ describe('Testing useMediator with React testing library', () => {
         expect(span2.textContent).toEqual('0');
         expect(span3).toHaveTextContent('0');
     })
-    it('Should change componentB when buttons clicked', () => {
+    it.only('Should change componentB when buttons clicked', () => {
         render(<Wrapper/>);
         const button1 = screen.getByTestId('b1');
         const button2 = screen.getByTestId('b2');
@@ -74,6 +74,9 @@ describe('Testing useMediator with React testing library', () => {
         const span1 = screen.getByTestId('val1');
         const span2 = screen.getByTestId('val2');
         const span3 = screen.getByTestId('val3');
+        // // button1.click();
+        // // button2.click();
+        // button3.click();
         fireEvent.click(button1);
         fireEvent.click(button2);
         fireEvent.click(button3);

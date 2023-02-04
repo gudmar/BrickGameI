@@ -1,23 +1,23 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Mediator } from "../functions/Mediator";
 import { getUUID } from "../functions/UUIDGenerator";
 
 export interface Observables {
     eventType: string,
     initialValue: any,
-    setStateFunction?: (payload:any) => {},
+    setStateFunctionGetter?: () => (payload:any) => {},
 }
 
 interface GetObservablesCallbacks {
     observables: Observables[] | null,
-    setValueStateFunction: any,
-    currentValueState: any[],
+    setValueStateFunctionGetter: any,
+    currentValueStateGetter: any,
 }
 
 interface GetCallback {
     index: number,
-    currentValueState: any[],
-    setStateFunction: any,
+    currentValueStateGetter: any,
+    setStateFunctionGetter: any,
 }
 
 
@@ -28,38 +28,43 @@ const getInitialValues = (observables:Observables[] | null):any[] | null => {
         )
     }
 
-const getCallback = ({ index, currentValueState, setStateFunction }: GetCallback) => {
+const getCallback = ({ index, currentValueStateGetter, setStateFunctionGetter }: GetCallback) => {
     const cb = (payload: any) => {
-        const valueStateCp = [...currentValueState];
+        console.log('payload', payload)
+        const valueStateCp = [...currentValueStateGetter()];
+        console.log('STATE CP', valueStateCp)
         valueStateCp[index] = payload;
+        const setStateFunction = setStateFunctionGetter();
         setStateFunction(valueStateCp);
     }
     return cb;
 }
 
 const getObservablesWithCallbacks = (
-        { observables, setValueStateFunction, currentValueState }: GetObservablesCallbacks
+        { observables, setValueStateFunctionGetter, currentValueStateGetter }: GetObservablesCallbacks
     ) => {
     if (!observables) return null;
     const newObservables = observables.map((observable, index) => ({
             ...observable,
-            setStateFunction: getCallback({index, currentValueState, setStateFunction: setValueStateFunction}),
+            setStateFunction: getCallback({index, currentValueStateGetter, setStateFunctionGetter: setValueStateFunctionGetter}),
         })
     );
     return newObservables;
 }
 
-const thisInstanceId = getUUID();
 const m = new Mediator();
 
 export const useMediator = (observables?: Observables[]):any => {
     
     const [values, setValues] = useState(getInitialValues(observables || null) || []);
 
+
+    
     useEffect(() => {
+        const thisInstanceId = getUUID();
         if (observables !== undefined) {
             const observablesWithCallbacks = getObservablesWithCallbacks({
-                observables, setValueStateFunction: setValues, currentValueState: values,
+                observables, setValueStateFunctionGetter: () => setValues, currentValueStateGetter: () => values,
             })
             observablesWithCallbacks!.forEach(observable => {
                 m.subscribe(
@@ -70,12 +75,17 @@ export const useMediator = (observables?: Observables[]):any => {
                     }
                 )
             })
-            return m.unsubscribeSubscriber(thisInstanceId);
+            
         }
-    }, []);
+        return () => { m.unsubscribeSubscriber(thisInstanceId);}
+    }, [values, setValues]);
+
+    useEffect(() => { console.log('VALUES CHANGED', values)}, [values])
 
     if (!observables) {
         return (eventType: string, payload: any) => {
+            const m = new Mediator();
+            console.log('SUBSCRIPTIONS', m.subscribtions)
             m.emit({ eventType, payload })
         }
     }
