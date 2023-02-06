@@ -5,10 +5,10 @@ import Dojo from './Dojo/Dojo';
 import styles from './styles.module.css';
 
 function Display(
-   {speed, level, currentGame}: DisplayProps
+   {speed, level, currentGameDescription}: DisplayProps
 ) {
 
-  const { cartridgeLibrary } = useCartridge();
+  const { currentCartridge } = useCartridge(currentGameDescription);
   
     return (
         <div className={styles.display}>

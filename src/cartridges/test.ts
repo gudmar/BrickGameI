@@ -12,11 +12,11 @@ export class TestCartridge extends GameLogic {
         return this;
     }
 
-    getNextStateOnTick(clockValue: number): GameLogicArgs {
+    public getNextStateOnTick(clockValue: number): GameLogicArgs {
         return this.getTwoInOne();
     }
 
-    getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {
+    public getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {
         return this.getEmptyGameLogicArgs();
     }
 

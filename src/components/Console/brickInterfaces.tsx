@@ -44,5 +44,5 @@ export interface Navigation {
 export interface DisplayProps {
     speed: Speed,
     level: Level,
-    currentGame: typeof GameLogic,
+    currentGameDescription: string,
 }

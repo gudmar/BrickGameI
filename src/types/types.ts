@@ -17,6 +17,15 @@ export interface GameLogicArgs {
     brickCoordinantes: number[][],
 }
 
+export interface GameState {
+    currentFigure: nextFigurePreview,
+    level: OneToTen,
+    speed: OneToTen,
+    score: number,
+    isPaused: false,
+    isAnimating: false,
+}
+
 export interface KeyPress {
     up: number,
     down: number,
@@ -25,7 +34,7 @@ export interface KeyPress {
 }
 
 export interface ConsoleArgs {
-    currentGame: typeof GameLogic,
+    currentGame: string,
     speed: OneToTen,
     level: OneToTen,
     setSpeed: (val: OneToTen) => void,

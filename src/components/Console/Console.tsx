@@ -29,7 +29,7 @@ function Console({
               <Display 
                 speed={speed}
                 level={level}
-                currentGame={currentGame}
+                currentGameDescription={currentGame}
               />
             </div>
             <div className={styles.rightSideBar}>

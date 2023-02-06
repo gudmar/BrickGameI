@@ -14,7 +14,7 @@ const mergeBrickModeWithOnOff = (brickMode: BrickMode, onOff: number) => {
 function BricksRow({row, brickMode}: Row) {
     return (
         <div className={styles.row}>
-            {row.map((brick) => <Brick mode={mergeBrickModeWithOnOff(brickMode, brick)}/>)}
+            {row.map((brick, index) => <Brick key = {index} mode={mergeBrickModeWithOnOff(brickMode, brick)}/>)}
         </div>
     )
 }
@@ -23,7 +23,7 @@ function Wall({ rows, brickMode }: WallProps) {
   
     return (
         <div className={styles.block}>
-            {rows.map((singleRow) => <BricksRow row={singleRow.row} brickMode={brickMode}/>)}
+            {rows.map((singleRow, index) => <BricksRow key={index} row={singleRow.row} brickMode={brickMode}/>)}
         </div>
     );
 }
