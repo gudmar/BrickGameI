@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTimer } from './useClock'
 import { TestCartridge } from '../cartridges/test'
 import { GameState } from '../types/types';
-import { arrayOfElements, GameLogic, getNextFigureOfSymbols } from '../cartridges/AbstractGameLogic';
+import { getNextFigureOfSymbols, getDojoOfSymbols } from '../cartridges/AbstractGameLogic';
 
 export const cartridges = {
     'TEST': "Test display",
@@ -32,7 +32,8 @@ const findCartridge = (cartridgeDescription: string) =>
     );
 
 const initialGameState: GameState = {
-    currentFigure: getNextFigureOfSymbols(0),
+    brickMap: getDojoOfSymbols(0),
+    nextFigure: getNextFigureOfSymbols(0),
     level: 0,
     speed: 0,
     score: 0,
@@ -47,30 +48,13 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
                 return (new (constructor)()) 
             }, [cartridgeToUseDescription]
         );
-    // const [currentCartridgeInstance, setCurrentCartridgeInstance] = useState(null);
     const [gameState, setGameState] = useState(initialGameState);
     const time = useTimer();
 
-    // useEffect(() => {
-    //     const cartridgeInstance = new (findCartridge(cartridgeToUseDescription)?.logicHandler)();
-    //     setCurrentCartridgeInstance(cartridgeInstance);
-    // //eslint-disable-next-line
-    // },[])
-
-    // useEffect(() => {
-    //     const cartridgeInstance = new (findCartridge(cartridgeToUseDescription)?.logicHandler)();
-    //     setCurrentCartridgeInstance(cartridgeInstance);
-    // }, [cartridgeToUseDescription]);
-
     useEffect(() => {
-        // const nextState = currentCartridgeInstance!.getNextStateOnTick(time);
-        const nextState = cartridgeInstance.getNextStateOnTick(time);
-        setGameState(nextState);
+        // const nextState = cartridgeInstance.getNextStateOnTick(time);
+        // setGameState(nextState);
     }, [time, cartridgeInstance])
 
-
-
-
-
-    return cartridgeLibrary;
+    return gameState;
 }

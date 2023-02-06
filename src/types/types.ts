@@ -7,6 +7,7 @@ export type Speed = OneToTen;
 export type Level = OneToTen;
 
 export type nextFigurePreview = number[][]
+export type BrickMap = number[][];
 
 export interface GameLogicArgs {
     score: number,
@@ -18,12 +19,13 @@ export interface GameLogicArgs {
 }
 
 export interface GameState {
-    currentFigure: nextFigurePreview,
+    nextFigure: nextFigurePreview,
     level: OneToTen,
     speed: OneToTen,
     score: number,
     isPaused: false,
     isAnimating: false,
+    brickMap: BrickMap,
 }
 
 export interface KeyPress {

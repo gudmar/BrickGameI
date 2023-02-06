@@ -78,8 +78,8 @@ BrickGame
                     score:0, 
                     level, 
                     speed, 
-                    nextFigureFieldContent, 
-                    bricksCoordinantes
+                    nextFigureFieldContent, / nextFigure
+                    bricksCoordinantes / brickMap
                 }
                 -(m) setPaused(value) // just set state to paused or not paused
 

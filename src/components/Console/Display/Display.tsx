@@ -5,15 +5,23 @@ import Dojo from './Dojo/Dojo';
 import styles from './styles.module.css';
 
 function Display(
-   {speed, level, currentGameDescription}: DisplayProps
+   {speed: initialSpeed, level: initialLevel, currentGameDescription}: DisplayProps
 ) {
 
-  const { currentCartridge } = useCartridge(currentGameDescription);
+  const { 
+    brickMap,
+    nextFigure,
+    level,
+    speed,
+    score,
+    isPaused,
+    isAnimating,
+   } = useCartridge(currentGameDescription);
   
     return (
         <div className={styles.display}>
           <div className={styles.dojoSection}>
-            <Dojo />
+            <Dojo brickMap = {brickMap}/>
           </div>
           <div className={styles.scoreSection}></div>
         </div>
