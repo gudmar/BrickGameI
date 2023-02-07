@@ -13,7 +13,14 @@ body {
   --consoleHousingWidth : 500px;
   /* ===== CALCULATING DISPLAY SIZE ===== */
   /* display size is:
-width: (500px * 7) / 11 = 318.18px
+
+nrOfFractions for ENTERPRISE-mode 
+12 and 13 are number of grids
+displayWidthInFractions = 6fr;
+displayHeightInFractions = 5fr;
+consoleHousingWidth = 500px;
+consoleHousingHeight = 900px;
+width: (500px * 6) / 12 = 250px
 height: (900px * 5) / 13 = 346.15px */
 
 /* screan division:
@@ -22,12 +29,11 @@ screanHeight = displayHeight = 346px; */
 
 /* display size should be fixed  */
 /* If housing size is changed, display dimention should be preserved */
-  --displayWidth: 318.18px;
+  --displayWidth: 250px;
   --displayHeight: 346.15px;
   --dojoWidth: 170px;
   --dojoHeight: 340px;
   --scoreBarWidth: calc( var(--displayWidth) - var(--dojoWidth));
-
 
 }
 

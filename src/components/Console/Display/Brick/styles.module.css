@@ -1,19 +1,39 @@
 .border {
-    --colorGameOn: #333;
-    --colorGameOff: #999;
+    
+    --colorGameOn: #32391b;
+    --colorGameOff: #92997b;
     --colorSticker: white;
     --colorNoBrick: transparent;
-    --gameSize: 12px;
+    --gameSize: 17px;
     --stickerSize: 25px;
-    --borderGameOn: solid var(--colorGameOn) thick;
-    --borderGameOff: solid var(--colorGameOff) thick;
+    --borderGameOn: solid var(--colorGameOn)   thick;
+    --borderGameOff: solid var(--colorGameOff) 3.6px;
     --borderSticker: solid var(--colorSticker) thick;
     --borderNoBrick: solid var(--colorNoBrick) thick;
     box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    justify-items: center;
 }
 
-.borderGameOn { border: var(--borderGameOn); }
-.borderGameOff { border: var(--borderGameOff); }
+.borderGameOn { 
+    position: relative;
+    border: var(--borderGameOn); 
+    width: var(--gameSize);
+    height: var(--gameSize);
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+.borderGameOff { 
+    position: relative;
+    border: var(--borderGameOff); 
+    width: var(--gameSize);
+    height: var(--gameSize);
+    box-sizing: border-box;
+    border-radius: 3px;
+}
 .borderSticker { 
     box-sizing: border-box;
     width: var(--stickerSize);
@@ -21,12 +41,13 @@
     border: var(--borderSticker); 
     padding: 3px;
     margin: 1px;
+    border-radius: 3px;
 }
 .borderNoBrick { 
     border: var(--borderNoBrick); 
-    box-sizing: border-box;
+    /* box-sizing: border-box; */
     width: var(--stickerSize);
-    height: var(--stickerSize);    
+    height: var(--stickerSize);
     margin: 1px;
 }
 
@@ -34,21 +55,21 @@
     box-sizing: border-box;
     border: var(--borderGameOn);
     background-color: var(--colorGameOn);
-    width: var(--gameSize);
-    height: var(--gameSize);
+    /* width: var(--gameSize);
+    height: var(--gameSize); */
     border-radius: 50%;
 }
 .insideGameOff {
     box-sizing: border-box;
     border: var(--borderGameOff);
     background-color: var(--colorGameOff);
-    width: var(--gameSize);
-    height: var(--gameSize);
+    /* width: var(--gameSize);
+    height: var(--gameSize); */
     border-radius: 50%;
 }
 .insideSticker {
-    height: 100%;
-    border: var(--colorSticker);
+    /* height: 100%; */
+    border: var(--borderSticker);
     background-color: var(--colorSticker);
     border-radius: 50%;
 }

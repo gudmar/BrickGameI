@@ -12,16 +12,16 @@ function Brick({mode}: BrickInterface) {
   }
   const getInside = () => {
     if (mode === BrickMode.GameOn) return styles.insideGameOn;
-    if (mode === BrickMode.GameOff) return styles.inisdeGameOff;
+    if (mode === BrickMode.GameOff) return styles.insideGameOff;
     if (mode === BrickMode.NoBrick) return styles.insideNoBrick;
     return styles.insideSticker;
   }
     return (
-      <div className={styles.border}>
-        <div className={getBorder()}>
+      // <div className={styles.border}>
+        <div className={`${getBorder()} ${styles.border}`}>
           <div className={getInside()}></div>
         </div>
-      </div>
+      // </div>
   );
 }
 
