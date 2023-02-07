@@ -14,8 +14,10 @@ export interface GameLogicArgs {
     level: number,
     speed: number,
     // nextFigureFieldContent: [number[], number[], number[] ,number[]],
-    nextFigureFieldContent: nextFigurePreview,
-    brickCoordinantes: number[][],
+    nextFigure: nextFigurePreview,
+    brickMap: number[][],
+    isPaused: boolean,
+    isAnimating: boolean,
 }
 
 export interface GameState {

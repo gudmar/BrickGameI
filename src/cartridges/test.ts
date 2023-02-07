@@ -25,8 +25,10 @@ export class TestCartridge extends GameLogic {
             score: 0,
             level: 0,
             speed: 0,
-            nextFigureFieldContent: EMPTY_NEXT_FIGURE,
-            brickCoordinantes: TWO_IN_ONE,
+            nextFigure: EMPTY_NEXT_FIGURE,
+            brickMap: TWO_IN_ONE,
+            isPaused: false,
+            isAnimating: false,
         }
     }
     protected getEmptyGameLogicArgs():GameLogicArgs {
@@ -34,8 +36,10 @@ export class TestCartridge extends GameLogic {
             score:this.score, 
             level: this.level, 
             speed: this.speed, 
-            nextFigureFieldContent : this.EMPTY_FIELD_CONTENT,
-            brickCoordinantes: this.EMPRY_BRICK_COORDINANTES,
+            nextFigure : this.EMPTY_FIELD_CONTENT,
+            brickMap: this.EMPRY_BRICK_COORDINANTES,
+            isPaused: false,
+            isAnimating: false,
         }
     }
 

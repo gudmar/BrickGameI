@@ -52,8 +52,9 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
     const time = useTimer();
 
     useEffect(() => {
-        // const nextState = cartridgeInstance.getNextStateOnTick(time);
-        // setGameState(nextState);
+        const nextState = cartridgeInstance.getNextStateOnTick(time);
+        // if(time < 10) console.log(nextState)
+        setGameState(nextState);
     }, [time, cartridgeInstance])
 
     return gameState;

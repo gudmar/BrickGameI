@@ -32,12 +32,12 @@ export class GameLogic {
     protected paused: boolean = false;
     protected brickCoordinantes = this.EMPRY_BRICK_COORDINANTES
 
-    init({ score, level, speed, nextFigureFieldContent, brickCoordinantes }: GameLogicArgs) {
+    init({ score, level, speed, nextFigure, brickMap }: GameLogicArgs) {
         this.score = score;
         this.level = level;
         this.speed = speed;
-        this.nextFigureFieldContent = nextFigureFieldContent;
-        this.brickCoordinantes = brickCoordinantes;
+        this.nextFigureFieldContent = nextFigure;
+        this.brickCoordinantes = brickMap;
     }
 
     setPaused(value: boolean): void {
@@ -49,8 +49,10 @@ export class GameLogic {
             score:this.score, 
             level: this.level, 
             speed: this.speed, 
-            nextFigureFieldContent : this.EMPTY_FIELD_CONTENT,
-            brickCoordinantes: this.EMPRY_BRICK_COORDINANTES,
+            nextFigure : this.EMPTY_FIELD_CONTENT,
+            brickMap: this.EMPRY_BRICK_COORDINANTES,
+            isPaused: false,
+            isAnimating: false,
         }
     }
 

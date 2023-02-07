@@ -1,12 +1,11 @@
 .border {
-    
     --colorGameOn: #32391b;
     --colorGameOff: #92997b;
     --colorSticker: white;
     --colorNoBrick: transparent;
     --gameSize: 17px;
     --stickerSize: 25px;
-    --borderGameOn: solid var(--colorGameOn)   thick;
+    --borderGameOn: solid var(--colorGameOn)   3.6px;
     --borderGameOff: solid var(--colorGameOff) 3.6px;
     --borderSticker: solid var(--colorSticker) thick;
     --borderNoBrick: solid var(--colorNoBrick) thick;
@@ -24,7 +23,7 @@
     width: var(--gameSize);
     height: var(--gameSize);
     box-sizing: border-box;
-    border-radius: 5px;
+    border-radius: 3px;
 }
 .borderGameOff { 
     position: relative;
@@ -45,7 +44,6 @@
 }
 .borderNoBrick { 
     border: var(--borderNoBrick); 
-    /* box-sizing: border-box; */
     width: var(--stickerSize);
     height: var(--stickerSize);
     margin: 1px;
@@ -55,20 +53,15 @@
     box-sizing: border-box;
     border: var(--borderGameOn);
     background-color: var(--colorGameOn);
-    /* width: var(--gameSize);
-    height: var(--gameSize); */
     border-radius: 50%;
 }
 .insideGameOff {
     box-sizing: border-box;
     border: var(--borderGameOff);
     background-color: var(--colorGameOff);
-    /* width: var(--gameSize);
-    height: var(--gameSize); */
     border-radius: 50%;
 }
 .insideSticker {
-    /* height: 100%; */
     border: var(--borderSticker);
     background-color: var(--colorSticker);
     border-radius: 50%;
