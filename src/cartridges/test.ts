@@ -1,10 +1,12 @@
 import { GameLogic } from './AbstractGameLogic';
 import { KeyPress, GameLogicArgs } from '../types/types';
 import { EMPTY_NEXT_FIGURE, TWO_IN_ONE } from './constants';
+import { BarUp } from './test/BarUp';
 
 export class TestCartridge extends GameLogic {
     static instance: any;
     public NAME = "Test cartridge";
+    private animationClassInstance = new BarUp();
     constructor() {
         if(TestCartridge.instance) return TestCartridge.instance;
         super();
@@ -13,7 +15,8 @@ export class TestCartridge extends GameLogic {
     }
 
     public getNextStateOnTick(clockValue: number): GameLogicArgs {
-        return this.getTwoInOne();
+        return this.animationClassInstance.nextTick();
+        // return this.getTwoInOne();
     }
 
     public getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {
