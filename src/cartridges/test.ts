@@ -15,7 +15,7 @@ export class TestCartridge extends GameLogic {
     }
 
     public getNextStateOnTick(clockValue: number): GameLogicArgs {
-        return this.animationClassInstance.nextTick();
+        return this.animationClassInstance.nextTick(clockValue);
         // return this.getTwoInOne();
     }
 

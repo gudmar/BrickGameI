@@ -2,15 +2,12 @@ import { board } from "../../constants/constants";
 import { GameLogicArgs } from "../../types/types";
 import { getDojoBar, getDojoOfSymbols, getNextFigureOfSymbols } from "../AbstractGameLogic";
 
-export class BarUp {
+export class BarDown {
     dojo = getDojoOfSymbols(0);
     nextTick(time:number): GameLogicArgs {
-        const index = (board.HEIGHT - time % board.HEIGHT - 1);
-        if (board.HEIGHT - time % board.HEIGHT === board.HEIGHT) {
-            this.dojo[0] = getDojoBar(0)
-        } else { 
-            this.dojo[index + 1] = getDojoBar(0);
-        }
+        if (time % board.HEIGHT === 0) this.dojo[board.HEIGHT - 1] = getDojoBar(0)
+        const index = (time % board.HEIGHT);
+        this.dojo[index-1] = getDojoBar(0);
         this.dojo[index] = getDojoBar(1);
         return {
             score: 0,
