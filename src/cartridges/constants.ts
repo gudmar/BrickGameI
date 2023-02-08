@@ -28,6 +28,9 @@ export const EMPTY_NEXT_FIGURE = [
     [0, 0, 0, 0], 
 ];
 
+export const INDEX_OUT_OF_RANGE = 'Index out of range,';
+export const TYPE_MISMATCH = 'Type mismatch'
+
 // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

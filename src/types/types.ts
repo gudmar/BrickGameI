@@ -44,3 +44,9 @@ export interface ConsoleArgs {
     setSpeed: (val: OneToTen) => void,
     setLevel: (val: OneToTen) => void,
 }
+
+export interface DoWithBar {
+    dojo: number[][],
+    index: number,
+    pixelModificationFunction: (currentValue: number) => number
+}

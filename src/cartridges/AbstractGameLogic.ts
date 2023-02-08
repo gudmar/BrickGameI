@@ -1,6 +1,7 @@
-import {KeyPress, GameLogicArgs, Speed} from '../types/types'
+import {KeyPress, GameLogicArgs, Speed, DoWithBar} from '../types/types'
 import { shouldGenerateNextMove } from '../functions/shouldGenerateNextMove';
 import { board, nextFigure } from '../constants/constants';
+import { INDEX_OUT_OF_RANGE, TYPE_MISMATCH } from './constants';
 
 // type NextFigureFieldContent = [number[], number[], number[] ,number[]];
 // type NextFigureFieldContent = number[][];
@@ -16,6 +17,16 @@ export const getNextFigureOfSymbols = (digit:number) => {
 
 export const getDojoBar = (digit: number) => {
     return arrayOfElements<number>(board.WIDTH, digit)
+}
+
+export const doWithVerticalBar = ({ dojo, index, pixelModificationFunction }: DoWithBar) => {
+    if (!Array.isArray(dojo)) throw(TYPE_MISMATCH);
+    if (index < 0 || index >= dojo[0].length) throw(INDEX_OUT_OF_RANGE)
+    const newDojo = dojo.map(row => {
+        row[index] = pixelModificationFunction(row[index]);
+        return row;
+    });
+    return newDojo;
 }
 
 
