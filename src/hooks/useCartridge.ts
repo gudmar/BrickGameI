@@ -3,9 +3,11 @@ import { useTimer } from './useClock'
 import { TestCartridge } from '../cartridges/test'
 import { GameState } from '../types/types';
 import { getNextFigureOfSymbols, getDojoOfSymbols } from '../cartridges/AbstractGameLogic';
+import { LayersApplayer } from '../cartridges/layers/LayersApplayer';
 
 export const cartridges = {
     'TEST': "Test display",
+    'LAYERS': 'Animate layers'
 }
 
 interface LogicDescriptor {
@@ -22,6 +24,11 @@ const cartridgeLibrary: Library = {
     [cartridges.TEST]: {
         logicHandler: TestCartridge,
         description: cartridges.TEST,
+        show: true,
+    },
+    [cartridges.LAYERS]: {
+        logicHandler: LayersApplayer,
+        description: cartridges.LAYERS,
         show: true,
     },
 }

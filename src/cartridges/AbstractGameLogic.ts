@@ -1,4 +1,4 @@
-import {KeyPress, GameLogicArgs, Speed, DoWithBar} from '../types/types'
+import {KeyPress, GameLogicArgs, Speed, DoWithBar, nextFigurePreview, BrickMap} from '../types/types'
 import { shouldGenerateNextMove } from '../functions/shouldGenerateNextMove';
 import { board, nextFigure } from '../constants/constants';
 import { INDEX_OUT_OF_RANGE, TYPE_MISMATCH } from './constants';
@@ -7,11 +7,11 @@ import { INDEX_OUT_OF_RANGE, TYPE_MISMATCH } from './constants';
 // type NextFigureFieldContent = number[][];
 
 
-export const arrayOfElements  = <T>(length: number, element: T) => Array(length).fill(element);
+export const arrayOfElements  = <T>(length: number, element: T): T[] => Array(length).fill(null).map(_ => element);
 export const getDojoOfSymbols = (digit:number) => {
     return arrayOfElements<number[]>(board.HEIGHT, arrayOfElements<number>(board.WIDTH, digit));
 }
-export const getNextFigureOfSymbols = (digit:number) => {
+export const getNextFigureOfSymbols = (digit:number):nextFigurePreview => {
     return arrayOfElements<number[]>(nextFigure.HEIGHT, arrayOfElements<number>(nextFigure.WIDTH, digit));
 }
 

@@ -7,7 +7,7 @@ import { GameLogic } from '../../cartridges/AbstractGameLogic';
 import { cartridges } from '../../hooks/useCartridge'
 
 function BrickGame() {
-  const [currentGame, setCurrentGame] = useState(cartridges.TEST);
+  const [currentGame, setCurrentGame] = useState(cartridges.LAYERS);
   const [speed, setSpeed]: [OneToTen, any] = useState(0);
   const [level, setLevel]: [OneToTen, any] = useState(0);
     return (

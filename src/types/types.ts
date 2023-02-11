@@ -15,7 +15,7 @@ export interface GameLogicArgs {
     speed: number,
     // nextFigureFieldContent: [number[], number[], number[] ,number[]],
     nextFigure: nextFigurePreview,
-    brickMap: number[][],
+    brickMap: BrickMap,
     isPaused: boolean,
     isAnimating: boolean,
 }
