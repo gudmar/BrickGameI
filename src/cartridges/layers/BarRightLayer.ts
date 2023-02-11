@@ -14,15 +14,14 @@ export class BarRightLayer extends AbstractLayerBuilder {
     
     public applyNextAnimationFrame(brickMap: BrickMap) {
         this.resetLayer();
-        const index = (this.tick % board.HEIGHT);
-        this.layer[index] = getDojoBar(1);
+        const index = (this.tick % board.WIDTH);
         setColumn(this.layer, index);
         this.tick++;
         this.mergeLayer(brickMap);
     }
 
     protected modifyBrickFunction(currentBrick: number, layerBrick:number){
-        return 1;
+        return currentBrick || layerBrick;
     }
 
 }

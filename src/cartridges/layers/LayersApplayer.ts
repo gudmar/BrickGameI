@@ -21,7 +21,7 @@ export class LayersApplayer extends GameLogic {
     static instance: any;
     public NAME = "Layer applier";
     private layerGenerators = [
-        // BarRightLayer,
+        BarRightLayer,
         BarDownLayer,
     ]
     private visitor;
