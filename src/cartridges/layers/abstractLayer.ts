@@ -13,6 +13,11 @@ export class AbstractLayerBuilder {
 
     protected resetLayer() { this.layer = getDojoOfSymbols(0) }
 
+    public reset() {
+        this.resetLayer();
+        this.tick = 0;
+    }
+
     public accept(brickMapVisitor: any){
         brickMapVisitor.visit(this);
     }
