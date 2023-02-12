@@ -13,7 +13,7 @@ export interface SequencerParams {
 
 interface SingleSequencerParams {
     // background: BrickMap,
-    animators: any,
+    animators: any[],
     repetitions: number,
 }
 
@@ -77,7 +77,7 @@ export class SingleSequencer {
         // return background;
     }
 
-    get done():boolean { return this.done }
+    get done():boolean { return this._done }
 }
 
 export class AnimationSequencer {
@@ -131,7 +131,7 @@ export class AnimatorSequencersApplier {
         )
     }
 
-    private getBackgroundCp() { return this.background }
+    private getBackgroundCp() { return getBackgroundCopy(this.background) }
 
     getNextStateOnTick() {
         let bgCp = this.getBackgroundCp();
@@ -140,5 +140,10 @@ export class AnimatorSequencersApplier {
         })
         return bgCp;
     }
+}
+
+export const getBackgroundCopy = (background: BrickMap) => {
+    const copyRow = (row: number[]) => row.map(_ => _);
+    return background.map(row => copyRow(row))
 }
 
