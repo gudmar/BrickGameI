@@ -33,27 +33,27 @@ describe('Testing AnimationSequencer', () => {
             [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
             [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
         ]
-        const expectedAfterReset = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-            [0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
-            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
-            [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 1, 0, 1, 0, 0, 1, 0, 0],
-            [0, 0, 1, 0, 1, 1, 0, 1, 0, 0],
-            [0, 0, 1, 0, 1, 0, 1, 1, 0, 0],
-            [0, 0, 1, 0, 1, 0, 0, 1, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        const expectedAfterResetAndInvocation = [
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+            [1, 0, 0, 1, 0, 0, 1, 0, 0, 0],
+            [1, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+            [1, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [1, 0, 0, 1, 0, 0, 1, 0, 0, 0],
+            [1, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 1, 0, 1, 0, 0, 1, 0, 0],
+            [1, 0, 1, 0, 1, 1, 0, 1, 0, 0],
+            [1, 0, 1, 0, 1, 0, 1, 1, 0, 0],
+            [1, 0, 1, 0, 1, 0, 0, 1, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+            [1, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+            [1, 0, 0, 0, 1, 1, 1, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ]
         const sequencer = new AnimationSequencer({ configuration });
         const background = getBg();
@@ -64,8 +64,86 @@ describe('Testing AnimationSequencer', () => {
         sequencer.applyNextStateOnTick(finalBg);
         console.log(background)
         expect(finalBg).toEqual(expectedBeforeReset);
+        const afterResetBg = getBg();
+        sequencer.applyNextStateOnTick(afterResetBg);
+        expect(afterResetBg).toEqual(expectedAfterResetAndInvocation);
     })
-    it('Should repeat a single animation 2 times, and then second animation 3 times when sequence with repetitions 2 and 3 given', () => {
-        
+    it('Should repeat a single animation 4 times, and then second animation 3 times when sequence with repetitions 2 and 3 given', () => {
+        const configuration = [
+        {
+            repetitions: 4,
+            animators: [ BarDownLayer, BarRightLayer ],
+        },
+        {
+            repetitions: 3,
+            animators: [ BarDownLayer, BarRightLayer ],
+        },
+    ]
+        const firstRound = [
+            [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
+            [1, 1, 1, 1, 1, 1, 1 ,1, 1, 1],
+            [0, 0, 0, 1, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
+            [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+            [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 0, 0, 1, 0, 0],
+            [0, 0, 1, 1, 1, 1, 0, 1, 0, 0],
+            [0, 0, 1, 1, 1, 0, 1, 1, 0, 0],
+            [0, 0, 1, 1, 1, 0, 0, 1, 0, 0],
+            [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+            [0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+            [0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+            [0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+            [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+            [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+        ]
+        const secondRound = [
+            [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 1, 1, 0, 0, 0, 0],
+            [1, 1, 1, 1, 1, 1, 1 ,1, 1, 1],
+            [0, 0, 1, 0, 0, 1, 0, 0, 0, 0],
+            [0, 0, 1, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 0, 0, 1, 0, 0, 0],
+            [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+            [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 1, 0, 0, 1, 0, 0],
+            [0, 0, 1, 0, 1, 1, 0, 1, 0, 0],
+            [0, 0, 1, 0, 1, 0, 1, 1, 0, 0],
+            [0, 0, 1, 0, 1, 0, 0, 1, 0, 0],
+            [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 1, 0, 0, 0, 0],
+            [0, 0, 1, 0, 1, 1, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 1, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 1, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 1, 0, 0, 0, 0],
+            [0, 0, 1, 0, 1, 1, 1, 0, 0, 0],
+            [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        ];
+        const sequencer = new AnimationSequencer({ configuration });
+        const background = getBg();
+        sequencer.applyNextStateOnTick(background);
+        sequencer.applyNextStateOnTick(background);
+        sequencer.applyNextStateOnTick(background);
+        const finalBg = getBg();
+        sequencer.applyNextStateOnTick(finalBg);
+        expect(finalBg).toEqual(firstRound);
+
+        sequencer.applyNextStateOnTick(background);
+        sequencer.applyNextStateOnTick(background);
+        const afterResetBg = getBg();
+        sequencer.applyNextStateOnTick(afterResetBg);
+        expect(afterResetBg).toEqual(secondRound);
+
+        sequencer.applyNextStateOnTick(background);
+        sequencer.applyNextStateOnTick(background);
+        sequencer.applyNextStateOnTick(background);
+        const nextRoundBg = getBg();
+        sequencer.applyNextStateOnTick(nextRoundBg);
+        expect(nextRoundBg).toEqual(firstRound);
+
     })
 })
