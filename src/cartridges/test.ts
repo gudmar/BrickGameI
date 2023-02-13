@@ -1,8 +1,6 @@
 import { GameLogic } from './AbstractGameLogic';
 import { KeyPress, GameLogicArgs } from '../types/types';
 import { EMPTY_NEXT_FIGURE, TWO_IN_ONE } from './constants';
-import { BarUp } from './test/BarUp';
-import { BarRight } from './test/BarRight';
 import { BarLeft } from './test/BarLeft';
 
 export class TestCartridge extends GameLogic {

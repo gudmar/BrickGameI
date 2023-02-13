@@ -1,5 +1,5 @@
 import { getNextFigureOfSymbols } from '../AbstractGameLogic';
-import { EMPTY_NEXT_FIGURE, TWO_IN_ONE } from '../constants';
+import { TWO_IN_ONE } from '../constants';
 import { TestCartridge } from '../test';
 
 

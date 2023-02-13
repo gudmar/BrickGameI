@@ -11,7 +11,7 @@ const getEmptyGameLogic = (): GameLogicArgs => (
         level: 0,
         speed: 0,
         nextFigure : getNextFigureOfSymbols(0),
-        brickMap: <BrickMap>getDojoOfSymbols(0),
+        brickMap: getDojoOfSymbols(0),//<BrickMap>getDojoOfSymbols(0),
         isPaused: false,
         isAnimating: false,
     }

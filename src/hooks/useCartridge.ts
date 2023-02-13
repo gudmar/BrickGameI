@@ -4,10 +4,12 @@ import { TestCartridge } from '../cartridges/test'
 import { GameState } from '../types/types';
 import { getNextFigureOfSymbols, getDojoOfSymbols } from '../cartridges/AbstractGameLogic';
 import { LayersApplayer } from '../cartridges/layers/LayersApplayer';
+import { Animations } from '../cartridges/Animations/Animations';
 
 export const cartridges = {
     'TEST': "Test display",
-    'LAYERS': 'Animate layers'
+    'LAYERS': 'Animate layers',
+    'ANIMATIONS': 'Animations'
 }
 
 interface LogicDescriptor {
@@ -29,6 +31,11 @@ const cartridgeLibrary: Library = {
     [cartridges.LAYERS]: {
         logicHandler: LayersApplayer,
         description: cartridges.LAYERS,
+        show: true,
+    },
+    [cartridges.ANIMATIONS]: {
+        logicHandler: Animations,
+        description: cartridges.ANIMATIONS,
         show: true,
     },
 }
