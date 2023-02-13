@@ -94,7 +94,6 @@ describe('Testing BarUpLapyer', () => {
             layerApplier.applyNextAnimationFrame(first);
         }
         layerApplier.applyNextAnimationFrame(second);
-        console.log(second)
         expect(second).toEqual(EXPECTED);
     })
 })

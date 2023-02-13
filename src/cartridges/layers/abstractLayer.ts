@@ -1,4 +1,3 @@
-import Brick from "../../components/Console/Display/Brick/Brick";
 import { BrickMap } from "../../types/types";
 import { getDojoOfSymbols } from "../AbstractGameLogic";
 
@@ -40,7 +39,6 @@ export class AbstractLayerBuilder {
 
     private mergeRow(brickMapRow:number[], layerRow:number[]) {
         return brickMapRow.map((brick: number, index:number) => {
-            // console.log(brick, layerRow[index], this.modifyBrickFunction(brick, layerRow[index]))
                 return this.modifyBrickFunction(brick, layerRow[index])
             }
         )

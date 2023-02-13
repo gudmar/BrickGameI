@@ -62,7 +62,6 @@ describe('Testing AnimationSequencer', () => {
         sequencer.applyNextStateOnTick(background);
         const finalBg = getBg();
         sequencer.applyNextStateOnTick(finalBg);
-        console.log(background)
         expect(finalBg).toEqual(expectedBeforeReset);
         const afterResetBg = getBg();
         sequencer.applyNextStateOnTick(afterResetBg);

@@ -33,7 +33,6 @@ describe('Testing LeftBarLayer', () => {
         layerApplier.applyNextAnimationFrame(bg1);
         const bg2 = getBg();
         layerApplier.applyNextAnimationFrame(bg2);
-        console.log(bg2)
         expect(bg2).toEqual(expected);
     })
 })

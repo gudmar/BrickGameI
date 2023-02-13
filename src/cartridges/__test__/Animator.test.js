@@ -63,7 +63,6 @@ describe('Testing Animator from AnimationSequencer', () => {
         animator.applyNextAnimationFrame(background);
         animator.applyNextAnimationFrame(background);
         const lastBg = getBg();
-        console.log(lastBg)
         animator.applyNextAnimationFrame(lastBg);
         expect(lastBg).toEqual(expected);
     })

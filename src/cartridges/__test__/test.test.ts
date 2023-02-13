@@ -1,3 +1,4 @@
+import { getNextFigureOfSymbols } from '../AbstractGameLogic';
 import { EMPTY_NEXT_FIGURE, TWO_IN_ONE } from '../constants';
 import { TestCartridge } from '../test';
 
@@ -10,8 +11,10 @@ describe('Testing test cardridge', () => {
                 score: 0,
                 level: 0,
                 speed: 0,
-                nextFigureFieldContent: EMPTY_NEXT_FIGURE,
-                brickCoordinantes: TWO_IN_ONE,
+                brickMap: TWO_IN_ONE,
+                isAnimating: false,
+                isPaused: false,
+                nextFigure: getNextFigureOfSymbols(0),
             }
             const result = cartridge.getTwoInOne();
             expect(result).toEqual(expected);

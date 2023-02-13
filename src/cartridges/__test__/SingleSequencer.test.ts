@@ -62,7 +62,6 @@ describe('Testing SingleSequencer', () => {
         sequencer.applyNextStateOnTick(background);
         const finalBg = getBg();
         sequencer.applyNextStateOnTick(finalBg);
-        console.log(finalBg)
         expect(finalBg).toEqual(expectedBeforeReset);
     })
     it('Should repeat a single animation 2 times, and then second animation 3 times when sequence with repetitions 2 and 3 given', () => {
