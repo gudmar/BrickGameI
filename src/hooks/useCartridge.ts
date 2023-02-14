@@ -67,6 +67,7 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
 
     useEffect(() => {
         const nextState = cartridgeInstance.getNextStateOnTick(time);
+        // console.log(time)   TIME is not divided here
         // if(time < 10) console.log(nextState)
         setGameState(nextState);
     }, [time, cartridgeInstance])

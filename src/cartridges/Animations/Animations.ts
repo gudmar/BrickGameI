@@ -6,6 +6,12 @@ import { BarDownLayer } from "../layers/BarDownLayer";
 import { BarUpLayer } from "../layers/BarUpLayer";
 import { BarRightLayer } from "../layers/BarRightLayer";
 import { BarLeftLayer } from "../layers/BarLeftLayer";
+import { BarDownToggleLayer } from "../layers/toggle/BarDownToggleLayer";
+import { BarUpToggleLayer } from "../layers/toggle/BarUpToggleLayer";
+import { BarLeftToggleLayer } from "../layers/toggle/BarLeftToggleLayer";
+import { BarRightToggleLayer } from "../layers/toggle/BarRightToggleLayer";
+import { BarLeftRightLayer } from "../layers/toggle/BarLeftRightLayer";
+import { BarDownUpLayer } from "../layers/toggle/BarDownUpLayer";
 
 const getEmptyGameLogic = (): GameLogicArgs => (
     {
@@ -20,24 +26,37 @@ const getEmptyGameLogic = (): GameLogicArgs => (
 )
 
 const sequencerConfigurations = [
+    // [
+    //     {
+    //         animators: [BarLeftToggleLayer],
+    //         repetitions: 10,
+    //     },
+    //     {
+    //         animators: [BarRightToggleLayer],
+    //         repetitions: 10,
+    //     },
+    // ],
+    // [
+    //     {
+    //         animators: [BarDownToggleLayer],
+    //         repetitions: 20,
+    //     },
+    //     {
+    //         animators: [BarUpToggleLayer],
+    //         repetitions: 20,
+    //     },
+    // ],
+
     [
         {
-            animators: [BarDownLayer],
-            repetitions: 20,
-        },
-        {
-            animators: [BarUpLayer],
+            animators: [BarLeftRightLayer],
             repetitions: 20,
         },
     ],
     [
         {
-            animators: [BarLeftLayer],
-            repetitions: 10,
-        },
-        {
-            animators: [BarRightLayer],
-            repetitions: 10,
+            animators: [BarDownUpLayer],
+            repetitions: 40,
         },
     ]
 ]
