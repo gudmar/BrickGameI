@@ -12,6 +12,8 @@ export class AbstractLayerBuilder {
 
     protected resetLayer() { this.layer = getDojoOfSymbols(0) }
 
+    protected setLayerBlack() { this.layer = getDojoOfSymbols(1) }
+
     public reset() {
         this.resetLayer();
         this.tick = 0;

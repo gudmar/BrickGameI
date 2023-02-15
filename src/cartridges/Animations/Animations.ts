@@ -1,85 +1,97 @@
-import { BrickMap, GameLogicArgs, KeyPress } from "../../types/types";
-import { GameLogic, getNextFigureOfSymbols, getDojoOfSymbols } from "../AbstractGameLogic";
+import { GameLogicArgs, KeyPress, ScheaduleProps } from "../../types/types";
+import { GameLogic } from "../AbstractGameLogic";
+import { AnimationScheaduler } from "../AnimationSequencer/AnimationScheaduler";
 import { EMPTY_NEXT_FIGURE, TWO_IN_ONE } from "../constants";
-import { AnimatorSequencersApplier } from "../AnimationSequencer/AnimationSequencer";
-import { BarDownLayer } from "../layers/BarDownLayer";
-import { BarUpLayer } from "../layers/BarUpLayer";
-import { BarRightLayer } from "../layers/BarRightLayer";
-import { BarLeftLayer } from "../layers/BarLeftLayer";
-import { BarDownToggleLayer } from "../layers/toggle/BarDownToggleLayer";
-import { BarUpToggleLayer } from "../layers/toggle/BarUpToggleLayer";
-import { BarLeftToggleLayer } from "../layers/toggle/BarLeftToggleLayer";
-import { BarRightToggleLayer } from "../layers/toggle/BarRightToggleLayer";
-import { BarLeftRightLayer } from "../layers/toggle/BarLeftRightLayer";
-import { BarDownUpLayer } from "../layers/toggle/BarDownUpLayer";
+import { BottomTopLeftRight } from "./BottomTopLeftRight";
+import { PauseBlackAnimation } from "./PauseBlackAnimation";
+import { PauseWhiteAnimation } from "./PauseWhiteAnimation";
 
-const getEmptyGameLogic = (): GameLogicArgs => (
+const scheadule: ScheaduleProps[] = [
     {
-        score: 0,
-        level: 0,
-        speed: 0,
-        nextFigure : getNextFigureOfSymbols(0),
-        brickMap: getDojoOfSymbols(0),
-        isPaused: false,
-        isAnimating: false,
-    }
-)
+        background: TWO_IN_ONE,
+        repetitions: 39,
+        animationSequencer: BottomTopLeftRight,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: 10,
+        animationSequencer: PauseWhiteAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: 8,
+        animationSequencer: PauseBlackAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: 8,
+        animationSequencer: PauseWhiteAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: 8,
+        animationSequencer: PauseBlackAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: 3,
+        animationSequencer: PauseWhiteAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: 3,
+        animationSequencer: PauseBlackAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: 3,
+        animationSequencer: PauseWhiteAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: 3,
+        animationSequencer: PauseBlackAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: 3,
+        animationSequencer: PauseWhiteAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: 3,
+        animationSequencer: PauseBlackAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: 3,
+        animationSequencer: PauseWhiteAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: 3,
+        animationSequencer: PauseBlackAnimation,
+    },
 
-const sequencerConfigurations = [
-    // [
-    //     {
-    //         animators: [BarLeftToggleLayer],
-    //         repetitions: 10,
-    //     },
-    //     {
-    //         animators: [BarRightToggleLayer],
-    //         repetitions: 10,
-    //     },
-    // ],
-    // [
-    //     {
-    //         animators: [BarDownToggleLayer],
-    //         repetitions: 20,
-    //     },
-    //     {
-    //         animators: [BarUpToggleLayer],
-    //         repetitions: 20,
-    //     },
-    // ],
-
-    [
-        {
-            animators: [BarLeftRightLayer],
-            repetitions: 20,
-        },
-    ],
-    [
-        {
-            animators: [BarDownUpLayer],
-            repetitions: 40,
-        },
-    ]
 ]
 
-export class Animations extends GameLogic {
+export class Animations extends GameLogic{
+
     static instance: any;
     public NAME = "Animations";
-    private animationSequencer;
+    private animationScheaduler:any;
 
     constructor() {
         if(Animations.instance) return Animations.instance;
         super();
-        this.animationSequencer = new AnimatorSequencersApplier({
-            background: TWO_IN_ONE,
-            sequencerConfigurations,
-        })
+        this.animationScheaduler = new AnimationScheaduler(scheadule)
         Animations.instance = this;
         return this;
     }
 
     public getNextStateOnTick(): GameLogicArgs {
-        const background = this.animationSequencer?.getNextStateOnTick();
-        return { ...this.getTwoInOne(), brickMap: <BrickMap>background }
+        const nextState = this.animationScheaduler?.getNextStateOnTick();
+        return nextState;
     }
 
     public getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {

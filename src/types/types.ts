@@ -9,6 +9,13 @@ export type Level = OneToTen;
 export type nextFigurePreview = number[][]
 export type BrickMap = number[][];
 
+export interface ScheaduleProps {
+    background: BrickMap,
+    animationSequencer: any,
+    repetitions: number,
+    scheaduler?: any,
+}
+
 export interface GameLogicArgs {
     score: number,
     level: number,

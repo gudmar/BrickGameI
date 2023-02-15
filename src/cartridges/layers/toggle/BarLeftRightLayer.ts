@@ -2,7 +2,6 @@ import { board } from "../../../constants/constants";
 import { BrickMap } from "../../../types/types";
 import { doWithVerticalBar } from "../../AbstractGameLogic";
 import { AbstractLayerBuilder } from "../abstractLayer";
-import { BarLeftLayer } from "../BarLeftLayer";
 import { toggle } from "./toggleFunction";
 
 const setColumn1 = (dojo: BrickMap, index:number) => doWithVerticalBar({
@@ -29,7 +28,6 @@ export class BarLeftRightLayer extends AbstractLayerBuilder {
 
     private applyNextAnimationFrameLeft(brickMap: BrickMap) {
         const index = board.WIDTH - (this.tick % board.WIDTH) - 1;
-        console.log(index)
         setColumn2(this.layer, index);
         this.tick++;
         this.mergeLayer(brickMap);
