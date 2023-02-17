@@ -6,11 +6,20 @@ export const xor = (currentBrick: number, layerBrick: number) => {
     return 0;
 }
 
+export const spiral = (currentBrick: number, layerBrick: number) => {
+    // 0 0 => 0 
+    // 0 1 => 1
+    // 1 0 => 1
+    // 1 1 => 0
+}
+
 export const toggle = (currentBrick: number, layerBrick: number) => {
-    const and = currentBrick && layerBrick;
-    const or = currentBrick || layerBrick;
-    if (and) return 0;
-    if (or) return 1;
-    return 0;
+    return xor(currentBrick, layerBrick)
+    // console.log(currentBrick, layerBrick)
+    // // const and = currentBrick && layerBrick;
+    // const or = currentBrick || layerBrick;
+    // // if (and) return 0;
+    // if (or) return 1;
+    // return 0;
 }
     

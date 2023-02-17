@@ -7,10 +7,31 @@ import { INDEX_OUT_OF_RANGE, TYPE_MISMATCH } from './constants';
 // type NextFigureFieldContent = number[][];
 
 
-export const arrayOfElements  = <T>(length: number, element: T): T[] => Array(length).fill(null).map(_ => element);
-export const getDojoOfSymbols = (digit:number) => {
-    return arrayOfElements<number[]>(board.HEIGHT, arrayOfElements<number>(board.WIDTH, digit));
+export const arrayOfElements  = <T>(length: number, element: T): T[] => Array(length).fill(null).map(
+    ( _ ) => {
+        const e = element;
+        return e;
+    }
+);
+const getArrayOfDigits = (length: number, element: number): number[] => {
+    const arr = [];
+    for(let i = 0; i < length; i++) {
+        arr.push(parseInt(`${element}`))
+    }
+    return arr;
 }
+
+export const getDojoOfSymbols = (digit: number) => {
+    let arr = []
+    for(let i = 0; i < board.HEIGHT; i++) {
+        arr.push(getArrayOfDigits(board.WIDTH, digit))
+    }
+    return arr;
+}
+
+// export const getDojoOfSymbols = (digit:number) => {
+//     return arrayOfElements<number[]>(board.HEIGHT, getArrayOfDigits(board.WIDTH, digit));
+// }
 export const getNextFigureOfSymbols = (digit:number):nextFigurePreview => {
     return arrayOfElements<number[]>(nextFigure.HEIGHT, arrayOfElements<number>(nextFigure.WIDTH, digit));
 }

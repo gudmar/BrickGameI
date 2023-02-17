@@ -5,8 +5,21 @@ import { EMPTY_NEXT_FIGURE, TWO_IN_ONE } from "../constants";
 import { BottomTopLeftRight } from "./BottomTopLeftRight";
 import { PauseBlackAnimation } from "./PauseBlackAnimation";
 import { PauseWhiteAnimation } from "./PauseWhiteAnimation";
+import { SpiralInside } from "./SpiraleInside";
+
+const PAUSE_LONG = 5;
+const PAUSE_SHORT = 2;
+const SPIRAL = 200;
 
 const scheadule: ScheaduleProps[] = [
+    {
+        background: TWO_IN_ONE,
+        repetitions: SPIRAL,
+        animationSequencer: SpiralInside,
+    },
+]
+
+const _scheadule: ScheaduleProps[] = [
     {
         background: TWO_IN_ONE,
         repetitions: 39,
@@ -14,63 +27,68 @@ const scheadule: ScheaduleProps[] = [
     },
     {
         background: TWO_IN_ONE,
-        repetitions: 10,
+        repetitions: PAUSE_LONG,
         animationSequencer: PauseWhiteAnimation,
     },
     {
         background: TWO_IN_ONE,
-        repetitions: 8,
+        repetitions: PAUSE_LONG,
         animationSequencer: PauseBlackAnimation,
     },
     {
         background: TWO_IN_ONE,
-        repetitions: 8,
+        repetitions: PAUSE_LONG,
         animationSequencer: PauseWhiteAnimation,
     },
     {
         background: TWO_IN_ONE,
-        repetitions: 8,
+        repetitions: PAUSE_LONG,
         animationSequencer: PauseBlackAnimation,
     },
     {
         background: TWO_IN_ONE,
-        repetitions: 3,
+        repetitions: PAUSE_SHORT,
         animationSequencer: PauseWhiteAnimation,
     },
     {
         background: TWO_IN_ONE,
-        repetitions: 3,
+        repetitions: PAUSE_SHORT,
         animationSequencer: PauseBlackAnimation,
     },
     {
         background: TWO_IN_ONE,
-        repetitions: 3,
+        repetitions: PAUSE_SHORT,
         animationSequencer: PauseWhiteAnimation,
     },
     {
         background: TWO_IN_ONE,
-        repetitions: 3,
+        repetitions: PAUSE_SHORT,
         animationSequencer: PauseBlackAnimation,
     },
     {
         background: TWO_IN_ONE,
-        repetitions: 3,
+        repetitions: PAUSE_SHORT,
         animationSequencer: PauseWhiteAnimation,
     },
     {
         background: TWO_IN_ONE,
-        repetitions: 3,
+        repetitions: PAUSE_SHORT,
         animationSequencer: PauseBlackAnimation,
     },
     {
         background: TWO_IN_ONE,
-        repetitions: 3,
+        repetitions: PAUSE_SHORT,
         animationSequencer: PauseWhiteAnimation,
     },
     {
         background: TWO_IN_ONE,
-        repetitions: 3,
+        repetitions: PAUSE_SHORT,
         animationSequencer: PauseBlackAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: SPIRAL,
+        animationSequencer: SpiralInside,
     },
 
 ]
