@@ -1,3 +1,4 @@
+import { copyBackground } from "../../functions/copyBackground";
 import { getDojoOfSymbols } from "../AbstractGameLogic";
 import { SpiralInsideToggle } from "../layers/toggle/SpiralInsideToggle";
 import { BACKGROUND_0, BACKGROUND_1_BRICK, BACKGROUND_5_BRICKS, COL_1_TURN } from "./data/spiralInsideData"
@@ -20,22 +21,26 @@ describe('Testing SpiralInsideToggle', () => {
         animator.applyNextAnimationFrame(input);
         expect(input).toEqual(expected);
     });
-    it.only('Should fill first 5 bricks', () => {
+    it('Should fill first 5 bricks', () => {
         let result;
         const expected = BACKGROUND_5_BRICKS;
         for(let i = 0; i < 5; i++) {
-            const input = BACKGROUND_0;
+            const input = copyBackground(BACKGROUND_0);
+            animator.applyNextAnimationFrame(input);
+            result = input;
+        }
+        expect(animator.layer).toEqual(expected);
+        expect(result).toEqual(expected);
+    });
+    it.only('Should fill first column and turn with run 21 tims', () => {
+        const input = BACKGROUND_0;
+        const expected = COL_1_TURN;
+        let result;
+        for(let i = 0; i <= 20; i++) {
+            const input = copyBackground(BACKGROUND_0);
             animator.applyNextAnimationFrame(input);
             result = input;
         }
         expect(result).toEqual(expected);
-    });
-    it('Should fill first column and turn with run 21 tims', () => {
-        const input = BACKGROUND_0;
-        const expected = COL_1_TURN;
-        for(let i = 0; i < 20; i++) {
-            animator.applyNextAnimationFrame(input);
-        }
-        expect(input).toEqual(expected);
     })
 })

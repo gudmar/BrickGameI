@@ -27,16 +27,14 @@ export class SpiralInsideToggle extends AbstractLayerBuilder {
     public applyNextAnimationFrame(brickMap: BrickMap): void {
         this.brickMap = brickMap;
         this.MAX_ITERATIONS = this.getMaxIterations();
-        console.log(Direction.DOWN, this.direction, this.x, this.y)
         this.markPosition();
         this.move();
         this.changeDirectionIfNeeded();
-        // this.move();
         this.terminate();
-        // this.mergeLayer(this.brickMap);
         this.mergeLayer();
-        const a = 0;
     }
+
+    public getLayer() { return this.layer }
 
     protected mergeLayer(): void {
         this.brickMap.forEach((row, index) => {
@@ -45,7 +43,7 @@ export class SpiralInsideToggle extends AbstractLayerBuilder {
     }
     private _mergeRow(row: number[], index: number) {
         row.forEach((brick, i) => {
-            row[i] = this.mergeSingleLayerBrick(row[i], this.layer[index][i])
+            row[i] = this.mergeSingleLayerBrick(brick, this.layer[index][i])
          })
     }
     protected mergeSingleLayerBrick(brickMapBrick:number, layerBrick:number) {
@@ -66,6 +64,7 @@ export class SpiralInsideToggle extends AbstractLayerBuilder {
             case Direction.UP: this.startPosition.y -= 1; break;
             case Direction.LEFT: this.startPosition.x -= 1; break;
         }
+        this.iterations++;
     }
 
     private markPosition() {
@@ -125,7 +124,11 @@ export class SpiralInsideToggle extends AbstractLayerBuilder {
             this.startPosition = { x: 0, y: 0 }
             this.direction = Direction.DOWN;
             this.iterations = 0;
+            this.modifiedBricks = getDojoOfSymbols(0);
         }
+    }
+    public reset(): void {
+        this.terminate()
     }
 
 

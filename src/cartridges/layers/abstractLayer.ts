@@ -32,6 +32,9 @@ export class AbstractLayerBuilder {
     }
 
     public applyNextAnimationFrame(brickMap: BrickMap) {
+        // THIS has to mutate original brick map for applying multiple
+        // layers purpose. Do NOT change to 'getNextAnimationFrame' that would 
+        // return new brickMap
         throw new Error('applyNextAnimationFrame has to be overwritten. It takes a brickMap and applies next layer on top of it')
     }
 
@@ -44,6 +47,14 @@ export class AbstractLayerBuilder {
                 return this.modifyBrickFunction(brick, layerRow[index])
             }
         )
+    }
+
+    protected copyBackground(background: BrickMap) {
+        return background.map((row) => this.copyBackgroundRow(row));
+    }
+
+    protected copyBackgroundRow(row: number[]){
+        return [...row];
     }
 
     protected modifyBrickFunction(currentBrick: number, layerBrick:number){
