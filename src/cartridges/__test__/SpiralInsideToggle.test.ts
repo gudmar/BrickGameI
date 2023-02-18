@@ -33,7 +33,6 @@ describe('Testing SpiralInsideToggle', () => {
         expect(result).toEqual(expected);
     });
     it.only('Should fill first column and turn with run 21 tims', () => {
-        const input = BACKGROUND_0;
         const expected = COL_1_TURN;
         let result;
         for(let i = 0; i <= 20; i++) {

@@ -2,7 +2,6 @@ import { BrickMap, GameLogicArgs, KeyPress } from "../../types/types";
 import { GameLogic, getNextFigureOfSymbols, getDojoOfSymbols } from "../AbstractGameLogic";
 import { EMPTY_NEXT_FIGURE, TWO_IN_ONE } from "../constants";
 import { AnimatorSequencersApplier } from "../AnimationSequencer/AnimationSequencer";
-import { BarUpToggleLayer } from "../layers/toggle/BarUpToggleLayer";
 import { SpiralInsideToggle } from "../layers/toggle/SpiralInsideToggle";
 
 const getEmptyGameLogic = (): GameLogicArgs => (
@@ -24,12 +23,6 @@ const sequencerConfigurations = [
             repetitions: 200,
         },
     ],
-    // [
-    //     {
-    //         animators: [BarUpToggleLayer],
-    //         repetitions: 40,
-    //     },
-    // ]
 ]
 
 export class SpiralInside extends GameLogic {

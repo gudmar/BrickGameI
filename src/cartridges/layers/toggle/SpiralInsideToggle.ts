@@ -1,7 +1,6 @@
 import { BrickMap } from "../../../types/types";
-// import { getDojoOfSymbols } from "../../AbstractGameLogic";
 import { AbstractLayerBuilder } from "../abstractLayer";
-import { toggle, xor } from "./toggleFunction";
+import { xor } from "./toggleFunction";
 
 enum Direction { DOWN, RIGHT, UP, LEFT }
 interface Cord { x: number, y: number }
@@ -22,7 +21,6 @@ export class SpiralInsideToggle extends AbstractLayerBuilder {
     brickMap: BrickMap = getDojoOfSymbols(0);
     MAX_ITERATIONS: number = this.getMaxIterations();
     iterations: number = 0;
-    modifiedBricks: BrickMap = getDojoOfSymbols(0);
 
     public applyNextAnimationFrame(brickMap: BrickMap): void {
         this.brickMap = brickMap;
@@ -32,6 +30,7 @@ export class SpiralInsideToggle extends AbstractLayerBuilder {
         this.changeDirectionIfNeeded();
         this.terminate();
         this.mergeLayer();
+        this.terminate();
     }
 
     public getLayer() { return this.layer }
@@ -68,11 +67,7 @@ export class SpiralInsideToggle extends AbstractLayerBuilder {
     }
 
     private markPosition() {
-        // this.layer[this.y][this.x] = this.modifyBrickFunction(
-        //     this.brickMap[this.y][this.x], this.layer[this.y][this.x]
-        // )
         this.layer[this.y][this.x] = 1;
-        this.modifiedBricks[this.y][this.x] = 1;
         return 0
     }
 
@@ -95,28 +90,27 @@ export class SpiralInsideToggle extends AbstractLayerBuilder {
     }
 
     private shouldChangeDirectionToRight() {
-        console.log(this.y + 1 >= this.yLength, JSON.parse(JSON.stringify(this.modifiedBricks)))
         return (
             this.direction === Direction.DOWN && 
-            (this.y + 1 >= this.yLength || this.modifiedBricks[this.y + 1][this.x] === 1)
+            (this.y + 1 >= this.yLength || this.layer[this.y + 1][this.x] === 1)
         )
     }
     private shouldChangeDirectionToUp() {
         return (
             this.direction === Direction.RIGHT && 
-            (this.x + 1 >= this.xLength || this.modifiedBricks[this.y][this.x + 1] === 1)
+            (this.x + 1 >= this.xLength || this.layer[this.y][this.x + 1] === 1)
         )
     }
     private shouldChangeDirectionToLeft() {
         return (
             this.direction === Direction.UP && 
-            (this.y <= 0 || this.modifiedBricks[this.y - 1][this.x] === 1)
+            (this.y <= 0 || this.layer[this.y - 1][this.x] === 1)
         )
     }
     private shouldChangeDirectionToDown() {
         return (
             this.direction === Direction.LEFT && 
-            (this.x <= 0 || this.modifiedBricks[this.y][this.x - 1] === 1)
+            (this.x <= 0 || this.layer[this.y][this.x - 1] === 1)
         )
     }
     private terminate() {
@@ -124,7 +118,7 @@ export class SpiralInsideToggle extends AbstractLayerBuilder {
             this.startPosition = { x: 0, y: 0 }
             this.direction = Direction.DOWN;
             this.iterations = 0;
-            this.modifiedBricks = getDojoOfSymbols(0);
+            this.resetLayer();
         }
     }
     public reset(): void {
@@ -138,12 +132,6 @@ export class SpiralInsideToggle extends AbstractLayerBuilder {
     private get y() { return this.startPosition.y }
 
     protected modifyBrickFunction(currentBrick: number, layerBrick:number){
-        // if (currentBrick === 0 && layerBrick === 0 ) return 1;
-        // if (currentBrick === 0 && layerBrick === 1 ) return 1;
-        // if (currentBrick === 1 && layerBrick === 0 ) return 0;
-        // if (currentBrick === 1 && layerBrick === 1 ) return 
-        // return 1;
         return xor(currentBrick, layerBrick)
-        return toggle(currentBrick, layerBrick)
     }
 }

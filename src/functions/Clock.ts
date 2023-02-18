@@ -6,7 +6,7 @@ export class Clock {
     static instance: any; // [!!!] Type should be corrected
     private time!: number;
     private counter!: NodeJS.Timeout;
-    private INTERVAL: number = 100;
+    private INTERVAL: number = 10;
     protected callbacks!: {[key: string]: OnTick }
     constructor() {
         if (Clock.instance) return Clock.instance;
