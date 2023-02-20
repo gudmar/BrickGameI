@@ -2,21 +2,22 @@ import { useEffect, useState } from "react";
 import { Clock } from "../functions/Clock";
 import { Speed } from "../types/types";
 
-export const DIV_POINTS = {
-    _10: 10,
-    _9: 12,
-    _8: 14,
-    _7: 16,
-    _6: 18,
-    _5: 20,
-    _4: 23,
-    _3: 26,
-    _2: 28,
-    _1: 30,
-}
-
-export const divideTime = (time, speed) => {
-
+/**
+ * y = ax + b;
+ * speed = a * divider + b;
+ * 1 = 100a + b
+ * 10  10a + b
+ * divider = 110 - 10 * speed // where speed is {1, 2, ..., 10}
+ * @param time time from clock
+ * @param speed game current speed
+ */
+export const divideTime = (time: number, speed?: Speed) => {
+    if (speed !== undefined && speed > 10) throw new Error(`Speed value: ${speed} is grater then 10`);
+    if (speed !== undefined && speed < 1) throw new Error(`Speed value: ${speed} is less then 10`);
+    if (!speed) return time;
+    const divider = 110 - 10 * speed;
+    const result = Math.floor(time / divider);
+    return result;
 }
 
 export const useTimer = (speed?:Speed) => {

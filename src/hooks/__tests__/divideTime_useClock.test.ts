@@ -1,4 +1,4 @@
-import { divideTime, DIV_POINTS } from "../useClock";
+import { divideTime } from "../useClock";
 
 // speed = -0.1 divider + 11
 // -speed * 10 = divider - 110;
@@ -17,6 +17,13 @@ const BIG_TIME_TEST_CASES = [
 ]
 
 describe('Testing divideTime', () => {
+    BIG_TIME_TEST_CASES.forEach((testCase) => {
+        const {speed, time, expected} = testCase;
+        it(`Should return ${expected} in case speed is ${speed} and time is ${time}`,() => {
+            const result = divideTime(time, speed);
+            expect(result).toBe(expected);
+        })
+    })
     it('Should return not divided value if speed is not defined', () => {
         const time = 987;
         const speed = undefined;
@@ -27,6 +34,7 @@ describe('Testing divideTime', () => {
     it('Should thorw in case speed is < 1', () => {
         const throwingFunction = () => divideTime(299, 0);
         expect(throwingFunction).toThrow();
+        
     })
     it('Should throw in case speed is > 10', () => {
         const throwingFunction = () => divideTime(322, 11);
@@ -41,7 +49,7 @@ describe('Testing divideTime', () => {
         it(`Should return 0 if speed 10 and time 99`, () => {
             const time = 99; 
             const speed = 10;
-            const expected = 0;
+            const expected = 9;
             const result  = divideTime(time, speed);
             expect(result).toBe(expected);
         });
@@ -55,14 +63,14 @@ describe('Testing divideTime', () => {
         it(`Should return 1 if speed 10 and time 100`, () => {
             const time = 100; 
             const speed = 10;
-            const expected = 1;
+            const expected = 10;
             const result  = divideTime(time, speed);
             expect(result).toBe(expected);
         });
         it(`Should return 1 if speed 10 and time 109`, () => {
             const time = 109; 
             const speed = 10;
-            const expected = 1;
+            const expected = 10;
             const result  = divideTime(time, speed);
             expect(result).toBe(expected);
 
@@ -70,7 +78,7 @@ describe('Testing divideTime', () => {
         it(`Should return 9 if speed 10 and time 901`, () => {
             const time = 901; 
             const speed = 10;
-            const expected = 9;
+            const expected = 90;
             const result  = divideTime(time, speed);
             expect(result).toBe(expected);
         })
@@ -83,31 +91,31 @@ describe('Testing divideTime', () => {
             const result  = divideTime(time, speed);
             expect(result).toBe(expected);
         })
-        it('Should return 0 in case speed is 1 and time is 999', () => {
+        it('Should return 9 in case speed is 1 and time is 999', () => {
             const time = 999; 
             const speed = 1;
-            const expected = 0;
+            const expected = 9;
             const result  = divideTime(time, speed);
             expect(result).toBe(expected);
         })
-        it('Should return 1 in case speed is 1 and time is 1000', () => {
+        it('Should return 10 in case speed is 1 and time is 1000', () => {
             const time = 1000; 
             const speed = 1;
-            const expected = 1;
+            const expected = 10;
             const result  = divideTime(time, speed);
             expect(result).toBe(expected);
         });
-        it('Should return 1 in case speed is 1 and time is 1999', () => {
+        it('Should return 19 in case speed is 1 and time is 1999', () => {
             const time = 1999; 
             const speed = 1;
-            const expected = 1;
+            const expected = 19;
             const result  = divideTime(time, speed);
             expect(result).toBe(expected);
         })
-        it('Should return 10 in case speed is 1 and time is 10000', () => {
+        it('Should return 100 in case speed is 1 and time is 10000', () => {
             const time = 10000; 
             const speed = 1;
-            const expected = 10;
+            const expected = 100;
             const result  = divideTime(time, speed);
             expect(result).toBe(expected);
         })
