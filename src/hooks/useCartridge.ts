@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTimer } from './useClock'
 import { TestCartridge } from '../cartridges/test'
-import { GameState } from '../types/types';
+import { GameState, OneToTen } from '../types/types';
 import { getNextFigureOfSymbols, getDojoOfSymbols } from '../cartridges/AbstractGameLogic';
 import { LayersApplayer } from '../cartridges/layers/LayersApplayer';
 import { Animations } from '../cartridges/Animations/Animations';
@@ -48,8 +48,8 @@ const findCartridge = (cartridgeDescription: string) =>
 const initialGameState: GameState = {
     brickMap: getDojoOfSymbols(0),
     nextFigure: getNextFigureOfSymbols(0),
-    level: 0,
-    speed: 0,
+    level: 1,
+    speed: 1,
     score: 0,
     isPaused: false,
     isAnimating: false,
@@ -67,8 +67,6 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
 
     useEffect(() => {
         const nextState = cartridgeInstance.getNextStateOnTick(time);
-        // console.log(time)   TIME is not divided here
-        // if(time < 10) console.log(nextState)
         setGameState(nextState);
     }, [time, cartridgeInstance])
 

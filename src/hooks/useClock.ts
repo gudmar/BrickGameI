@@ -20,14 +20,23 @@ export const divideTime = (time: number, speed?: Speed) => {
     return result;
 }
 
+const setDividedTime = ( currentTime: number, speed: Speed | undefined, setTimeFunction: ((time: number) => void) ) => (clockTime: number) => {
+    if (currentTime !== clockTime) {
+        const dividedTime = divideTime(clockTime, speed);
+        setTimeFunction(dividedTime);
+    }
+}
+
 export const useTimer = (speed?:Speed) => {
-    const clock = new Clock();
+    const clock = new Clock(); // A singleton, will always be the same object, so no risk for deps
     const [time, setTime] = useState(clock.currentTime);
+    useEffect(() => console.log(speed), [])
     useEffect(()=>{
-        const removeEventListener = clock.addEventListener(setTime);
-        clock.addEventListener(setTime);
+        const setDividedTimeFunction = setDividedTime(time, speed, setTime);
+        const removeEventListener = clock.addEventListener(setDividedTimeFunction);
+        clock.addEventListener(setDividedTimeFunction);
         return removeEventListener();
-    }, [])
-    return time;    
+    }, [time, speed, setTime, clock])
+    return time;  
 }
 

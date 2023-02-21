@@ -9,8 +9,8 @@ import { cartridges } from '../../hooks/useCartridge'
 function BrickGame() {
   // const [currentGame, setCurrentGame] = useState(cartridges.LAYERS);
   const [currentGame, setCurrentGame] = useState(cartridges.ANIMATIONS);
-  const [speed, setSpeed]: [OneToTen, any] = useState(0);
-  const [level, setLevel]: [OneToTen, any] = useState(0);
+  const [speed, setSpeed]: [OneToTen, any] = useState(1);
+  const [level, setLevel]: [OneToTen, any] = useState(1);
     return (
         <div className="root">
             <Navigation />
