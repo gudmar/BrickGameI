@@ -12,10 +12,15 @@ const PAUSE_SHORT = 2;
 const SPIRAL = 200;
 
 const scheadule: ScheaduleProps[] = [
+    // {
+    //     background: TWO_IN_ONE,
+    //     repetitions: SPIRAL,
+    //     animationSequencer: SpiralInside,
+    // },
     {
         background: TWO_IN_ONE,
-        repetitions: SPIRAL,
-        animationSequencer: SpiralInside,
+        repetitions: 39,
+        animationSequencer: BottomTopLeftRight,
     },
 ]
 
