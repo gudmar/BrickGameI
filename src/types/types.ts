@@ -13,6 +13,7 @@ export interface ScheaduleProps {
     background: BrickMap,
     animationSequencer: any,
     repetitions: number,
+    tickDivider?: number,
     scheaduler?: any,
 }
 
