@@ -34,8 +34,8 @@ export const useTimer = (speed?:Speed) => {
     useEffect(()=>{
         const setDividedTimeFunction = setDividedTime(time, speed, setTime);
         const removeEventListener = clock.addEventListener(setDividedTimeFunction);
-        clock.addEventListener(setDividedTimeFunction);
-        return removeEventListener();
+        // const uuid = clock.addEventListener(setDividedTimeFunction);
+        return removeEventListener;
     }, [time, speed, setTime, clock])
     return time;  
 }

@@ -3,6 +3,7 @@ import { GameLogic, getNextFigureOfSymbols, getDojoOfSymbols } from "../Abstract
 import { EMPTY_NEXT_FIGURE, TWO_IN_ONE } from "../constants";
 import { AnimatorSequencersApplier } from "../AnimationSequencer/AnimationSequencer";
 import { SpiralInsideToggle } from "../layers/toggle/SpiralInsideToggle";
+import { AnimationTemplate } from "./AnimationTemplate";
 
 const getEmptyGameLogic = (): GameLogicArgs => (
     {
@@ -24,6 +25,21 @@ const sequencerConfigurations = [
         },
     ],
 ]
+
+// class SpiralInside extends AnimationTemplate{
+//     constructor() {
+//         if (SpiralInside.instance !== undefined) return SpiralInside.instance;
+//         super();
+//         SpiralInside.instance = this;
+//         return SpiralInside.instance;
+//     }
+//     protected sequencerConfigurations = sequencerConfigurations;
+//     protected background = TWO_IN_ONE;
+// }
+
+// console.dir(SpiralInside)
+
+// export { SpiralInside };
 
 export class SpiralInside extends GameLogic {
     static instance: any;
