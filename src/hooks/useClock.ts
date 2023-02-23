@@ -30,7 +30,6 @@ const setDividedTime = ( currentTime: number, speed: Speed | undefined, setTimeF
 export const useTimer = (speed?:Speed) => {
     const clock = new Clock(); // A singleton, will always be the same object, so no risk for deps
     const [time, setTime] = useState(clock.currentTime);
-    useEffect(() => console.log(speed), [])
     useEffect(()=>{
         const setDividedTimeFunction = setDividedTime(time, speed, setTime);
         const removeEventListener = clock.addEventListener(setDividedTimeFunction);
