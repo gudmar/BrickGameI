@@ -11,20 +11,35 @@ const PAUSE_LONG = 5;
 const PAUSE_SHORT = 2;
 const SPIRAL = 200;
 
-const scheadule: ScheaduleProps[] = [
+const __________scheadule: ScheaduleProps[] = [
     // {
     //     background: TWO_IN_ONE,
     //     repetitions: SPIRAL,
     //     animationSequencer: SpiralInside,
     // },
+    // {
+    //     background: TWO_IN_ONE,
+    //     repetitions: 39,
+    //     animationSequencer: BottomTopLeftRight,
+    // },
     {
         background: TWO_IN_ONE,
-        repetitions: 39,
-        animationSequencer: BottomTopLeftRight,
+        repetitions: PAUSE_LONG,
+        animationSequencer: PauseWhiteAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: PAUSE_LONG,
+        animationSequencer: PauseBlackAnimation,
     },
 ]
 
-const _scheadule: ScheaduleProps[] = [
+const scheadule: ScheaduleProps[] = [
+    {
+        background: TWO_IN_ONE,
+        repetitions: SPIRAL,
+        animationSequencer: SpiralInside,
+    },
     {
         background: TWO_IN_ONE,
         repetitions: 39,
