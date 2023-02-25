@@ -5,36 +5,39 @@ import { EMPTY_NEXT_FIGURE, TWO_IN_ONE } from "../constants";
 import { BottomTopLeftRight } from "./BottomTopLeftRight";
 import { PauseBlackAnimation } from "./PauseBlackAnimation";
 import { PauseWhiteAnimation } from "./PauseWhiteAnimation";
+import { RandomPixelsAnimation } from "./RandomPixelsAnimation";
 import { SpiralInside } from "./SpiraleInside";
 
 const PAUSE_LONG = 5;
 const PAUSE_SHORT = 2;
 const SPIRAL = 200;
 
-const __________scheadule: ScheaduleProps[] = [
+const ____scheadule: ScheaduleProps[] = [
+    {
+        background: TWO_IN_ONE,
+        repetitions: 200,
+        animationSequencer: RandomPixelsAnimation,
+    },
+
     // {
     //     background: TWO_IN_ONE,
-    //     repetitions: SPIRAL,
-    //     animationSequencer: SpiralInside,
+    //     repetitions: PAUSE_LONG,
+    //     animationSequencer: PauseWhiteAnimation,
     // },
     // {
     //     background: TWO_IN_ONE,
-    //     repetitions: 39,
-    //     animationSequencer: BottomTopLeftRight,
+    //     repetitions: PAUSE_LONG,
+    //     animationSequencer: PauseBlackAnimation,
     // },
-    {
-        background: TWO_IN_ONE,
-        repetitions: PAUSE_LONG,
-        animationSequencer: PauseWhiteAnimation,
-    },
-    {
-        background: TWO_IN_ONE,
-        repetitions: PAUSE_LONG,
-        animationSequencer: PauseBlackAnimation,
-    },
 ]
 
 const scheadule: ScheaduleProps[] = [
+    {
+        background: TWO_IN_ONE,
+        repetitions: 200,
+        animationSequencer: RandomPixelsAnimation,
+        tickDivider: 3,
+    },
     {
         background: TWO_IN_ONE,
         repetitions: SPIRAL,
