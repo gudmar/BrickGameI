@@ -1,7 +1,9 @@
+import { findAllByAltText } from "@testing-library/react";
+
 const KEYDOWN = 'keydown';
 
 interface Subscribtion {
-    id: string, eventType: string, callback: (() => {}),
+    id: string, eventType: string, callback: (() => {}), typeModifier?: string,
 }
 
 interface Unsubscribtion {
@@ -90,11 +92,22 @@ const keyCodes = {
     // Can add more if needed
 }
 
+const errors = {
+    WRONG_MODIFIER: 'Given modification key not supported. Use one of: ctrl, Shift or alt',
+    WRONG_TYPE: 'Given type is not supported. Use one of KeyReader.keys'
+}
+
+interface PathCreationable {
+    eventType: string, id: string, root: any,
+}
+
 export class KeyReader {
     static instance: any;
     static keys = keyCodes;
+    private static errors = errors;
     holdReadingInputs = false;
     private _subscribtions: any = {};
+    private _subscribtionsCTRL: any = {};
     constructor() {
         if (KeyReader.instance) return KeyReader.instance;
         KeyReader.instance = this;
@@ -102,15 +115,43 @@ export class KeyReader {
     }
 
     public get subscribtions() { return this._subscribtions }
+    public get subscribtionsCTRL() { return this._subscribtionsCTRL }
 
-    private createPath(eventType: string, id: string):void{
-        if (!this._subscribtions[eventType]) this._subscribtions[eventType] = {};
-        if (!this._subscribtions[eventType][id]) this._subscribtions[eventType][id] = null;
+    private createPath({eventType, id, root}: PathCreationable):void{
+        if (!root[eventType]) root[eventType] = {};
+        if (!root[eventType][id]) root[eventType][id] = null;
     }
 
-    subscribe({ id, eventType, callback }: Subscribtion) {
-        this.createPath(eventType, id);
+    subscribe({ id, eventType, callback, typeModifier }: Subscribtion) {
+        this.throwIfTypeNotAllowed(eventType);
+        switch( typeModifier ){
+            case undefined: {
+                this.subscribeNoModifier({id, eventType, callback});
+                break;
+            }
+            case KeyReader.keys.CTRL: {
+                this.subscribeCTRL({id, eventType, callback});
+                break;
+            }
+            default: throw new Error(KeyReader.errors.WRONG_MODIFIER)
+        }
+    }
+
+    private throwIfTypeNotAllowed = (type:string) => {
+        const allowedTypes = Object.values(KeyReader.keys);
+        if (!allowedTypes.find(t => t === type)) {
+            throw new Error(KeyReader.errors.WRONG_TYPE)
+        }
+    }
+
+    private subscribeNoModifier({id, eventType, callback}: Subscribtion) {
+        this.createPath({ eventType, id, root: this._subscribtions });
         this._subscribtions[eventType][id] = callback;
+    }
+
+    private subscribeCTRL({id, eventType, callback}: Subscribtion) {
+        this.createPath({ eventType, id, root: this._subscribtionsCTRL });
+        this._subscribtionsCTRL[eventType][id] = callback;
     }
 
     unsubscribe({ id, eventType }: Unsubscribtion) {
