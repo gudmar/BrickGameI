@@ -101,6 +101,8 @@ export class KeyReader {
         window.addEventListener(KEYDOWN, this.onKeyDown)
     }
 
+    public get subscribtions() { return this._subscribtions }
+
     private createPath(eventType: string, id: string):void{
         if (!this._subscribtions[eventType]) this._subscribtions[eventType] = {};
         if (!this._subscribtions[eventType][id]) this._subscribtions[eventType][id] = null;
