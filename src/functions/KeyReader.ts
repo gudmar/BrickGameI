@@ -7,7 +7,7 @@ interface Subscribtion {
 }
 
 interface Unsubscribtion {
-    id: string, eventType: string,
+    id: string, eventType: string, typeModifier?: string
 }
 
 const keyCodes = {
@@ -92,7 +92,7 @@ const keyCodes = {
     // Can add more if needed
 }
 
-const errors = {
+export const errors = {
     WRONG_MODIFIER: 'Given modification key not supported. Use one of: ctrl, Shift or alt',
     WRONG_TYPE: 'Given type is not supported. Use one of KeyReader.keys'
 }
@@ -154,8 +154,20 @@ export class KeyReader {
         this._subscribtionsCTRL[eventType][id] = callback;
     }
 
-    unsubscribe({ id, eventType }: Unsubscribtion) {
-        delete this._subscribtions[eventType][id];
+    unsubscribe({ id, eventType, typeModifier }: Unsubscribtion) {
+        this.throwIfTypeNotAllowed(eventType);
+        switch(typeModifier){
+            case undefined: {
+                delete this._subscribtions[eventType][id];
+                break;
+            }
+            case KeyReader.keys.CTRL: {
+                delete this._subscribtionsCTRL[eventType][id];
+                break;
+            }
+            default: throw new Error(KeyReader.errors.WRONG_MODIFIER)
+        }
+        
     }
 
     hold() { this.holdReadingInputs = true; }

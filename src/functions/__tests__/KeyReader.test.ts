@@ -1,4 +1,4 @@
-import {KeyReader} from '../KeyReader.ts'
+import { KeyReader, errors } from '../KeyReader'
 
 describe('Testing KeyReader', () => {
     afterEach(() => { delete KeyReader.instance })
@@ -177,8 +177,8 @@ describe('Testing KeyReader', () => {
                 typeModifier: KeyReader.keys.CTRL,
                 callback: cb,
             })
-            expect(throwFunctionNoModifier).toThrow(KeyReader.errors.WRONG_TYPE);
-            expect(throwFunctionModifier).toThrow(KeyReader.errors.WRONG_TYPE);
+            expect(throwFunctionNoModifier).toThrow(errors.WRONG_TYPE);
+            expect(throwFunctionModifier).toThrow(errors.WRONG_TYPE);
         })
         it('Should throw a WRONG MODIFIER TYPE error in case some recepiant wants to subscribe to an event with type modifier other than CTRL, ALT or Shift', () => {
             const keyReader = new KeyReader();
@@ -190,20 +190,167 @@ describe('Testing KeyReader', () => {
                 typeModifier: KeyReader.keys.G,
                 callback: cb,
             })
-            expect(throwFunctionModifier).toThrow(KeyReader.errors.WRONG_MODIFIER);
+            expect(throwFunctionModifier).toThrow(errors.WRONG_MODIFIER);
         })
 
     })
     describe('Unsubscribtions', () => {
         it('Should unsubscribe from an A event in case mulple events and multiple users', () => {
+            const keyReader = new KeyReader();
+            const cb_1 = jest.fn();
+            const cb_2 = jest.fn();
+            const cb_3 = jest.fn();
+            const cb_4 = jest.fn();
+            const ID_1 = 'ID_1';
+            const ID_2 = 'ID_2';
+            const ID_3 = 'ID_3';
+            const ID_4 = 'ID_4';
+            keyReader.subscribe({
+                id:ID_1,
+                eventType: KeyReader.keys.A,
+                callback: cb_1,
+            });
+            keyReader.subscribe({
+                id:ID_2,
+                eventType: KeyReader.keys.A,
+                callback: cb_2,
+            });
+            keyReader.subscribe({
+                id:ID_3,
+                eventType: KeyReader.keys.RIGHT,
+                callback: cb_3,
+            });
+            keyReader.subscribe({
+                id:ID_4,
+                eventType: KeyReader.keys.UP,
+                callback: cb_4,
+            });
 
+            const expected = {
+                [KeyReader.keys.A]: {
+                    [ID_1]: cb_1,
+                    [ID_2]: cb_2,
+                },
+                [KeyReader.keys.RIGHT]: {
+                    [ID_3]: cb_3,
+                },
+                [KeyReader.keys.UP]: {
+                    [ID_4]: cb_4,
+                },
+            }
+            expect(keyReader.subscribtions).toEqual(expected);
+            const expectedAfterRemove = {
+                [KeyReader.keys.A]: {
+                    [ID_2]: cb_2,
+                },
+                [KeyReader.keys.RIGHT]: {
+                    [ID_3]: cb_3,
+                },
+                [KeyReader.keys.UP]: {
+                    [ID_4]: cb_4,
+                },
+            }
+            keyReader.unsubscribe({id:ID_1, eventType: KeyReader.keys.A})
+            expect(keyReader.subscribtions).toEqual(expectedAfterRemove);
         });
         it('Should unsubscribe from an A-ctrl event', () => {
+            const keyReader = new KeyReader();
+            const cb_1 = jest.fn();
+            const cb_2 = jest.fn();
+            const cb_3 = jest.fn();
+            const cb_4 = jest.fn();
+            const ID_1 = 'ID_1';
+            const ID_2 = 'ID_2';
+            const ID_3 = 'ID_3';
+            const ID_4 = 'ID_4';
+            keyReader.subscribe({
+                id:ID_1,
+                eventType: KeyReader.keys.A,
+                typeModifier: KeyReader.keys.CTRL,
+                callback: cb_1,
+            });
+            keyReader.subscribe({
+                id:ID_2,
+                eventType: KeyReader.keys.A,
+                typeModifier: KeyReader.keys.CTRL,
+                callback: cb_2,
+            });
+            keyReader.subscribe({
+                id:ID_3,
+                eventType: KeyReader.keys.RIGHT,
+                typeModifier: KeyReader.keys.CTRL,
+                callback: cb_3,
+            });
+            keyReader.subscribe({
+                id:ID_4,
+                eventType: KeyReader.keys.UP,
+                typeModifier: KeyReader.keys.CTRL,
+                callback: cb_4,
+            });
 
+            const expected = {
+                [KeyReader.keys.A]: {
+                    [ID_1]: cb_1,
+                    [ID_2]: cb_2,
+                },
+                [KeyReader.keys.RIGHT]: {
+                    [ID_3]: cb_3,
+                },
+                [KeyReader.keys.UP]: {
+                    [ID_4]: cb_4,
+                },
+            }
+            expect(keyReader.subscribtionsCTRL).toEqual(expected);
+            const expectedAfterRemove = {
+                [KeyReader.keys.A]: {
+                    [ID_2]: cb_2,
+                },
+                [KeyReader.keys.RIGHT]: {
+                    [ID_3]: cb_3,
+                },
+                [KeyReader.keys.UP]: {
+                    [ID_4]: cb_4,
+                },
+            }
+            keyReader.unsubscribe({id:ID_1, eventType: KeyReader.keys.A, typeModifier: KeyReader.keys.CTRL})
+            expect(keyReader.subscribtionsCTRL).toEqual(expectedAfterRemove);
         })
-        it('Should throw a NO_SUCH_EVENT exception in case recepiant wants to unsubscribe from a not exisitng event', () => {
-
-        }) 
+        it('Should throw a WRONG EVENT TYPE exception in case recepiant wants to unsubscribe from a not exisitng event type', () => {
+            const keyReader = new KeyReader();
+            const cb_1 = jest.fn();
+            const ID_1 = 'ID_1';
+            keyReader.subscribe({
+                id:ID_1,
+                eventType: KeyReader.keys.A,
+                typeModifier: KeyReader.keys.CTRL,
+                callback: cb_1,
+            });
+            const throwingFunction = () => keyReader.unsubscribe({
+                eventType: 'NOT EXISTIONG TYPE',
+                id: ID_1,
+                typeModifier: KeyReader.keys.CTRL
+            })
+            keyReader.unsubscribe({id:ID_1, eventType: KeyReader.keys.A, typeModifier: KeyReader.keys.CTRL})
+            expect(throwingFunction).toThrow(errors.WRONG_TYPE);
+        });
+        it('Shoudl throw WRONG_MODIFIER_TYPE in case of unsubscribtion from not existing type modifier', () => {
+            const keyReader = new KeyReader();
+            const cb_1 = jest.fn();
+            const ID_1 = 'ID_1';
+            keyReader.subscribe({
+                id:ID_1,
+                eventType: KeyReader.keys.A,
+                typeModifier: KeyReader.keys.CTRL,
+                callback: cb_1,
+            });
+            const throwingFunction = () => keyReader.unsubscribe({
+                eventType: KeyReader.keys.A,
+                id: ID_1,
+                typeModifier: 'Not existing modifier'
+            })
+            keyReader.unsubscribe({id:ID_1, eventType: KeyReader.keys.A, typeModifier: KeyReader.keys.CTRL})
+            expect(throwingFunction).toThrow(errors.WRONG_MODIFIER);
+        })
     })
     describe('Firing events', () => {
         it('Should trigger all functions related to an A event, not touching functions related to B event, not touching functions related to CTRL-A event', () => {
