@@ -8,40 +8,100 @@ import { PauseWhiteAnimation } from "./PauseWhiteAnimation";
 import { RandomPixelsAnimation } from "./RandomPixelsAnimation";
 import { SpiralInside } from "./SpiraleInside";
 
-const PAUSE_LONG = 5;
-const PAUSE_SHORT = 2;
-const SPIRAL = 200;
-
-const ____scheadule: ScheaduleProps[] = [
-    {
-        background: TWO_IN_ONE,
-        repetitions: 200,
-        animationSequencer: RandomPixelsAnimation,
-    },
-
-    // {
-    //     background: TWO_IN_ONE,
-    //     repetitions: PAUSE_LONG,
-    //     animationSequencer: PauseWhiteAnimation,
-    // },
-    // {
-    //     background: TWO_IN_ONE,
-    //     repetitions: PAUSE_LONG,
-    //     animationSequencer: PauseBlackAnimation,
-    // },
-]
+const PAUSE_LONG_REPETITIONS = 5;
+const PAUSE_SHORT_REPETITIONS = 2;
+const SPIRAL = 400;
+const PAUSE_SHORT_DIVIDER = 5;
+const PAUSE_LONG_DIVIDER = 10;
 
 const scheadule: ScheaduleProps[] = [
     {
         background: TWO_IN_ONE,
-        repetitions: 200,
-        animationSequencer: RandomPixelsAnimation,
-        tickDivider: 3,
+        repetitions: SPIRAL,
+        animationSequencer: SpiralInside,
     },
     {
         background: TWO_IN_ONE,
-        repetitions: SPIRAL,
-        animationSequencer: SpiralInside,
+        repetitions: 400,
+        animationSequencer: RandomPixelsAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: PAUSE_LONG_REPETITIONS,
+        animationSequencer: PauseWhiteAnimation,
+        tickDivider: PAUSE_LONG_DIVIDER,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: PAUSE_LONG_REPETITIONS,
+        animationSequencer: PauseWhiteAnimation,
+        tickDivider: PAUSE_LONG_DIVIDER,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: PAUSE_LONG_REPETITIONS,
+        animationSequencer: PauseBlackAnimation,
+        tickDivider: PAUSE_LONG_DIVIDER,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: PAUSE_LONG_REPETITIONS,
+        animationSequencer: PauseWhiteAnimation,
+        tickDivider: PAUSE_LONG_DIVIDER,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: PAUSE_LONG_REPETITIONS,
+        animationSequencer: PauseBlackAnimation,
+        tickDivider: PAUSE_LONG_DIVIDER,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: PAUSE_SHORT_REPETITIONS,
+        tickDivider: PAUSE_SHORT_DIVIDER,
+        animationSequencer: PauseWhiteAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: PAUSE_SHORT_REPETITIONS,
+        tickDivider: PAUSE_SHORT_DIVIDER,
+        animationSequencer: PauseBlackAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: PAUSE_SHORT_REPETITIONS,
+        tickDivider: PAUSE_SHORT_DIVIDER,
+        animationSequencer: PauseWhiteAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: PAUSE_SHORT_REPETITIONS,
+        tickDivider: PAUSE_SHORT_DIVIDER,
+        animationSequencer: PauseBlackAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: PAUSE_SHORT_REPETITIONS,
+        tickDivider: PAUSE_SHORT_DIVIDER,
+        animationSequencer: PauseWhiteAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: PAUSE_SHORT_REPETITIONS,
+        tickDivider: PAUSE_SHORT_DIVIDER,
+        animationSequencer: PauseBlackAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: PAUSE_SHORT_REPETITIONS,
+        tickDivider: PAUSE_SHORT_DIVIDER,
+        animationSequencer: PauseWhiteAnimation,
+    },
+    {
+        background: TWO_IN_ONE,
+        repetitions: PAUSE_SHORT_REPETITIONS,
+        tickDivider: PAUSE_SHORT_DIVIDER,
+        animationSequencer: PauseBlackAnimation,
     },
     {
         background: TWO_IN_ONE,
@@ -49,85 +109,6 @@ const scheadule: ScheaduleProps[] = [
         animationSequencer: BottomTopLeftRight,
         tickDivider: 10,
     },
-    {
-        background: TWO_IN_ONE,
-        repetitions: PAUSE_LONG,
-        animationSequencer: PauseWhiteAnimation,
-        tickDivider: 10,
-    },
-    {
-        background: TWO_IN_ONE,
-        repetitions: PAUSE_LONG,
-        animationSequencer: PauseBlackAnimation,
-        tickDivider: 10,
-    },
-    {
-        background: TWO_IN_ONE,
-        repetitions: PAUSE_LONG,
-        animationSequencer: PauseWhiteAnimation,
-        tickDivider: 10,
-    },
-    {
-        background: TWO_IN_ONE,
-        repetitions: PAUSE_LONG,
-        animationSequencer: PauseBlackAnimation,
-        tickDivider: 10,
-    },
-    {
-        background: TWO_IN_ONE,
-        repetitions: PAUSE_SHORT,
-        tickDivider: 5,
-        animationSequencer: PauseWhiteAnimation,
-    },
-    {
-        background: TWO_IN_ONE,
-        repetitions: PAUSE_SHORT,
-        tickDivider: 5,
-        animationSequencer: PauseBlackAnimation,
-    },
-    {
-        background: TWO_IN_ONE,
-        repetitions: PAUSE_SHORT,
-        tickDivider: 5,
-        animationSequencer: PauseWhiteAnimation,
-    },
-    {
-        background: TWO_IN_ONE,
-        repetitions: PAUSE_SHORT,
-        tickDivider: 5,
-        animationSequencer: PauseBlackAnimation,
-    },
-    {
-        background: TWO_IN_ONE,
-        repetitions: PAUSE_SHORT,
-        tickDivider: 5,
-        animationSequencer: PauseWhiteAnimation,
-    },
-    {
-        background: TWO_IN_ONE,
-        repetitions: PAUSE_SHORT,
-        tickDivider: 5,
-        animationSequencer: PauseBlackAnimation,
-    },
-    {
-        background: TWO_IN_ONE,
-        repetitions: PAUSE_SHORT,
-        tickDivider: 5,
-        animationSequencer: PauseWhiteAnimation,
-    },
-    {
-        background: TWO_IN_ONE,
-        repetitions: PAUSE_SHORT,
-        tickDivider: 5,
-        animationSequencer: PauseBlackAnimation,
-    },
-    {
-        background: TWO_IN_ONE,
-        repetitions: SPIRAL,
-        tickDivider: 5,
-        animationSequencer: SpiralInside,
-    },
-
 ]
 
 export class Animations extends GameLogic{

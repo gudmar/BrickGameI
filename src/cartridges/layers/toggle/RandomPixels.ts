@@ -1,7 +1,5 @@
 import { DisplayControllerForAnimations } from "../DisplayControllerForAnimations";
 
-enum Direction { DOWN, RIGHT, UP, LEFT }
-
 export class RandomPixels extends DisplayControllerForAnimations {
     constructor() {
         super(CommandMediator);
@@ -10,7 +8,6 @@ export class RandomPixels extends DisplayControllerForAnimations {
     move() {
         const moveMediator = new this.moveMediator(this);
         moveMediator.move();
-        console.log(this.iterations)
     }
 }
 
@@ -32,20 +29,6 @@ export class CommandMediator {
         }
     
     }
-
-    // getBricksCords() {
-    //     const nrOfRows = this.mediatedObject.brickMap.length;
-    //     const nrOfCols = this.mediatedObject.brickMap[0].length;
-    //     if ( (nrOfCols * nrOfRows) % this.NR_OF_BRICKS_IN_ONE_MOVE ) {
-    //         throw new Error('RandomPixeslsMediator: brick array size modulo nr of pixels in move error')
-    //     }
-    //     let cords:BrickCord[]|[] = [];
-    //     for(let i = 0; i < nrOfRows; i++) {
-    //         const row = this.getBrickRowCords(i, nrOfCols);
-    //         cords = [...cords, ...row]
-    //     }
-    //     return cords;
-    // }
 
     getBricksCords() {
         const result = this.mediatedObject.layer.flatMap((row: number[], index:number) => {
@@ -77,7 +60,6 @@ export class CommandMediator {
             const index = this.random(this.bricksCords.length);
             cords.push(this.bricksCords[index]);
             this.bricksCords.splice(index, 1);
-            // console.log(index, this.bricksCords)
         }
         return cords;
     }
@@ -87,7 +69,6 @@ export class CommandMediator {
     }
 
     move() {
-        // console.log(this.mediatedObject.isUndoMode, this.mediatedObject.iterations)
         this.mediatedObject.iterations = this.mediatedObject.isUndoMode ? 
             this.mediatedObject.iterations - this.NR_OF_BRICKS_IN_ONE_MOVE : 
             this.mediatedObject.iterations + this.NR_OF_BRICKS_IN_ONE_MOVE;
@@ -120,13 +101,11 @@ class ToggleRandomBricksCommand {
     }
 
     public execute() {
-        // console.log(this.cordsToModify)
         this.cordsToModify.forEach(cord => {
             this.animatedObject.layer[cord.row][cord.col] += 1;
         })
     }
     public undo() {
-        // console.log(this.cordsToModify)
         this.cordsToModify.forEach(cord => {
             this.animatedObject.layer[cord.row][cord.col] -= 1;
         })

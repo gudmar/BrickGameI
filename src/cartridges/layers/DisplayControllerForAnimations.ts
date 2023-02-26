@@ -32,11 +32,8 @@ export class DisplayControllerForAnimations extends AbstractLayerBuilder {
 
     public applyNextAnimationFrame(brickMap: BrickMap): void {
         this.brickMap = brickMap;
-        // this.MAX_ITERATIONS = this.getMaxIterations();
-        // console.log(this.brickMap.length, this.brickMap[0].length, this.brickMap.length * this.brickMap[0].length ,this.MAX_ITERATIONS)
         this.markPosition();
         this.move();
-        // if(this.iterations < 5) console.log(this.layer)
         this.mergeLayer();
         this.terminate();
     }

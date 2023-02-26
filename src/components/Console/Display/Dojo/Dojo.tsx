@@ -24,8 +24,7 @@ function Line ({ lineMap }: LineMap) {
 }
 
 function Dojo ({ brickMap }: DojoParams) {
-  // console.log(brickMap)
-  useEffect(()=>{console.log(brickMap)}, [])
+  // useEffect(()=>{console.log(brickMap)}, [])
     return (
       <>
         {brickMap.map((line) => (<Line lineMap={line} />))}
