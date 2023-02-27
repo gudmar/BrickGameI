@@ -354,7 +354,134 @@ describe('Testing KeyReader', () => {
     })
     describe('Firing events', () => {
         it('Should trigger all functions related to an A event, not touching functions related to B event, not touching functions related to CTRL-A event', () => {
-
+            const keyReader = new KeyReader();
+            const cb_1 = jest.fn();
+            const cb_2 = jest.fn();
+            const cb_3 = jest.fn();
+            const cb_4 = jest.fn();
+            const ID_1 = 'ID_1';
+            const ID_2 = 'ID_2';
+            const ID_3 = 'ID_3';
+            const ID_4 = 'ID_4';
+            keyReader.subscribe({
+                id:ID_1,
+                eventType: KeyReader.keys.A,
+                callback: cb_1,
+            });
+            keyReader.subscribe({
+                id:ID_2,
+                eventType: KeyReader.keys.B,
+                callback: cb_2,
+            });
+            keyReader.subscribe({
+                id:ID_3,
+                eventType: KeyReader.keys.A,
+                callback: cb_3,
+            });
+            keyReader.subscribe({
+                id:ID_4,
+                eventType: KeyReader.keys.D,
+                callback: cb_4,
+            });
+            keyReader.onKeyDown({
+                altKey: false,
+                ctrlKey: false,
+                key: KeyReader.keys.A,
+                repeat: false,
+                shiftKey: false,
+                preventDefault: () => {},
+            });
+            expect(cb_1).toHaveBeenCalled();
+            expect(cb_3).toHaveBeenCalled();
+        })
+        it('Should not call CTRL modified callbacks in case CTRL is not pressed', () => {
+            const keyReader = new KeyReader();
+            const cb_1 = jest.fn();
+            const cb_2 = jest.fn();
+            const cb_3 = jest.fn();
+            const cb_4 = jest.fn();
+            const ID_1 = 'ID_1';
+            const ID_2 = 'ID_2';
+            const ID_3 = 'ID_3';
+            const ID_4 = 'ID_4';
+            keyReader.subscribe({
+                id:ID_1,
+                eventType: KeyReader.keys.A,
+                callback: cb_1,
+                typeModifier: KeyReader.keys.CTRL,
+            });
+            keyReader.subscribe({
+                id:ID_2,
+                eventType: KeyReader.keys.B,
+                callback: cb_2,
+                typeModifier: KeyReader.keys.CTRL,
+            });
+            keyReader.subscribe({
+                id:ID_3,
+                eventType: KeyReader.keys.A,
+                callback: cb_3,
+            });
+            keyReader.subscribe({
+                id:ID_4,
+                eventType: KeyReader.keys.D,
+                callback: cb_4,
+            });
+            keyReader.onKeyDown({
+                altKey: false,
+                ctrlKey: false,
+                key: KeyReader.keys.A,
+                repeat: false,
+                shiftKey: false,
+                preventDefault: () => {},
+            });
+            expect(cb_1).not.toHaveBeenCalled();
+            expect(cb_2).not.toHaveBeenCalled();
+            expect(cb_3).toHaveBeenCalled();
+        })
+        it('Should call only CTRL modified callbacks in case CTRL is pressed', () => {
+            const keyReader = new KeyReader();
+            const cb_1 = jest.fn();
+            const cb_2 = jest.fn();
+            const cb_3 = jest.fn();
+            const cb_4 = jest.fn();
+            const ID_1 = 'ID_1';
+            const ID_2 = 'ID_2';
+            const ID_3 = 'ID_3';
+            const ID_4 = 'ID_4';
+            keyReader.subscribe({
+                id:ID_1,
+                eventType: KeyReader.keys.A,
+                callback: cb_1,
+                typeModifier: KeyReader.keys.CTRL,
+            });
+            keyReader.subscribe({
+                id:ID_2,
+                eventType: KeyReader.keys.B,
+                callback: cb_2,
+                typeModifier: KeyReader.keys.CTRL,
+            });
+            keyReader.subscribe({
+                id:ID_3,
+                eventType: KeyReader.keys.A,
+                callback: cb_3,
+            });
+            keyReader.subscribe({
+                id:ID_4,
+                eventType: KeyReader.keys.D,
+                callback: cb_4,
+            });
+            keyReader.onKeyDown({
+                altKey: false,
+                ctrlKey: true,
+                key: KeyReader.keys.A,
+                repeat: false,
+                shiftKey: false,
+                preventDefault: () => {},
+            });
+            expect(cb_1).toHaveBeenCalled();
+            expect(cb_2).not.toHaveBeenCalled();
+            expect(cb_3).not.toHaveBeenCalled();
+            expect(cb_4).not.toHaveBeenCalled();
         })
     })
     describe('Hold feature', () => {

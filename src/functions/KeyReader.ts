@@ -1,4 +1,5 @@
 import { findAllByAltText } from "@testing-library/react";
+/* eslint @typescript-eslint/consistent-type-assertions: "off" */
 
 const KEYDOWN = 'keydown';
 
@@ -94,7 +95,8 @@ const keyCodes = {
 
 export const errors = {
     WRONG_MODIFIER: 'Given modification key not supported. Use one of: ctrl, Shift or alt',
-    WRONG_TYPE: 'Given type is not supported. Use one of KeyReader.keys'
+    WRONG_TYPE: 'Given type is not supported. Use one of KeyReader.keys',
+    NOT_IMPLEMENTED: 'Not implemented'
 }
 
 interface PathCreationable {
@@ -178,11 +180,19 @@ export class KeyReader {
             altKey, ctrlKey, key, repeat, shiftKey, type
         } = event;
         event.preventDefault();
-        console.log(`[${event.key}]`);
-        if(event.key === ' ') console.log('SPACE')
-        // console.log('CTRL', event.ctrlKey)
-        console.log('CTRL', event)
+        if(altKey){throw new Error(errors.NOT_IMPLEMENTED)}
+        if(shiftKey){throw new Error(errors.NOT_IMPLEMENTED)}
+        if(ctrlKey){this.runCallbacks(this.subscribtionsCTRL, key)}
+        if (![altKey, shiftKey, ctrlKey].some((mutator) => mutator === true)) {
+            this.runCallbacks(this.subscribtions, key);
+        }
     };
+
+    runCallbacks(root:any, eventType:string){
+        if (!root[eventType]) return;
+        const callbacks = Object.values(root[eventType]);
+        callbacks.forEach( ( cb ) => { (cb as () => void)();} )
+    }
 
     removeKeyListener() {
         window.removeEventListener(KEYDOWN, this.onKeyDown);
