@@ -11,23 +11,18 @@ describe('Testing KeyReader', () => {
         expect(keyReader_1 === keyReader_3).toBeFalsy();
     });
     it('Should not create more than one event listerner on the window objet', () => {
-        // Call new KeyReader twice
-        // Subscribe a subscirber
-        // Create a mock function with counter
-        // Trigger key event
-        // See how many times function was invoked
+        const addListener = jest.fn();
+        global.window.addEventListener = addListener;
+        const keyReader1 = new KeyReader();
+        const keyReader2 = new KeyReader();
+        expect(addListener).toHaveBeenCalledTimes(1);
     });
     it('Should remove event listener when removeKeyListener called', () => {
-        // Call newKeyReader
-        // Subscribe to an keyEvent
-        // emulate key event,
-        // check if cb function was invoked,
-        // removeKeyListener
-        // emulate kye event again
-        // subscribe function should not be invoked
-        // subscribe one more time
-        // emulate key event one more time
-        // cb should be invoked
+        const removeListener = jest.fn();
+        global.window.removeEventListener = removeListener;
+        const keyReader = new KeyReader();
+        keyReader.removeKeyListener();
+        expect(removeListener).toHaveBeenCalled();
     })
     describe('Subscribtions', () => {
         it('Should subscribe to an event on "A" key', () => {
@@ -486,7 +481,79 @@ describe('Testing KeyReader', () => {
     })
     describe('Hold feature', () => {
         it('Should not trigger any event when A pressed, there are A subscribers but hold set to true', () => {
+            const keyReader = new KeyReader();
+            const cb_1 = jest.fn();
+            const cb_2 = jest.fn();
+            const cb_3 = jest.fn();
+            const cb_4 = jest.fn();
+            const ID_1 = 'ID_1';
+            const ID_2 = 'ID_2';
+            const ID_3 = 'ID_3';
+            const ID_4 = 'ID_4';
+            keyReader.subscribe({
+                id:ID_1,
+                eventType: KeyReader.keys.A,
+                callback: cb_1,
+                typeModifier: KeyReader.keys.CTRL,
+            });
+            keyReader.subscribe({
+                id:ID_2,
+                eventType: KeyReader.keys.B,
+                callback: cb_2,
+                typeModifier: KeyReader.keys.CTRL,
+            });
+            keyReader.subscribe({
+                id:ID_3,
+                eventType: KeyReader.keys.A,
+                callback: cb_3,
+            });
+            keyReader.subscribe({
+                id:ID_4,
+                eventType: KeyReader.keys.D,
+                callback: cb_4,
+            });
+            keyReader.onKeyDown({
+                altKey: false,
+                ctrlKey: false,
+                key: KeyReader.keys.A,
+                repeat: false,
+                shiftKey: false,
+                preventDefault: () => {},
+            });
+            expect(cb_1).not.toHaveBeenCalled();
+            expect(cb_2).not.toHaveBeenCalled();
+            expect(cb_3).toHaveBeenCalled();
+            expect(cb_4).not.toHaveBeenCalled();
+            jest.clearAllMocks();
+            keyReader.hold();
+            keyReader.onKeyDown({
+                altKey: false,
+                ctrlKey: false,
+                key: KeyReader.keys.A,
+                repeat: false,
+                shiftKey: false,
+                preventDefault: () => {},
+            });
+            expect(cb_1).not.toHaveBeenCalled();
+            expect(cb_2).not.toHaveBeenCalled();
+            expect(cb_3).not.toHaveBeenCalled();
+            expect(cb_4).not.toHaveBeenCalled();
+
+            keyReader.resume();
+            keyReader.onKeyDown({
+                altKey: false,
+                ctrlKey: false,
+                key: KeyReader.keys.A,
+                repeat: false,
+                shiftKey: false,
+                preventDefault: () => {},
+            });
+            expect(cb_1).not.toHaveBeenCalled();
+            expect(cb_2).not.toHaveBeenCalled();
+            expect(cb_3).toHaveBeenCalled();
+            expect(cb_4).not.toHaveBeenCalled();
 
         })
     })
 })
+// });

@@ -169,13 +169,13 @@ export class KeyReader {
             }
             default: throw new Error(KeyReader.errors.WRONG_MODIFIER)
         }
-        
     }
 
     hold() { this.holdReadingInputs = true; }
     resume() { this.holdReadingInputs = false; }
 
     onKeyDown(event:any) {
+        if (this.holdReadingInputs) return;
         const {
             altKey, ctrlKey, key, repeat, shiftKey, type
         } = event;
