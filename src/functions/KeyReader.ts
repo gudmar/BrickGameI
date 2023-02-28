@@ -113,7 +113,7 @@ export class KeyReader {
     constructor() {
         if (KeyReader.instance) return KeyReader.instance;
         KeyReader.instance = this;
-        window.addEventListener(KEYDOWN, this.onKeyDown)
+        window.addEventListener(KEYDOWN, this.onKeyDown.bind(this))
     }
 
     public get subscribtions() { return this._subscribtions }
@@ -180,6 +180,7 @@ export class KeyReader {
             altKey, ctrlKey, key, repeat, shiftKey, type
         } = event;
         event.preventDefault();
+        console.log('Key pressed: ', key)
         if(altKey){throw new Error(errors.NOT_IMPLEMENTED)}
         if(shiftKey){throw new Error(errors.NOT_IMPLEMENTED)}
         if(ctrlKey){this.runCallbacks(this.subscribtionsCTRL, key)}

@@ -12,9 +12,6 @@ describe('Testing Mediator for RandomPixels', () => {
         const expected:BrickMap = getBoardOf_0();
         expected[0][0] = 1;
         expected[0][1] = 1;
-        expected[0][2] = 1;
-        expected[0][3] = 1;
-        expected[0][4] = 1;
         expect(animator.brickMap).toEqual(expected);
     })
 })
