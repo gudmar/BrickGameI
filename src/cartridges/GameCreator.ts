@@ -22,7 +22,7 @@ export class GameCreator extends GameLogic {
     constructor(nextStateCalculator: any) {
         if(GameCreator.instance) return GameCreator.instance;
         super();
-        this.nextStateCalculator = nextStateCalculator;
+        this.nextStateCalculator = new nextStateCalculator();
         GameCreator.instance = this;
         return this;
     }
