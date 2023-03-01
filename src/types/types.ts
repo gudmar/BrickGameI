@@ -38,11 +38,15 @@ export interface GameState {
     brickMap: BrickMap,
 }
 
-export interface KeyPress {
-    up: number,
-    down: number,
-    right: number,
-    left: number,
+// export interface KeyPress {
+//     up: number,
+//     down: number,
+//     right: number,
+//     left: number,
+// }
+
+export enum KeyPress {
+    Up, Down, Left, Right, Level, Speed, Pause, Rotate
 }
 
 export interface ConsoleArgs {

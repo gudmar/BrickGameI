@@ -15,6 +15,7 @@ export const useKeyboard = ({key, modifier, callback}:useKeyboardProps) => {
     const lock = () => {console.log('LOCK'); setLocked(true)};
     const unlock = () => {console.log('UNLOCK'); setLocked(false)};
     const id =useId();
+    const unsubscribe = () => keyReader.unsubscribe({id, eventType: key, typeModifier:modifier})
     useEffect(() => {
         if (locked) {
             keyReader.unsubscribe({id, eventType: key, typeModifier: modifier});
@@ -30,7 +31,10 @@ export const useKeyboard = ({key, modifier, callback}:useKeyboardProps) => {
             keyReader.unsubscribe({id, eventType: key, typeModifier: modifier});
         }
     },
+
     // eslint-disable-next-line
     [key, modifier, callback, id, locked])
-    return { lock, unlock }
+
+
+    return { lock, unlock, unsubscribe }
 }

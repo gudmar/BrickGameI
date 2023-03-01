@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTimer } from './useClock'
 import { TestCartridge } from '../cartridges/test'
-import { GameState, OneToTen } from '../types/types';
+import { GameState, KeyPress } from '../types/types';
 import { getNextFigureOfSymbols, getDojoOfSymbols } from '../cartridges/AbstractGameLogic';
 import { LayersApplayer } from '../cartridges/layers/LayersApplayer';
 import { Animations } from '../cartridges/Animations/Animations';
+import { keys, useKeyboard } from './useKeyboard';
 
 export const cartridges = {
     'TEST': "Test display",
@@ -64,6 +65,63 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
         );
     const [gameState, setGameState] = useState(initialGameState);
     const time = useTimer();
+
+    const handleMoveUp = () => {
+        const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Up);
+        setGameState(nextState);
+        return {};
+    }
+    const handleMoveDown = () => {
+        const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Down);
+        setGameState(nextState);
+        return {};
+    }
+
+    const handleMoveLeft = () => {
+        const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Left);
+        setGameState(nextState);
+        return {};
+    }
+    const handleMoveRight = () => {
+        const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Right);
+        setGameState(nextState);
+        return {};
+    }
+
+    const handleRotate = () => {
+        const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Rotate);
+        setGameState(nextState);
+        return {};
+    }
+    const handleLevelChange = () => {
+        const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Level);
+        setGameState(nextState);
+        return {};
+    }
+    const handleSpeedChange = () => {
+        const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Speed);
+        setGameState(nextState);
+        return {};
+    }
+    const handlePause = () => {
+        const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Pause);
+        setGameState(nextState);
+        return {};
+    }
+
+    useKeyboard({ key: keys.UP, callback: handleMoveUp })
+    useKeyboard({ key: keys.DOWN, callback: handleMoveDown })
+    useKeyboard({ key: keys.LEFT, callback: handleMoveLeft })
+    useKeyboard({ key: keys.RIGHT, callback: handleMoveRight })
+    useKeyboard({ key: keys.S, callback: handleSpeedChange })
+    useKeyboard({ key: keys.L, callback: handleLevelChange })
+    useKeyboard({ key: keys.P, callback: handlePause })
+    useKeyboard({ key: keys.SPACE, callback: handleRotate })
+
+
+
+
+
 
     useEffect(() => {
         const nextState = cartridgeInstance.getNextStateOnTick(time);
