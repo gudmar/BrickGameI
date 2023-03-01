@@ -19,8 +19,8 @@ export interface ScheaduleProps {
 
 export interface GameLogicArgs {
     score: number,
-    level: number,
-    speed: number,
+    level: OneToTen,
+    speed: OneToTen,
     // nextFigureFieldContent: [number[], number[], number[] ,number[]],
     nextFigure: nextFigurePreview,
     brickMap: BrickMap,

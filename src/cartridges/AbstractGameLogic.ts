@@ -1,4 +1,4 @@
-import {KeyPress, GameLogicArgs, Speed, DoWithBar, nextFigurePreview, BrickMap} from '../types/types'
+import {KeyPress, GameLogicArgs, Speed, DoWithBar, nextFigurePreview, BrickMap, OneToTen} from '../types/types'
 import { shouldGenerateNextMove } from '../functions/shouldGenerateNextMove';
 import { board, nextFigure } from '../constants/constants';
 import { INDEX_OUT_OF_RANGE, TYPE_MISMATCH } from './constants';
@@ -63,8 +63,8 @@ export class GameLogic {
     }
     protected EMPRY_BRICK_COORDINANTES: number[][] = getDojoOfSymbols(0);
     protected score: number = 0;
-    protected level: number = 0;
-    protected speed: number = 0;
+    protected level: OneToTen = 1;
+    protected speed: OneToTen = 1;
     protected nextFigureFieldContent = this.EMPTY_FIELD_CONTENT;
     protected paused: boolean = false;
     protected brickCoordinantes = this.EMPRY_BRICK_COORDINANTES
