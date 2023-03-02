@@ -8,8 +8,8 @@ import { BrickMapVisitor } from "./BrickMapVisitor";
 const getEmptyGameLogic = (): GameLogicArgs => (
     {
         score: 0,
-        level: 0,
-        speed: 0,
+        level: 1,
+        speed: 1,
         nextFigure : getNextFigureOfSymbols(0),
         brickMap: getDojoOfSymbols(0),//<BrickMap>getDojoOfSymbols(0),
         isPaused: false,
@@ -58,8 +58,8 @@ export class LayersApplayer extends GameLogic {
     getTwoInOne(): GameLogicArgs {
         return {
             score: 0,
-            level: 0,
-            speed: 0,
+            level: 1,
+            speed: 1,
             nextFigure: EMPTY_NEXT_FIGURE,
             brickMap: TWO_IN_ONE,
             isPaused: false,

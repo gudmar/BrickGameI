@@ -36,8 +36,8 @@ export class AnimationTemplate extends GameLogic {
     getTwoInOne(): GameLogicArgs {
         return {
             score: 0,
-            level: 0,
-            speed: 0,
+            level: 1,
+            speed: 1,
             nextFigure: EMPTY_NEXT_FIGURE,
             brickMap: this.background,
             isPaused: false,

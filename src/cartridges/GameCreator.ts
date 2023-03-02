@@ -3,13 +3,17 @@ import { GameLogic } from "./AbstractGameLogic";
 import { EMPTY_BOARD, EMPTY_NEXT_FIGURE, MAZE } from "./constants";
 import { xor } from "./layers/toggle/toggleFunction";
 
+export interface PawnCords {
+    row: number,
+    col: number,
+}
 
 export class GameCreator extends GameLogic {
 
     static instance: any;
     public NAME = "Maze mover";
     private background = MAZE;
-    private layer: BrickMap = EMPTY_BOARD;
+    private pawnLayer: BrickMap = EMPTY_BOARD;
     private brickMap = this.mergeLayer();
     level:OneToTen = 1;
     speed:OneToTen = 1;
@@ -18,6 +22,7 @@ export class GameCreator extends GameLogic {
     private isPaused: boolean = false;
     private isAnimating: boolean = false;
     private nextStateCalculator: any;    
+    private pawnCords: PawnCords = { row: 0, col: 0 };
 
     constructor(nextStateCalculator: any) {
         if(GameCreator.instance) return GameCreator.instance;
@@ -47,7 +52,7 @@ export class GameCreator extends GameLogic {
     }
 
     public getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {
-        const nextState = this.nextStateCalculator.getNextStateOnKeyPress(this.getGameState(), keyPresses)
+        const nextState = this.nextStateCalculator.getNextStateOnKeyPress(this, keyPresses)
         this.updateState(nextState);
         return nextState;
     }
@@ -66,7 +71,7 @@ export class GameCreator extends GameLogic {
     }
 
     private mergeLayer(): BrickMap {
-        const result = this.layer.map((layerRow: number[], index: number) => {
+        const result = this.pawnLayer.map((layerRow: number[], index: number) => {
             return this.mergeRow(layerRow, this.background[index])
         })
         return result;

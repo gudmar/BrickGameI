@@ -26,8 +26,8 @@ export class BarRight {
         setColumn(this.dojo, index);
         return {
             score: 0,
-            level: 0,
-            speed: 0,
+            level: 1,
+            speed: 1,
             nextFigure: getNextFigureOfSymbols(0),
             brickMap: this.dojo,
             isAnimating: false,

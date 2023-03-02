@@ -13,6 +13,8 @@ function BrickGame() {
   const [speed, setSpeed]: [OneToTen, any] = useState(1);
   const [level, setLevel]: [OneToTen, any] = useState(1);
 
+  
+
   useEffect(() => {
     new KeyReader();
   }, [])

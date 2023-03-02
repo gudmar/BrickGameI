@@ -14,8 +14,8 @@ export class BarUp {
         this.dojo[index] = getDojoBar(1);
         return {
             score: 0,
-            level: 0,
-            speed: 0,
+            level: 1,
+            speed: 1,
             nextFigure: getNextFigureOfSymbols(0),
             brickMap: this.dojo,
             isAnimating: false,

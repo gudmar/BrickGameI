@@ -6,11 +6,13 @@ import { getNextFigureOfSymbols, getDojoOfSymbols } from '../cartridges/Abstract
 import { LayersApplayer } from '../cartridges/layers/LayersApplayer';
 import { Animations } from '../cartridges/Animations/Animations';
 import { keys, useKeyboard } from './useKeyboard';
+import { MazeMoverDecorator } from '../cartridges/MovingKeys/MazeMover';
 
 export const cartridges = {
     'TEST': "Test display",
     'LAYERS': 'Animate layers',
-    'ANIMATIONS': 'Animations'
+    'ANIMATIONS': 'Animations',
+    'MAZE': 'Maze'
 }
 
 interface LogicDescriptor {
@@ -39,6 +41,11 @@ const cartridgeLibrary: Library = {
         description: cartridges.ANIMATIONS,
         show: true,
     },
+    [cartridges.MAZE]: {
+        logicHandler: MazeMoverDecorator,
+        description: cartridges.MAZE,
+        show: true,
+    }
 }
 
 const findCartridge = (cartridgeDescription: string) => 
