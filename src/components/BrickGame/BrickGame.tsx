@@ -9,7 +9,8 @@ import { KeyReader } from '../../functions/KeyReader';
 
 function BrickGame() {
   // const [currentGame, setCurrentGame] = useState(cartridges.LAYERS);
-  const [currentGame, setCurrentGame] = useState(cartridges.ANIMATIONS);
+  // const [currentGame, setCurrentGame] = useState(cartridges.ANIMATIONS);
+  const [currentGame, setCurrentGame] = useState(cartridges.MAZE);
   const [speed, setSpeed]: [OneToTen, any] = useState(1);
   const [level, setLevel]: [OneToTen, any] = useState(1);
 

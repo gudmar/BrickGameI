@@ -67,6 +67,7 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
     const cartridgeInstance = useMemo( 
             () => { 
                 const constructor = findCartridge(cartridgeToUseDescription)!.logicHandler
+                console.log('Construction ' + cartridgeToUseDescription)
                 return (new (constructor)()) 
             }, [cartridgeToUseDescription]
         );

@@ -44,11 +44,20 @@ class PawnMover {
         if (keyPresses === KeyPress.Up && pawnCordsCP.row <= 0) return;
         if (keyPresses === KeyPress.Left && pawnCordsCP.col <= 0) return;
         if (keyPresses === KeyPress.Right && pawnCordsCP.col >= nrOfCols - 1) return;
-        visitedObject.layer[pawnCordsCP.row][pawnCordsCP.col] = 0;
-        if (keyPresses === KeyPress.Down) visitedObject.layer[pawnCordsCP.row + 1][pawnCordsCP.col] = 1;
-        if (keyPresses === KeyPress.Up) visitedObject.layer[pawnCordsCP.row - 1][pawnCordsCP.col] = 1;
-        if (keyPresses === KeyPress.Left) visitedObject.layer[pawnCordsCP.row][pawnCordsCP.col - 1] = 1;
-        if (keyPresses === KeyPress.Right) visitedObject.layer[pawnCordsCP.row][pawnCordsCP.col + 1] = 1;
-        visitedObject.layer[pawnCordsCP.row][pawnCordsCP.col] = 0;
+        visitedObject.pawnLayer[pawnCordsCP.row][pawnCordsCP.col] = 0;
+        if (keyPresses === KeyPress.Down) this.move(visitedObject, 1, 0);
+        if (keyPresses === KeyPress.Up) this.move(visitedObject, -1, 0);
+        if (keyPresses === KeyPress.Left) this.move(visitedObject, 0, -1);
+        if (keyPresses === KeyPress.Right) this.move(visitedObject, 0, 1);
+        visitedObject.pawnLayer[pawnCordsCP.row][pawnCordsCP.col] = 0;
+    }
+
+    move(visitedObject: any, deltaRow:number, deltaCol:number) {
+        const newPawnCordsCP: PawnCords = {
+            col: visitedObject.pawnCords.col + deltaCol,
+            row: visitedObject.pawnCords.row + deltaRow,
+        };
+        visitedObject.pawnCords = newPawnCordsCP;
+        visitedObject.pawnLayer[newPawnCordsCP.row][newPawnCordsCP.col] = 1;
     }
 }

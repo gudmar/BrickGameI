@@ -46,28 +46,45 @@ export class GameCreator extends GameLogic {
 
     public getNextStateOnTick(): GameLogicArgs {
         // Blinking pawn
-        const nextState = this.nextStateCalculator.getNextStateOnTick(this.getGameState())
-        this.updateState(nextState);
-        return nextState;
+        this.nextStateCalculator.getNextStateOnTick(this.getGameState())
+        // this.updateState(nextState);
+        // return nextState;
+        return this.state;
     }
 
     public getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {
-        const nextState = this.nextStateCalculator.getNextStateOnKeyPress(this, keyPresses)
-        this.updateState(nextState);
-        return nextState;
+        // const nextState = this.nextStateCalculator.setVisitorToNextStateOnKeyPress(this, keyPresses)
+        this.nextStateCalculator.setVisitorToNextStateOnKeyPress(this, keyPresses)
+        // this.updateState(nextState);
+        // return nextState;
+        this.brickMap = this.mergeLayer()
+        console.log(this.brickMap)
+        return this.state;
     }
 
-    private updateState(nextState: GameLogicArgs) {
-        const {
-            brickMap, level, speed, nextFigure, score, isPaused, isAnimating
-        } = nextState;
-        this.brickMap = brickMap;
-        this.level = level;
-        this.speed = speed;
-        this.nextFigure = nextFigure;
-        this.score = score;
-        this.isPaused = isPaused;
-        this.isAnimating = isAnimating;
+    // private updateState(nextState: GameLogicArgs) {
+    //     const {
+    //         brickMap, level, speed, nextFigure, score, isPaused, isAnimating
+    //     } = nextState;
+    //     this.brickMap = brickMap;
+    //     this.level = level;
+    //     this.speed = speed;
+    //     this.nextFigure = nextFigure;
+    //     this.score = score;
+    //     this.isPaused = isPaused;
+    //     this.isAnimating = isAnimating;
+    // }
+
+    private get state() {
+        return {
+            brickMap: this.brickMap,
+            level: this.level,
+            speed: this.speed,
+            nextFigure: this.nextFigure,
+            score: this.score,
+            isPaused: this.isPaused,
+            isAnimating: this.isAnimating,
+        }
     }
 
     private mergeLayer(): BrickMap {
