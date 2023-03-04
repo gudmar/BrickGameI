@@ -1,6 +1,6 @@
 import { BrickMap, GameLogicArgs, KeyPress, OneToTen } from "../types/types";
 import { GameLogic } from "./AbstractGameLogic";
-import { EMPTY_BOARD, EMPTY_NEXT_FIGURE, MAZE } from "./constants";
+import { EMPTY_BOARD, EMPTY_NEXT_FIGURE } from "./constants";
 import { xor } from "./layers/toggle/toggleFunction";
 
 export interface PawnCords {
@@ -12,7 +12,7 @@ export class GameCreator extends GameLogic {
 
     static instance: any;
     public NAME = "Maze mover";
-    private background = MAZE;
+    private background = EMPTY_BOARD;
     private pawnLayer: BrickMap = EMPTY_BOARD;
     private brickMap = this.mergeLayer();
     level:OneToTen = 1;
@@ -24,10 +24,13 @@ export class GameCreator extends GameLogic {
     private nextStateCalculator: any;    
     private pawnCords: PawnCords = { row: 0, col: 0 };
 
-    constructor(nextStateCalculator: any) {
+    constructor(nextStateCalculator: any, background: BrickMap) {
         if(GameCreator.instance) return GameCreator.instance;
         super();
         this.nextStateCalculator = new nextStateCalculator();
+        this.background = background;
+        this.nextStateCalculator.initiate(this);
+        this.brickMap = this.mergeLayer();
         GameCreator.instance = this;
         return this;
     }
@@ -47,18 +50,12 @@ export class GameCreator extends GameLogic {
     public getNextStateOnTick(): GameLogicArgs {
         // Blinking pawn
         this.nextStateCalculator.getNextStateOnTick(this.getGameState())
-        // this.updateState(nextState);
-        // return nextState;
         return this.state;
     }
 
     public getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {
-        // const nextState = this.nextStateCalculator.setVisitorToNextStateOnKeyPress(this, keyPresses)
         this.nextStateCalculator.setVisitorToNextStateOnKeyPress(this, keyPresses)
-        // this.updateState(nextState);
-        // return nextState;
         this.brickMap = this.mergeLayer()
-        console.log(this.brickMap)
         return this.state;
     }
 

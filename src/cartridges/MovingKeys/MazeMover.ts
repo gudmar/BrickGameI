@@ -1,15 +1,23 @@
 import { KeyPress } from "../../types/types";
+import { MAZE } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
 
 export class MazeMoverDecorator {
     constructor() {
-        const decoratedClass = new GameCreator(PawnMover);
+        const decoratedClass = new GameCreator(PawnMover, MAZE);
         return decoratedClass;
     }
 }
 
 class PawnMover {
-    // NOT a pure functions, has own state
+
+    initiate(visitedObject:any){
+        visitedObject.pawnCords = {
+            col: 1, row: 0,
+        }
+        visitedObject.pawnLayer[0][1] = 1;
+    }
+
     getNextStateOnTick(currentGameState:any){
         return currentGameState;
     }
@@ -34,30 +42,49 @@ class PawnMover {
     }
 
     tryMoving( visitedObject: any, keyPresses: KeyPress ) {
-        const nrOfRows = visitedObject.pawnLayer.length;
-        const nrOfCols = visitedObject.pawnLayer[0].length;
-        const pawnCordsCP: PawnCords = {
-            col: visitedObject.pawnCords.col,
-            row: visitedObject.pawnCords.row,
-        };
-        if (keyPresses === KeyPress.Down && pawnCordsCP.row >= nrOfRows - 1) return;
-        if (keyPresses === KeyPress.Up && pawnCordsCP.row <= 0) return;
-        if (keyPresses === KeyPress.Left && pawnCordsCP.col <= 0) return;
-        if (keyPresses === KeyPress.Right && pawnCordsCP.col >= nrOfCols - 1) return;
-        visitedObject.pawnLayer[pawnCordsCP.row][pawnCordsCP.col] = 0;
+
         if (keyPresses === KeyPress.Down) this.move(visitedObject, 1, 0);
         if (keyPresses === KeyPress.Up) this.move(visitedObject, -1, 0);
         if (keyPresses === KeyPress.Left) this.move(visitedObject, 0, -1);
         if (keyPresses === KeyPress.Right) this.move(visitedObject, 0, 1);
-        visitedObject.pawnLayer[pawnCordsCP.row][pawnCordsCP.col] = 0;
     }
 
     move(visitedObject: any, deltaRow:number, deltaCol:number) {
-        const newPawnCordsCP: PawnCords = {
-            col: visitedObject.pawnCords.col + deltaCol,
-            row: visitedObject.pawnCords.row + deltaRow,
-        };
+        if (this.isFieldOutsideBoard(visitedObject, deltaRow, deltaCol)) return;
+        if (this.isFieldOccupied(visitedObject, deltaRow, deltaCol)) return;
+        const oldPawnCords: PawnCords = {
+            col: visitedObject.pawnCords.col,
+            row: visitedObject.pawnCords.row,
+        }
+        const newPawnCordsCP: PawnCords = this.getNewPawnCords(visitedObject, deltaRow, deltaCol);
+        visitedObject.pawnLayer[oldPawnCords.row][oldPawnCords.col] = 0;
         visitedObject.pawnCords = newPawnCordsCP;
         visitedObject.pawnLayer[newPawnCordsCP.row][newPawnCordsCP.col] = 1;
+        visitedObject.pawnLayer[oldPawnCords.row][oldPawnCords.col] = 0;
+    }
+
+    isFieldOutsideBoard(visitedObject: any, deltaRow:number, deltaCol:number) {
+        const newPawnCordsCP: PawnCords = this.getNewPawnCords(visitedObject, deltaRow, deltaCol);
+        const maxRow = visitedObject.pawnLayer.length - 1;
+        const maxCol = visitedObject.pawnLayer[0].length - 1;
+        if (newPawnCordsCP.col > maxCol) return true;
+        if (newPawnCordsCP.row > maxRow) return true;
+        if (newPawnCordsCP.col < 0) return true;
+        if (newPawnCordsCP.row < 0) return true;
+        return false;
+    }
+
+    isFieldOccupied(visitedObject: any, deltaRow:number, deltaCol:number) {
+        const newPawnCordsCP: PawnCords = this.getNewPawnCords(visitedObject, deltaRow, deltaCol);
+        const isOccupied = visitedObject.background[newPawnCordsCP.row][newPawnCordsCP.col];
+        console.log(isOccupied)
+        return isOccupied
+    }
+
+    getNewPawnCords(visitedObject:any, deltaRow:number, deltaCol:number) {
+        return {
+            col: visitedObject.pawnCords.col + deltaCol,
+            row: visitedObject.pawnCords.row + deltaRow,
+        }
     }
 }
