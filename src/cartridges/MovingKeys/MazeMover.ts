@@ -18,8 +18,13 @@ class PawnMover {
         visitedObject.pawnLayer[0][1] = 1;
     }
 
-    getNextStateOnTick(currentGameState:any){
-        return currentGameState;
+    setVisitorToNextStateOnTick(visitedObject:any){
+        const {col, row} = visitedObject.pawnCords;
+        if (visitedObject.pawnLayer[row][col] === 1) {
+            visitedObject.pawnLayer[row][col] = 0
+        } else {
+            visitedObject.pawnLayer[row][col] = 1;
+        }
     }
     setVisitorToNextStateOnKeyPress(visitedObject:any, keyPresses: KeyPress){
         this.tryMoving(visitedObject, keyPresses);
@@ -77,7 +82,6 @@ class PawnMover {
     isFieldOccupied(visitedObject: any, deltaRow:number, deltaCol:number) {
         const newPawnCordsCP: PawnCords = this.getNewPawnCords(visitedObject, deltaRow, deltaCol);
         const isOccupied = visitedObject.background[newPawnCordsCP.row][newPawnCordsCP.col];
-        console.log(isOccupied)
         return isOccupied
     }
 

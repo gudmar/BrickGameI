@@ -47,9 +47,12 @@ export class GameCreator extends GameLogic {
         }
     }
 
-    public getNextStateOnTick(): GameLogicArgs {
+    public getNextStateOnTick(time:number): GameLogicArgs {
         // Blinking pawn
-        this.nextStateCalculator.getNextStateOnTick(this.getGameState())
+        if ((time % 10) === 0) {
+            this.nextStateCalculator.setVisitorToNextStateOnTick(this)
+            this.brickMap = this.mergeLayer()
+        }
         return this.state;
     }
 
