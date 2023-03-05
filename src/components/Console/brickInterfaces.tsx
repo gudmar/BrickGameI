@@ -1,5 +1,5 @@
 import { GameLogic } from "../../cartridges/AbstractGameLogic";
-import { Level, nextFigurePreview, OneToTen, Speed } from "../../types/types";
+import { Level, Speed } from "../../types/types";
 
 export enum BrickMode {
     GameOn, GameOff, Sticker, NoBrick

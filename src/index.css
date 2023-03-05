@@ -11,6 +11,10 @@ body {
   --displayBackgroundColor: #98a37f;
   --consoleHousingHeight: 900px;
   --consoleHousingWidth : 500px;
+
+  --colorGameOn: #32391b;
+  --colorGameOff: #92997b;
+
   /* ===== CALCULATING DISPLAY SIZE ===== */
   /* display size is:
 

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useCartridge } from '../../../hooks/useCartridge';
 import { DisplayProps } from '../brickInterfaces';
 import Dojo from './Dojo/Dojo';
+import ScoreBar from './ScoreBar/__test__/ScoreBar';
 import styles from './styles.module.css';
 
 function Display(
@@ -18,6 +19,7 @@ function Display(
     isAnimating,
     isGameOver,
     isGameWon,
+    isGameStarted,
    } = useCartridge(currentGameDescription);
 
    useEffect(() => {
@@ -29,7 +31,19 @@ function Display(
           <div className={styles.dojoSection}>
             <Dojo brickMap = {brickMap}/>
           </div>
-          <div className={styles.scoreSection}></div>
+          <div className={styles.scoreSection}>
+            <ScoreBar
+              level={level}
+              score={score}
+              speed={speed}
+              isGameOver={isGameOver}
+              isGameWon={isGameWon}
+              isPaused={isPaused}
+              nextFigure={nextFigure}
+              isAnimating={isAnimating}
+              isGameStarted={isGameStarted}
+            />
+          </div>
         </div>
   );
 }

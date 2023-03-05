@@ -25,6 +25,8 @@ export class GameCreator extends GameLogic {
     private nextStateCalculator: any;    
     private judge:any;
     private isGameWon: boolean = false;
+    private isGameStarted: boolean = true; // false by default, 
+    // if !isGameStarted then animation is displayed
     private pawnCords: PawnCords = { row: 0, col: 0 };
 
     constructor(nextStateCalculator: any, judge: any, background: BrickMap) {
