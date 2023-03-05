@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useCartridge } from '../../../hooks/useCartridge';
 import { DisplayProps } from '../brickInterfaces';
 import Dojo from './Dojo/Dojo';
@@ -16,7 +16,13 @@ function Display(
     score,
     isPaused,
     isAnimating,
+    isGameOver,
+    isGameWon,
    } = useCartridge(currentGameDescription);
+
+   useEffect(() => {
+    console.log(`GAME STATE: score: ${score}, isGameOver: ${isGameOver}, isGameWon: ${isGameWon}`)
+   }, [score, isGameOver, isGameWon])
   
     return (
         <div className={styles.display}>

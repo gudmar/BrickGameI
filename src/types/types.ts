@@ -26,6 +26,8 @@ export interface GameLogicArgs {
     brickMap: BrickMap,
     isPaused: boolean,
     isAnimating: boolean,
+    isGameOver?: boolean,
+    isGameWon?: boolean,
 }
 
 export interface GameState {
@@ -33,9 +35,11 @@ export interface GameState {
     level: OneToTen,
     speed: OneToTen,
     score: number,
-    isPaused: false,
-    isAnimating: false,
+    isPaused: boolean,
+    isAnimating: boolean,
     brickMap: BrickMap,
+    isGameOver: boolean,
+    isGameWon?: boolean,
 }
 
 // export interface KeyPress {

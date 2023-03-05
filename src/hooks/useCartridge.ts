@@ -61,6 +61,7 @@ const initialGameState: GameState = {
     score: 0,
     isPaused: false,
     isAnimating: false,
+    isGameOver: false,
 }
 
 export const useCartridge = (cartridgeToUseDescription: string) => {

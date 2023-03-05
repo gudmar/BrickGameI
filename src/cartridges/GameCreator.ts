@@ -21,18 +21,26 @@ export class GameCreator extends GameLogic {
     score:number = 0;
     private isPaused: boolean = false;
     private isAnimating: boolean = false;
+    private isGameOver: boolean = false;
     private nextStateCalculator: any;    
+    private judge:any;
+    private isGameWon: boolean = false;
     private pawnCords: PawnCords = { row: 0, col: 0 };
 
-    constructor(nextStateCalculator: any, background: BrickMap) {
+    constructor(nextStateCalculator: any, judge: any, background: BrickMap) {
         if(GameCreator.instance) return GameCreator.instance;
         super();
         this.nextStateCalculator = new nextStateCalculator();
         this.background = background;
         this.nextStateCalculator.initiate(this);
         this.brickMap = this.mergeLayer();
+        this.judge = new judge();
         GameCreator.instance = this;
         return this;
+    }
+
+    public informJudge(information: string, payload?: any) {
+        this.judge.inform(this, information, payload);
     }
 
     private getGameState (): GameLogicArgs {
@@ -44,21 +52,25 @@ export class GameCreator extends GameLogic {
             score: this.score,
             isPaused: this.isPaused,
             isAnimating: this.isAnimating,
+            isGameOver: this.isGameOver = false,
+            isGameWon: this.isGameWon = false,
         }
     }
 
     public getNextStateOnTick(time:number): GameLogicArgs {
         // Blinking pawn
-        if ((time % 10) === 0) {
-            this.nextStateCalculator.setVisitorToNextStateOnTick(this)
-            this.brickMap = this.mergeLayer()
+        if (!this.isGameOver && !this.isGameWon){
+            this.nextStateCalculator.setVisitorToNextStateOnTick(this, time)
+            this.brickMap = this.mergeLayer();
         }
         return this.state;
     }
 
     public getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {
-        this.nextStateCalculator.setVisitorToNextStateOnKeyPress(this, keyPresses)
-        this.brickMap = this.mergeLayer()
+        if (!this.isGameOver && !this.isGameWon){
+            this.nextStateCalculator.setVisitorToNextStateOnKeyPress(this, keyPresses)
+            this.brickMap = this.mergeLayer()    
+        }
         return this.state;
     }
 
@@ -84,6 +96,8 @@ export class GameCreator extends GameLogic {
             score: this.score,
             isPaused: this.isPaused,
             isAnimating: this.isAnimating,
+            isGameOver: this.isGameOver,
+            isGameWon: this.isGameWon,
         }
     }
 

@@ -11,7 +11,7 @@ interface Unsubscribtion {
     id: string, eventType: string, typeModifier?: string
 }
 
-const keyCodes = {
+export const keyCodes = {
     UP: 'ArrowUp',
     DOWN: 'ArrowDown',
     LEFT: 'ArrowLeft',
@@ -110,8 +110,11 @@ export class KeyReader {
     holdReadingInputs = false;
     private _subscribtions: any = {};
     private _subscribtionsCTRL: any = {};
-    constructor() {
+    private notPrevented: string[] = [];
+
+    constructor(listOfNotPreventedDefaultBehavours?:string[]) {
         if (KeyReader.instance) return KeyReader.instance;
+        this.notPrevented = listOfNotPreventedDefaultBehavours ?? [];
         KeyReader.instance = this;
         window.addEventListener(KEYDOWN, this.onKeyDown.bind(this))
     }
@@ -179,7 +182,9 @@ export class KeyReader {
         const {
             altKey, ctrlKey, key, repeat, shiftKey, type
         } = event;
-        event.preventDefault();
+        if (!this.notPrevented.includes(key)){
+            event.preventDefault();
+        }
         console.log('Key pressed: ', key)
         if(altKey){throw new Error(errors.NOT_IMPLEMENTED)}
         if(shiftKey){throw new Error(errors.NOT_IMPLEMENTED)}
