@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DigitDisplayType } from "../../types/types";
+import { digitDisplaySymbols, DigitDisplayType } from "../../types/types";
 import styles from './styles.module.css';
 
 const names = {
@@ -19,6 +19,8 @@ const isOnFunction = (name: string, digit: DigitDisplayType) => {
 
 const getSegments = (digit:DigitDisplayType) => {
     switch(digit) {
+        case '' : return getSegmentsForNothing();
+        case '-': return getSegmentsForMinus();
         case '0': return getSegmentsFor0();
         case '1': return getSegmentsFor1();
         case '2': return getSegmentsFor2();
@@ -31,7 +33,8 @@ const getSegments = (digit:DigitDisplayType) => {
         case '9': return getSegmentsFor9();
     }
 }
-
+const getSegmentsForNothing = () => ([]);
+const getSegmentsForMinus = () => ([names.MIDDLE]);
 const getSegmentsFor0 = () => ([names.TOP, names.TOP_LEFT, names.TOP_RIGHT, names.DOWN, names.DOWN_LEFT, names.DOWN_RIGHT]);
 const getSegmentsFor1 = () => ([names.TOP_RIGHT, names.DOWN_RIGHT]);
 const getSegmentsFor2 = () => ([names.TOP, names.TOP_RIGHT, names.MIDDLE, names.DOWN_LEFT, names.DOWN]);
@@ -62,8 +65,14 @@ const Segment = ({name, digit} : {digit: DigitDisplayType, name: string}) => {
     )
 }
 
-export const Digit = ({digit}: {digit: DigitDisplayType}) => {
+const throwIfNotSupported = (digit: DigitDisplayType) => {
+    if (!digitDisplaySymbols.includes(digit)) {
+        throw new Error(`Symbol ${digit} not supported by a Digit component`)
+    }
+}
 
+export const Digit = ({digit}: {digit: DigitDisplayType}) => {
+    throwIfNotSupported(digit);
     return (
         <div className={styles.digitContainer}>
             <div className={styles.block}>

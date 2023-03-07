@@ -1,6 +1,7 @@
 import React from 'react';
 import { NextFigurePreview, OneToTen } from '../../../../../types/types';
 import { Digit } from '../../../../Digit/Digit';
+import { getDigits } from '../../../../Digit/Digits';
 import styles from './styles.module.css';
 
 interface ScoreBarProps {
@@ -24,6 +25,7 @@ function ScoreBar(
     if (!isGameStarted) return true;
     return false;
   }
+  const Segment = getDigits(3);
   
     return (
         <div className={styles.container}>
@@ -64,6 +66,7 @@ function ScoreBar(
           />
 
           <Digit digit={'9'}/>
+          <Segment nrToDisplay={-23} />
 
 
         </div>
