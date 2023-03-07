@@ -1,0 +1,43 @@
+.digitContainer {
+    background-color: var(--displayBackgroundColor);
+    width: 3rem;
+    height: 5rem;
+}
+
+.on {
+    background-color: var(--colorGameOn);
+}
+.off {
+    background-color: var(--colorGameOff);
+}
+
+.bar {
+
+}
+
+.block {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-areas: 
+    ". topBar ."
+    "leftTopBar . rightTopBar"
+    ". middleBar ."
+    "downLeftBar . downRightBar"
+    ". downBar .";
+    grid-template-columns: 1fr 5fr 1fr;
+    grid-template-rows: 1fr 5fr 1fr 5fr 1fr;
+}
+
+.topBar { grid-area: topBar; }
+.leftTopBar { grid-area: leftTopBar;}
+.rightTopBar { grid-area: rightTopBar; }
+.middleBar { grid-area: middleBar; }
+.downLeftBar { grid-area: downLeftBar;}
+.downRightBar { grid-area: downRightBar; }
+.downBar { grid-area: downBar; }
+
+
+.segment {
+    width: 100%;
+}

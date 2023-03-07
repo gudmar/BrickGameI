@@ -1,5 +1,6 @@
 import React from 'react';
 import { NextFigurePreview, OneToTen } from '../../../../../types/types';
+import { Digit } from '../../../../Digit/Digit';
 import styles from './styles.module.css';
 
 interface ScoreBarProps {
@@ -61,6 +62,8 @@ function ScoreBar(
             isVisible={!isGameStarted}
             isOff={shouldTurnOffScoreBar()}
           />
+
+          <Digit digit={'9'}/>
 
 
         </div>
