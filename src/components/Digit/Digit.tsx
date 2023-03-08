@@ -71,10 +71,10 @@ const throwIfNotSupported = (digit: DigitDisplayType) => {
     }
 }
 
-export const Digit = ({digit}: {digit: DigitDisplayType}) => {
+export const Digit = ({digit, large=false}: {digit: DigitDisplayType, large?:boolean}) => {
     throwIfNotSupported(digit);
     return (
-        <div className={styles.digitContainer}>
+        <div className={styles.digitContainer} style={ large ? {width:'2rem', height:'3rem'} : {}}>
             <div className={styles.block}>
                 <Segment name={names.TOP} digit = {digit} />
                 <Segment name={names.TOP_LEFT} digit = {digit} />

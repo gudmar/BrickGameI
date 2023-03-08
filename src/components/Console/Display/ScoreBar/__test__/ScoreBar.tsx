@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { NextFigurePreview, OneToTen } from '../../../../../types/types';
 import { Digit } from '../../../../Digit/Digit';
 import { getDigits } from '../../../../Digit/Digits';
@@ -25,7 +25,6 @@ function ScoreBar(
     if (!isGameStarted) return true;
     return false;
   }
-  const Segment = getDigits(3);
   
     return (
         <div className={styles.container}>
@@ -33,16 +32,19 @@ function ScoreBar(
             label='Score'
             value={score}
             isOff={shouldTurnOffScoreBar()}
+            nrOfDigits={5}
           />
           <GameAttribute
             label='Speed'
             value={speed}
             isOff={shouldTurnOffScoreBar()}
+            nrOfDigits={2}
           />
           <GameAttribute
             label='Level'
             value={level}
             isOff={shouldTurnOffScoreBar()}
+            nrOfDigits={2}
           />
           <Band
             label='PAUSED'
@@ -64,11 +66,6 @@ function ScoreBar(
             isVisible={!isGameStarted}
             isOff={shouldTurnOffScoreBar()}
           />
-
-          <Digit digit={'9'}/>
-          <Segment nrToDisplay={-23} />
-
-
         </div>
   );
 }
@@ -82,11 +79,13 @@ function Band({label, isVisible, isOff}: {isOff: boolean, label: string, isVisib
 
 }
 
-function GameAttribute({label, value, isOff}: {isOff: boolean, label:string, value: number}){
+function GameAttribute({label, value, isOff, nrOfDigits}: {nrOfDigits: number, isOff: boolean, label:string, value: number}){
+  const Segment = getDigits(nrOfDigits);
   return (
   <div className={styles.gameAttributeContainer}>
     <div className={`${isOff ? styles.hidden : styles.visible} ${styles.gameAttributeLabel}`}>{label}</div>
-    <div className={`${isOff ? styles.hidden : styles.visible} ${styles.gameAttributeValue}`}>{value}</div>
+    <Segment nrToDisplay={value} />
+    {/* <div className={`${isOff ? styles.hidden : styles.visible} ${styles.gameAttributeValue}`}>{value}</div> */}
   </div>
   )
 }

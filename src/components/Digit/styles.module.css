@@ -1,7 +1,10 @@
 .digitContainer {
+    --w: 0.7rem;
+    --h: 1.2rem;
+    --afterSize: calc( calc( calc(0.7rem / 8) * 1.5 ) * 1.41)
     background-color: var(--displayBackgroundColor);
-    width: 0.7rem;
-    height: 1.2rem;
+    width: var(--w);
+    height: var(--h);
     margin: 1px;
     /* width: 2rem;
     height: 3rem; */
