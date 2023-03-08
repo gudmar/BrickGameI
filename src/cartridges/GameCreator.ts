@@ -68,6 +68,15 @@ export class GameCreator extends GameLogic {
         return this.state;
     }
 
+    public getNextStateOnSpeedTick(time:number): GameLogicArgs {
+        // Faster game actions
+        if (!this.isGameOver && !this.isGameWon){
+            this.nextStateCalculator.setVisitorToNextStateOnSpeedTick(this, time)
+            this.brickMap = this.mergeLayer();
+        }
+        return this.state;
+    }
+
     public getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {
         if (!this.isGameOver && !this.isGameWon){
             this.nextStateCalculator.setVisitorToNextStateOnKeyPress(this, keyPresses)
@@ -75,6 +84,9 @@ export class GameCreator extends GameLogic {
         }
         return this.state;
     }
+
+    public increaseSpeed() { this.speed > 9 ? this.speed = 1 : this.speed++; console.log('speed', this.speed) }
+    public increaseLevel() { this.level > 9 ? this.level = 1 : this.level++ }
 
     // private updateState(nextState: GameLogicArgs) {
     //     const {

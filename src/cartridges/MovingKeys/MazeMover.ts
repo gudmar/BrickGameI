@@ -56,26 +56,14 @@ class PawnMover {
                 visitedObject.pawnLayer[row][col] = 1;
             }    
         }
-        if (time % 1000 === 0) visitedObject.informJudge(gameEvents.TICK)
     }
+
+    setVisitorToNextStateOnSpeedTick(visitedObject:any, time:number){
+        visitedObject.informJudge(gameEvents.TICK)
+    }
+
     setVisitorToNextStateOnKeyPress(visitedObject:any, keyPresses: KeyPress){
         this.tryMoving(visitedObject, keyPresses);
-        this.trySpeedingUp(visitedObject, keyPresses);
-        this.tryLevelUp(visitedObject, keyPresses);
-    }
-
-    trySpeedingUp(visitedObject: any, keyPresses: KeyPress) {
-        if (keyPresses !== KeyPress.Speed) return;
-        const currentSpeed = visitedObject.speed;
-        if (currentSpeed < 10) visitedObject.speed += 1;
-        if (currentSpeed >= 10) visitedObject.speed = 0;
-    }
-
-    tryLevelUp(visitedObject: any, keyPresses: KeyPress) {
-        if (keyPresses !== KeyPress.Level) return;
-        const currentLevel = visitedObject.level;
-        if (currentLevel < 10) visitedObject.level += 1;
-        if (currentLevel >= 10) visitedObject.speed = 0;
     }
 
     tryMoving( visitedObject: any, keyPresses: KeyPress ) {
@@ -84,6 +72,8 @@ class PawnMover {
         if (keyPresses === KeyPress.Up) this.move(visitedObject, -1, 0);
         if (keyPresses === KeyPress.Left) this.move(visitedObject, 0, -1);
         if (keyPresses === KeyPress.Right) this.move(visitedObject, 0, 1);
+        if (keyPresses === KeyPress.Speed) {visitedObject.increaseSpeed()}
+        if (keyPresses === KeyPress.Level) {visitedObject.increaseLevel()}
     }
 
     move(visitedObject: any, deltaRow:number, deltaCol:number) {

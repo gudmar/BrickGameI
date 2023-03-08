@@ -73,7 +73,9 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
             }, [cartridgeToUseDescription]
         );
     const [gameState, setGameState] = useState(initialGameState);
-    const time = useTimer();
+    const timeEveryTick = useTimer();
+    const timeSpeed = useTimer(gameState.speed);
+
 
     const handleMoveUp = () => {
         const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Up);
@@ -133,9 +135,15 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
 
 
     useEffect(() => {
-        const nextState = cartridgeInstance.getNextStateOnTick(time);
+        const nextState = cartridgeInstance.getNextStateOnTick(timeEveryTick);
         setGameState(nextState);
-    }, [time, cartridgeInstance])
+    }, [timeEveryTick, cartridgeInstance])
+
+    useEffect(() => {
+        const nextState = cartridgeInstance.getNextStateOnSpeedTick(timeSpeed);
+        setGameState(nextState);
+    }, [timeSpeed, cartridgeInstance])
+
 
     return gameState;
 }
