@@ -55,6 +55,12 @@ export interface GameState {
 //     left: number,
 // }
 
+export type NextFigure = (0 | 1)[][];
+
+export interface FigureHandlePoint {
+    row: number, col: number,
+};
+
 export enum KeyPress {
     Up, Down, Left, Right, Level, Speed, Pause, Rotate, Start
 }

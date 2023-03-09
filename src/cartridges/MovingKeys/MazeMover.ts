@@ -44,7 +44,7 @@ class PawnMover {
             col: 1, row: 0,
         }
         visitedObject.pawnLayer[0][1] = 1;
-        visitedObject.score = 1000;
+        visitedObject.score = 2000;
     }
 
     restart(visitedObject:any){
