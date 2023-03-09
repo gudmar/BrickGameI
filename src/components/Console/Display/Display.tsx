@@ -23,7 +23,7 @@ function Display(
    } = useCartridge(currentGameDescription);
 
    useEffect(() => {
-    console.log(`GAME STATE: score: ${score}, isGameOver: ${isGameOver}, isGameWon: ${isGameWon}`)
+    console.log(`GAME STATE: score: ${score}, isGameOver: ${isGameOver}, isGameWon: ${isGameWon}, isGameStarted, ${isGameStarted}`)
    }, [score, isGameOver, isGameWon])
   
     return (

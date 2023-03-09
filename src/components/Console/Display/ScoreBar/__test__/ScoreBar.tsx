@@ -18,11 +18,11 @@ interface ScoreBarProps {
 
 function ScoreBar(
   {
-    score, level, speed, isGameOver, isGameWon, isGameStarted, isAnimating
+    score, level, speed, isGameOver, isGameWon, isGameStarted, isAnimating, isPaused
   }: ScoreBarProps) {
   const shouldTurnOffScoreBar = () => {
     if (isAnimating) return true;
-    if (!isGameStarted) return true;
+    // if (!isGameStarted) return true;
     return false;
   }
   
@@ -48,7 +48,7 @@ function ScoreBar(
           />
           <Band
             label='PAUSED'
-            isVisible={isGameOver}
+            isVisible={isPaused}
             isOff={shouldTurnOffScoreBar()}
           />
           <Band

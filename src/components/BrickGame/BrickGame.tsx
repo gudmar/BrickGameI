@@ -30,6 +30,17 @@ function BrickGame() {
                 level = {level}
                 setLevel = {setLevel}
             />
+            <div>
+              <div><b>Up</b> <i>Go up</i></div>
+              <div><b>Down</b> <i>Go down</i></div>
+              <div><b>Left</b> <i>Go left</i></div>
+              <div><b>Right</b> <i>Go right</i></div>
+              <div><b>p</b> <i>Pause, unpause</i></div>
+              <div><b>s</b> <i>Speed up</i></div>
+              <div><b>l</b> <i>Level up</i></div>
+              <div><b>Space</b> <i>Rotate</i></div>
+              <div><b>Enter</b> <i>Start game, restart game after finished</i></div>
+            </div>
         </div>
   );
 }

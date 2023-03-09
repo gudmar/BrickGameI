@@ -47,6 +47,13 @@ class PawnMover {
         visitedObject.score = 1000;
     }
 
+    restart(visitedObject:any){
+        if (visitedObject.isGameWon || visitedObject.isGameOver){
+            this.initiate(visitedObject);
+            visitedObject.restart();    
+        }
+    }
+
     setVisitorToNextStateOnTick(visitedObject:any, time:number){
         if (time % 10 === 0) {
             const {col, row} = visitedObject.pawnCords;
@@ -63,7 +70,17 @@ class PawnMover {
     }
 
     setVisitorToNextStateOnKeyPress(visitedObject:any, keyPresses: KeyPress){
-        this.tryMoving(visitedObject, keyPresses);
+        if (keyPresses === KeyPress.Speed) {visitedObject.increaseSpeed()}
+        if (keyPresses === KeyPress.Level) {visitedObject.increaseLevel()}
+        if (keyPresses === KeyPress.Start) {
+            this.restart(visitedObject);
+            visitedObject.startGame();
+        }
+        if (keyPresses === KeyPress.Pause) {visitedObject.pauseGame()}
+        if (!visitedObject.checkIfGameLocked()) {
+            this.tryMoving(visitedObject, keyPresses);
+        }
+        
     }
 
     tryMoving( visitedObject: any, keyPresses: KeyPress ) {
@@ -72,8 +89,6 @@ class PawnMover {
         if (keyPresses === KeyPress.Up) this.move(visitedObject, -1, 0);
         if (keyPresses === KeyPress.Left) this.move(visitedObject, 0, -1);
         if (keyPresses === KeyPress.Right) this.move(visitedObject, 0, 1);
-        if (keyPresses === KeyPress.Speed) {visitedObject.increaseSpeed()}
-        if (keyPresses === KeyPress.Level) {visitedObject.increaseLevel()}
     }
 
     move(visitedObject: any, deltaRow:number, deltaCol:number) {

@@ -32,6 +32,7 @@ export interface GameLogicArgs {
     isAnimating: boolean,
     isGameOver?: boolean,
     isGameWon?: boolean,
+    isGameStarted?: boolean,
 }
 
 export interface GameState {
@@ -55,7 +56,7 @@ export interface GameState {
 // }
 
 export enum KeyPress {
-    Up, Down, Left, Right, Level, Speed, Pause, Rotate
+    Up, Down, Left, Right, Level, Speed, Pause, Rotate, Start
 }
 
 export interface ConsoleArgs {
