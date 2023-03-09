@@ -13,12 +13,20 @@ export class Block {
     ) {
         this.basicFigure = basicFigure;
         this.figureHandlePoints = figureHandlePoints;
+        this.prepareVariants();
     }
+    prepareVariants(){
+        for (let i = 0; i<4; i++) {
+            this.variants.push(this.prepareVariant(i as Variant))
+        }
+    }
+
     prepareVariant(variantNr: Variant) {
         switch(variantNr){
             case 1: return this.rotateOnce();
             case 2: return this.rotateTwice();
             case 3: return this.rotateThreeTimes();
+            default: return this.basicFigure;
         }
     }
     rotateOnce() {

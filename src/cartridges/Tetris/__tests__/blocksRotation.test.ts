@@ -63,7 +63,7 @@ describe('Tetris blocks testing', () => {
             const testedBlock = new Block(BLOCK_L_LEFT, figureHandlePoints)
             const result = testedBlock.prepareVariant(variantNr);
             console.log(result)
-            expect(result).toEqual(expected);    
+            expect(result).toEqual(expected);
         });
         it('Should return a 2 times rotated L-left figure', () => {
             const expected = [
@@ -76,6 +76,36 @@ describe('Tetris blocks testing', () => {
             console.log(result)
             expect(result).toEqual(expected);    
         });
+        it('Should not mutate original figure if rotated 3 times', () => {
+            const expected = [
+                [1, 1, 1],
+                [1, 0, 0],
+            ];
+            const variantNr = 3;
+            const testedBlock = new Block(BLOCK_L_LEFT, figureHandlePoints)
+            testedBlock.prepareVariant(variantNr);
+            expect(testedBlock.basicFigure).toEqual(expected);
+        })
+        it('Should not mutate original figure if rotated 2 times', () => {
+            const expected = [
+                [1, 1, 1],
+                [1, 0, 0],
+            ];
+            const variantNr = 2;
+            const testedBlock = new Block(BLOCK_L_LEFT, figureHandlePoints)
+            testedBlock.prepareVariant(variantNr);
+            expect(testedBlock.basicFigure).toEqual(expected);
+        })
+        it('Should not mutate original figure if rotated 1 time', () => {
+            const expected = [
+                [1, 1, 1],
+                [1, 0, 0],
+            ];
+            const variantNr = 1;
+            const testedBlock = new Block(BLOCK_L_LEFT, figureHandlePoints)
+            testedBlock.prepareVariant(variantNr);
+            expect(testedBlock.basicFigure).toEqual(expected);
+        })
 
         it('Should return a 3 times rotated Long figure', () => {
             const expected = [
