@@ -2,14 +2,37 @@ import { FigureHandlePoint, NextFigure } from "../../types/types";
 
 type Variant = 0 | 1 | 2 | 3;
 
+enum BlockClasses {
+    LongBlock, TBlock, SBlock, ZBlock, LeftLBlock, RightLBlock,
+}
+
+export class Blocks {
+    private listOfBlocks: any[] = [
+        [ LongBlock, TBlock, SBlock, ZBlock, LeftLBlock, RightLBlock ]
+    ]
+    private instances = this.listOfBlocks.map(b => {
+       const block = new b();
+       return block;
+    })
+    private _currentBlock = this.instances[0];
+    private _randomBlock = this.setRandomBlock();
+
+    getBlock(index: BlockClasses) { return this.instances[index]; }
+    setRandomBlock() {
+        const index = Math.floor(Math.random() * this.instances.length);
+        this._currentBlock = this.listOfBlocks[index];
+    }
+    get randomBlock() { return this._randomBlock; }
+}
+
 export class Block {
     basicFigure: NextFigure;
     figureHandlePoints: FigureHandlePoint[];
-    currentVariant: Variant = 0;
+    _currentVariant: Variant = 0;
     variants: NextFigure[] = [];
     constructor(
         basicFigure: NextFigure,
-        figureHandlePoints: FigureHandlePoint[] ,
+        figureHandlePoints: FigureHandlePoint[], // rotation points array for different variants
     ) {
         this.basicFigure = basicFigure;
         this.figureHandlePoints = figureHandlePoints;
@@ -20,6 +43,12 @@ export class Block {
             this.variants.push(this.prepareVariant(i as Variant))
         }
     }
+
+    setCurrentVariant(nr:Variant) {
+        this._currentVariant = nr;
+    }
+
+    get currentVariant() {return this.variants[this._currentVariant]}
 
     prepareVariant(variantNr: Variant) {
         switch(variantNr){
@@ -63,6 +92,91 @@ export class Block {
         return column;
     }
 }
+
+export class LongBlock extends Block {
+    constructor() {
+        super(
+            BLOCK_LONG,
+            [
+                {row: 0, col: 2},
+                {row: 2, col: 0},
+                {row: 0, col: 2},
+                {row: 0, col: 0},
+            ]
+        )
+    }
+}
+
+export class TBlock extends Block {
+    constructor() {
+        super(
+                BLOCK_T,
+            [
+                {row: 1, col: 1},
+                {row: 1, col: 1},
+                {row: 1, col: 1},
+                {row: 1, col: 1},
+            ]
+        )
+    }
+}
+
+export class LeftLBlock extends Block {
+    constructor() {
+        super(
+                BLOCK_L_LEFT,
+            [
+                {row: 1, col: 1},
+                {row: 1, col: 1},
+                {row: 1, col: 1},
+                {row: 1, col: 1},
+            ]
+        )
+    }
+}
+
+export class RightLBlock extends Block {
+    constructor() {
+        super(
+                BLOCK_L_RIGHT,
+            [
+                {row: 1, col: 1},
+                {row: 1, col: 1},
+                {row: 1, col: 1},
+                {row: 1, col: 1},
+            ]
+        )
+    }
+}
+
+export class SBlock extends Block {
+    constructor() {
+        super(
+                BLOCK_S,
+            [
+                {row: 1, col: 1},
+                {row: 1, col: 1},
+                {row: 1, col: 1},
+                {row: 1, col: 1},
+            ]
+        )
+    }
+}
+
+export class ZBlock extends Block {
+    constructor() {
+        super(
+                BLOCK_Z,
+            [
+                {row: 1, col: 1},
+                {row: 1, col: 1},
+                {row: 1, col: 1},
+                {row: 1, col: 1},
+            ]
+        )
+    }
+}
+
 
 
 export const BLOCK_LONG: NextFigure = [

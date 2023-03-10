@@ -1,5 +1,5 @@
 import { FigureHandlePoint } from "../../../types/types";
-import { Block, BLOCK_LONG, BLOCK_L_LEFT, BLOCK_S, BLOCK_T } from "../blocks"
+import { Block, BLOCK_LONG, BLOCK_L_LEFT, BLOCK_S, BLOCK_T, LeftLBlock, LongBlock, SBlock, TBlock } from "../blocks"
 
 const figureHandlePoints: FigureHandlePoint[] = [
     {row: 1, col: 1},
@@ -17,7 +17,8 @@ describe('Tetris blocks testing', () => {
                 [0, 1],
             ];
             const variantNr = 1;
-            const testedBlock = new Block(BLOCK_T, figureHandlePoints)
+            // const testedBlock = new Block(BLOCK_T, figureHandlePoints)
+            const testedBlock = new TBlock();
             const result = testedBlock.prepareVariant(variantNr);
             expect(result).toEqual(expected);    
         });
@@ -27,7 +28,7 @@ describe('Tetris blocks testing', () => {
                 [1, 1, 1],
             ];
             const variantNr = 2;
-            const testedBlock = new Block(BLOCK_T, figureHandlePoints)
+            const testedBlock = new TBlock();
             const result = testedBlock.prepareVariant(variantNr);
             expect(result).toEqual(expected);    
         });
@@ -37,7 +38,7 @@ describe('Tetris blocks testing', () => {
                 [1, 1, 0],
             ];
             const variantNr = 2;
-            const testedBlock = new Block(BLOCK_S, figureHandlePoints)
+            const testedBlock = new SBlock();
             const result = testedBlock.prepareVariant(variantNr);
             expect(result).toEqual(expected);    
         });
@@ -48,7 +49,7 @@ describe('Tetris blocks testing', () => {
                 [0, 1],
             ];
             const variantNr = 3;
-            const testedBlock = new Block(BLOCK_S, figureHandlePoints)
+            const testedBlock = new SBlock();
             const result = testedBlock.prepareVariant(variantNr);
             
             expect(result).toEqual(expected);    
@@ -60,7 +61,7 @@ describe('Tetris blocks testing', () => {
                 [1, 1],
             ];
             const variantNr = 3;
-            const testedBlock = new Block(BLOCK_L_LEFT, figureHandlePoints)
+            const testedBlock = new LeftLBlock();
             const result = testedBlock.prepareVariant(variantNr);
             console.log(result)
             expect(result).toEqual(expected);
@@ -71,7 +72,7 @@ describe('Tetris blocks testing', () => {
                 [1, 1, 1],
             ];
             const variantNr = 2;
-            const testedBlock = new Block(BLOCK_L_LEFT, figureHandlePoints)
+            const testedBlock = new LeftLBlock();
             const result = testedBlock.prepareVariant(variantNr);
             console.log(result)
             expect(result).toEqual(expected);    
@@ -82,7 +83,7 @@ describe('Tetris blocks testing', () => {
                 [1, 0, 0],
             ];
             const variantNr = 3;
-            const testedBlock = new Block(BLOCK_L_LEFT, figureHandlePoints)
+            const testedBlock = new LeftLBlock();
             testedBlock.prepareVariant(variantNr);
             expect(testedBlock.basicFigure).toEqual(expected);
         })
@@ -92,7 +93,7 @@ describe('Tetris blocks testing', () => {
                 [1, 0, 0],
             ];
             const variantNr = 2;
-            const testedBlock = new Block(BLOCK_L_LEFT, figureHandlePoints)
+            const testedBlock = new LeftLBlock();
             testedBlock.prepareVariant(variantNr);
             expect(testedBlock.basicFigure).toEqual(expected);
         })
@@ -102,7 +103,7 @@ describe('Tetris blocks testing', () => {
                 [1, 0, 0],
             ];
             const variantNr = 1;
-            const testedBlock = new Block(BLOCK_L_LEFT, figureHandlePoints)
+            const testedBlock = new LeftLBlock();
             testedBlock.prepareVariant(variantNr);
             expect(testedBlock.basicFigure).toEqual(expected);
         })
@@ -115,7 +116,7 @@ describe('Tetris blocks testing', () => {
                 [1],
             ];
             const variantNr = 3;
-            const testedBlock = new Block(BLOCK_LONG, figureHandlePoints)
+            const testedBlock = new LongBlock();
             const result = testedBlock.prepareVariant(variantNr);
             console.log(result)
             expect(result).toEqual(expected);    
