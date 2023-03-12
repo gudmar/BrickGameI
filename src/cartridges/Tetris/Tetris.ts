@@ -1,6 +1,7 @@
 import { KeyPress } from "../../types/types";
 import { EMPTY_BOARD } from "../constants";
 import { GameCreator } from "../GameCreator";
+import { Blocks } from "./blocks";
 
 export class TetrisDecorator {
     constructor() {
@@ -30,6 +31,46 @@ class Judge {
     }
 }
 
-class TetrisMover {
-    
+class TetrisVisitor {
+    initiate(visitedObject: any){
+        const blocksInstance = new Blocks()
+        visitedObject.pawnCords = { col: 5, row: 0 };
+        visitedObject.blocksMaker = blocksInstance;
+        this.setNewBrick(visitedObject);
+        console.log(visitedObject)
+        this.placeNewBlock(visitedObject);
+    }
+
+    setVisitorToNextStateOnTick(visitedObject:any){
+
+    }
+
+    setNewBrick(visitedObject: any) {
+        // visitedObject.currentBrick = visitedObject.blocksMaker.randomBlock;
+        visitedObject.currentBlock = visitedObject.blocksMaker.getBlock(0);
+    }
+
+    placeNewBlock(visitedObject:any) {
+        const { col, row } = visitedObject.currentBlock.currentHandlePoint;
+        this.mergeBlockToLayer(visitedObject);
+        // visitedObject.pawnCords.row = row;
+    }
+
+    mergeBlockToLayer(visitedObject:any){
+        const { col, row } = visitedObject.pawnCords;
+        const {pawnLayer, currentBlock} = visitedObject;
+        const {currentFigure, currentHandlePoint} = currentBlock;
+        visitedObject.resetLayer();
+        const mergeRow = (rowIndex: number) => {
+            currentFigure[rowIndex].forEach(
+                (bit: 0 | 1, colIndex: number) => {
+                    console.log(rowIndex, colIndex, row, col, bit)
+                    pawnLayer[rowIndex + row][colIndex + col] = bit;
+                }
+            )
+        }
+        currentFigure.forEach((row: (0 | 1)[], rowIndex:number) => { mergeRow(rowIndex); })
+    }
+
+
 }

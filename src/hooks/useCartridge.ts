@@ -7,12 +7,14 @@ import { LayersApplayer } from '../cartridges/layers/LayersApplayer';
 import { Animations } from '../cartridges/Animations/Animations';
 import { keys, useKeyboard } from './useKeyboard';
 import { MazeMoverDecorator } from '../cartridges/MovingKeys/MazeMover';
+import { TetrisDecorator } from '../cartridges/Tetris/Tetris';
 
 export const cartridges = {
     'TEST': "Test display",
     'LAYERS': 'Animate layers',
     'ANIMATIONS': 'Animations',
-    'MAZE': 'Maze'
+    'MAZE': 'Maze',
+    'TETRIS': 'Tetris',
 }
 
 interface LogicDescriptor {
@@ -45,7 +47,13 @@ const cartridgeLibrary: Library = {
         logicHandler: MazeMoverDecorator,
         description: cartridges.MAZE,
         show: true,
-    }
+    },
+    [cartridges.TETRIS]: {
+        logicHandler: TetrisDecorator,
+        description: cartridges.TETRIS,
+        show: true,
+    },
+
 }
 
 const findCartridge = (cartridgeDescription: string) => 

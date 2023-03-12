@@ -41,6 +41,10 @@ export class GameCreator extends GameLogic {
         return this;
     }
 
+    public resetLayer() {
+        this.pawnLayer = getEmptyBoard();
+    }
+
     public informJudge(information: string, payload?: any) {
         this.judge.inform(this, information, payload);
     }
@@ -98,7 +102,7 @@ export class GameCreator extends GameLogic {
 
     public checkIfGameLocked() {
         // console.log('over', this.isGameOver, 'started', this.isGameStarted, 'paused', this.isPaused, 'won', this.isGameWon)
-        console.log('Layer', this.pawnLayer)
+        // console.log('Layer', this.pawnLayer)
         return (this.isGameOver || !this.isGameStarted || this.isPaused || this.isGameWon )
     }
 

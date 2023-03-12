@@ -15,9 +15,9 @@ interface LineMap {
 function Line ({ lineMap }: LineMap) {
   return (
     <div className={styles.line}>
-      {lineMap.map((brick) => (
-        brick === 0 ? <Brick mode={BrickMode.GameOff} /> :
-        <Brick mode={BrickMode.GameOn} />  
+      {lineMap.map((brick, index) => (
+        brick === 0 ? <Brick key={index + '-brick'} mode={BrickMode.GameOff} /> :
+        <Brick key={index + '-brick'} mode={BrickMode.GameOn} />  
       ))}
     </div>
   )
@@ -27,7 +27,7 @@ function Dojo ({ brickMap }: DojoParams) {
   // useEffect(()=>{console.log(brickMap)}, [])
     return (
       <>
-        {brickMap.map((line) => (<Line lineMap={line} />))}
+        {brickMap.map((line, index) => (<Line key={'line-'+index} lineMap={line} />))}
       </>
   );
 }

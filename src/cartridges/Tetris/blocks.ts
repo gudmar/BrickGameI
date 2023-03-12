@@ -8,20 +8,22 @@ enum BlockClasses {
 
 export class Blocks {
     private listOfBlocks: any[] = [
-        [ LongBlock, TBlock, SBlock, ZBlock, LeftLBlock, RightLBlock ]
+         LongBlock, TBlock, SBlock, ZBlock, LeftLBlock, RightLBlock,
     ]
-    private instances = this.listOfBlocks.map(b => {
+    private instances: any = this.listOfBlocks.map(b => {
        const block = new b();
        return block;
     })
-    private _currentBlock = this.instances[0];
-    private _randomBlock = this.setRandomBlock();
-
+    // private _currentBlock = this.instances[0];
+    private _randomBlock = this.getBlock(0);
+    reset() {this.instances.forEach((instance:any) => {instance.reset();})}
     getBlock(index: BlockClasses) { return this.instances[index]; }
     setRandomBlock() {
         const index = Math.floor(Math.random() * this.instances.length);
-        this._currentBlock = this.listOfBlocks[index];
+        this._randomBlock = this.instances[index];
+        this._randomBlock.getNewRandomVariant();
     }
+
     get randomBlock() { return this._randomBlock; }
 }
 
@@ -29,19 +31,36 @@ export class Block {
     basicFigure: NextFigure;
     figureHandlePoints: FigureHandlePoint[];
     _currentVariant: Variant = 0;
+    public currentFigure: NextFigure;
+    public currentHandlePoint: {col:number, row:number};
     variants: NextFigure[] = [];
     constructor(
         basicFigure: NextFigure,
         figureHandlePoints: FigureHandlePoint[], // rotation points array for different variants
     ) {
         this.basicFigure = basicFigure;
+        this.currentFigure=basicFigure;
+        this.currentHandlePoint = figureHandlePoints[0];
         this.figureHandlePoints = figureHandlePoints;
         this.prepareVariants();
     }
+    reset() {this._currentVariant = 0;}
     prepareVariants(){
         for (let i = 0; i<4; i++) {
             this.variants.push(this.prepareVariant(i as Variant))
         }
+    }
+    public getNewRandomVariant() {
+        const index: Variant = Math.floor(Math.random() * this.variants.length) as Variant;
+        this._currentVariant = index;
+        this._currentVariant = 0; // !!!!!!!!!!!!!!
+        this.currentHandlePoint = this.figureHandlePoints[index];
+        this.currentFigure = this.variants[index];
+        return {
+            figure: this.variants[index],
+            handlePoint: this.figureHandlePoints[index],
+        }
+        // return this.variants[index];
     }
 
     setCurrentVariant(nr:Variant) {
