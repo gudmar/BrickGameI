@@ -1,4 +1,4 @@
-import { KeyPress } from "../../types/types";
+import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { GAME_OVER, MAZE } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
 
@@ -37,7 +37,7 @@ class Judge {
     }
 }
 
-class PawnMover {
+class PawnMover extends NextStateCalculator {
 
     initiate(visitedObject:any){
         visitedObject.pawnCords = {
@@ -45,13 +45,6 @@ class PawnMover {
         }
         visitedObject.pawnLayer[0][1] = 1;
         visitedObject.score = 2000;
-    }
-
-    restart(visitedObject:any){
-        if (visitedObject.isGameWon || visitedObject.isGameOver){
-            this.initiate(visitedObject);
-            visitedObject.restart();    
-        }
     }
 
     setVisitorToNextStateOnTick(visitedObject:any, time:number){
@@ -67,28 +60,6 @@ class PawnMover {
 
     setVisitorToNextStateOnSpeedTick(visitedObject:any, time:number){
         visitedObject.informJudge(gameEvents.TICK)
-    }
-
-    setVisitorToNextStateOnKeyPress(visitedObject:any, keyPresses: KeyPress){
-        if (keyPresses === KeyPress.Speed) {visitedObject.increaseSpeed()}
-        if (keyPresses === KeyPress.Level) {visitedObject.increaseLevel()}
-        if (keyPresses === KeyPress.Start) {
-            this.restart(visitedObject);
-            visitedObject.startGame();
-        }
-        if (keyPresses === KeyPress.Pause) {visitedObject.pauseGame()}
-        if (!visitedObject.checkIfGameLocked()) {
-            this.tryMoving(visitedObject, keyPresses);
-        }
-        
-    }
-
-    tryMoving( visitedObject: any, keyPresses: KeyPress ) {
-
-        if (keyPresses === KeyPress.Down) this.move(visitedObject, 1, 0);
-        if (keyPresses === KeyPress.Up) this.move(visitedObject, -1, 0);
-        if (keyPresses === KeyPress.Left) this.move(visitedObject, 0, -1);
-        if (keyPresses === KeyPress.Right) this.move(visitedObject, 0, 1);
     }
 
     move(visitedObject: any, deltaRow:number, deltaCol:number) {
@@ -118,31 +89,10 @@ class PawnMover {
         if (oldCol !== newCol || oldRow !== newRow) { visitedObject.informJudge(gameEvents.MOVE, newCords)}
     }
 
-    isFieldOutsideBoard(visitedObject: any, deltaRow:number, deltaCol:number) {
-        const newPawnCordsCP: PawnCords = this.getNewPawnCords(visitedObject, deltaRow, deltaCol);
-        const maxRow = visitedObject.pawnLayer.length - 1;
-        const maxCol = visitedObject.pawnLayer[0].length - 1;
-        if (newPawnCordsCP.col > maxCol) return true;
-        if (newPawnCordsCP.row > maxRow) return true;
-        if (newPawnCordsCP.col < 0) return true;
-        if (newPawnCordsCP.row < 0) return true;
-        return false;
-    }
-
-    isFieldOccupied(visitedObject: any, deltaRow:number, deltaCol:number) {
-        const newPawnCordsCP: PawnCords = this.getNewPawnCords(visitedObject, deltaRow, deltaCol);
-        const isOccupied = visitedObject.background[newPawnCordsCP.row][newPawnCordsCP.col];
-        return isOccupied
-    }
-
     getNewPawnCords(visitedObject:any, deltaRow:number, deltaCol:number) {
         return {
             col: visitedObject.pawnCords.col + deltaCol,
             row: visitedObject.pawnCords.row + deltaRow,
         }
-    }
-
-    decreaseScore(visitedObject: any) {
-        visitedObject.score -= 10;
     }
 }

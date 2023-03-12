@@ -1,4 +1,5 @@
 import { KeyPress } from "../../types/types";
+import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { EMPTY_BOARD } from "../constants";
 import { GameCreator } from "../GameCreator";
 import { Blocks } from "./blocks";
@@ -31,18 +32,47 @@ class Judge {
     }
 }
 
-class TetrisVisitor {
+class TetrisVisitor extends NextStateCalculator {
     initiate(visitedObject: any){
         const blocksInstance = new Blocks()
+        visitedObject.name = 'Tetris'
         visitedObject.pawnCords = { col: 5, row: 0 };
         visitedObject.blocksMaker = blocksInstance;
         this.setNewBrick(visitedObject);
-        console.log(visitedObject)
         this.placeNewBlock(visitedObject);
+        console.log(visitedObject)
     }
 
     setVisitorToNextStateOnTick(visitedObject:any){
 
+    }
+
+    setVisitorToNextStateOnKeyPress(visitedObject:any, keyPresses: KeyPress){
+        if (keyPresses === KeyPress.Speed) {visitedObject.increaseSpeed()}
+        if (keyPresses === KeyPress.Level) {visitedObject.increaseLevel()}
+        if (keyPresses === KeyPress.Start) {
+            this.restart(visitedObject);
+            visitedObject.startGame();
+        }
+        if (keyPresses === KeyPress.Pause) {visitedObject.pauseGame()}
+        if (!visitedObject.checkIfGameLocked()) {
+            this.tryMoving(visitedObject, keyPresses);
+        }
+    }
+
+    tryMoving( visitedObject: any, keyPresses: KeyPress ) {
+
+        if (keyPresses === KeyPress.Down) this.move(visitedObject, 1, 0);
+        if (keyPresses === KeyPress.Up) this.move(visitedObject, -1, 0);
+        if (keyPresses === KeyPress.Left) this.move(visitedObject, 0, -1);
+        if (keyPresses === KeyPress.Right) this.move(visitedObject, 0, 1);
+    }
+
+    restart(visitedObject:any){
+        if (visitedObject.isGameWon || visitedObject.isGameOver){
+            this.initiate(visitedObject);
+            visitedObject.restart();    
+        }
     }
 
     setNewBrick(visitedObject: any) {
@@ -70,6 +100,7 @@ class TetrisVisitor {
             )
         }
         currentFigure.forEach((row: (0 | 1)[], rowIndex:number) => { mergeRow(rowIndex); })
+        visitedObject.pawnLayer = pawnLayer;
     }
 
 
