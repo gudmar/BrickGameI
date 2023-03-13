@@ -25,6 +25,10 @@ export abstract class NextStateCalculator {
         }
     }
 
+    setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number){
+        throw new Error('NextStateCalculator: setVisitorToNextStateOnSpeedTick should be overwritten')
+    }
+
     isFieldOutsideBoard(visitedObject: any, deltaRow: number, deltaCol: number) {
         const newPawnCordsCP: PawnCords = this.getNewPawnCords(visitedObject, deltaRow, deltaCol);
         const result = this.isBrickOutsideBoard(visitedObject, newPawnCordsCP);
@@ -55,7 +59,7 @@ export abstract class NextStateCalculator {
     }
 
     tryMoving( visitedObject: any, keyPresses: KeyPress ) {
-
+        console.log('try moving')
         if (keyPresses === KeyPress.Down) this.move(visitedObject, 1, 0);
         if (keyPresses === KeyPress.Up) this.move(visitedObject, -1, 0);
         if (keyPresses === KeyPress.Left) this.move(visitedObject, 0, -1);

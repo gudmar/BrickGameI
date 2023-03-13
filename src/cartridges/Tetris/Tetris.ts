@@ -1,7 +1,8 @@
-import { KeyPress } from "../../types/types";
+import { findLastIndex } from "../../functions/findLastIndex";
+import { BrickMap, KeyPress, NextFigure } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { EMPTY_BOARD } from "../constants";
-import { GameCreator } from "../GameCreator";
+import { GameCreator, PawnCords } from "../GameCreator";
 import { Blocks } from "./blocks";
 
 export class TetrisDecorator {
@@ -32,6 +33,10 @@ class Judge {
     }
 }
 
+enum MoveDirection {
+    down, up, left, right,
+}
+
 class TetrisVisitor extends NextStateCalculator {
     initiate(visitedObject: any){
         const blocksInstance = new Blocks()
@@ -47,37 +52,105 @@ class TetrisVisitor extends NextStateCalculator {
 
     }
 
-    setVisitorToNextStateOnKeyPress(visitedObject:any, keyPresses: KeyPress){
-        if (keyPresses === KeyPress.Speed) {visitedObject.increaseSpeed()}
-        if (keyPresses === KeyPress.Level) {visitedObject.increaseLevel()}
-        if (keyPresses === KeyPress.Start) {
-            this.restart(visitedObject);
-            visitedObject.startGame();
-        }
-        if (keyPresses === KeyPress.Pause) {visitedObject.pauseGame()}
-        if (!visitedObject.checkIfGameLocked()) {
-            this.tryMoving(visitedObject, keyPresses);
-        }
-    }
+    // setVisitorToNextStateOnKeyPress(visitedObject:any, keyPresses: KeyPress){
+    //     if (keyPresses === KeyPress.Speed) {visitedObject.increaseSpeed()}
+    //     if (keyPresses === KeyPress.Level) {visitedObject.increaseLevel()}
+    //     if (keyPresses === KeyPress.Start) {
+    //         this.restart(visitedObject);
+    //         visitedObject.startGame();
+    //     }
+    //     if (keyPresses === KeyPress.Pause) {visitedObject.pauseGame()}
+    //     if (!visitedObject.checkIfGameLocked()) {
+    //         this.tryMoving(visitedObject, keyPresses);
+    //     }
+    // }
+
+    // tryMoving( visitedObject: any, keyPresses: KeyPress ) {
+
+    //     if (keyPresses === KeyPress.Down) this.move(visitedObject, 1, 0);
+    //     if (keyPresses === KeyPress.Up) this.move(visitedObject, -1, 0);
+    //     if (keyPresses === KeyPress.Left) this.move(visitedObject, 0, -1);
+    //     if (keyPresses === KeyPress.Right) this.move(visitedObject, 0, 1);
+    // }
+
+    // restart(visitedObject:any){
+    //     if (visitedObject.isGameWon || visitedObject.isGameOver){
+    //         this.initiate(visitedObject);
+    //         visitedObject.restart();    
+    //     }
+    // }
 
     tryMoving( visitedObject: any, keyPresses: KeyPress ) {
-
-        if (keyPresses === KeyPress.Down) this.move(visitedObject, 1, 0);
-        if (keyPresses === KeyPress.Up) this.move(visitedObject, -1, 0);
-        if (keyPresses === KeyPress.Left) this.move(visitedObject, 0, -1);
-        if (keyPresses === KeyPress.Right) this.move(visitedObject, 0, 1);
+        console.log('try moving')
+        if (keyPresses === KeyPress.Down) this.tryMoveDown(visitedObject);
+        if (keyPresses === KeyPress.Up) this.tryMoveUp(visitedObject);
+        if (keyPresses === KeyPress.Left) this.tryMoveLeft(visitedObject);
+        if (keyPresses === KeyPress.Right) this.tryMoveRight(visitedObject);
     }
 
-    restart(visitedObject:any){
-        if (visitedObject.isGameWon || visitedObject.isGameOver){
-            this.initiate(visitedObject);
-            visitedObject.restart();    
-        }
+    tryMoveDown(visitedObject:any) {
+        visitedObject.pawnCords.row += 1;
+        this.move(visitedObject);
     }
+    tryMoveUp(visitedObject:any) {
+        visitedObject.pawnCords.row -= 1;
+        this.move(visitedObject);
+    }
+    tryMoveLeft(visitedObject:any) {
+        visitedObject.pawnCords.col -= 1;
+        this.move(visitedObject);
+    }
+    tryMoveRight(visitedObject:any){
+        visitedObject.pawnCords.col += 1;
+        this.move(visitedObject);
+    }
+
+    move(visitedObject:any) {
+        visitedObject.resetLayer();
+        this.mergeBlockToLayer(visitedObject);
+    }
+
+    isNextMoveValid(visitedObject:any, newCords:PawnCords) {
+
+    }
+
+
+    // getRowOfZeros(array:any){
+    //     const { lenght } = array;
+    //     const newArr = [];
+    //     for(let i = 0; i < lenght; i++){
+    //         newArr.push(0)
+    //     }
+    //     return newArr;
+    // }
+
+    // findFirstBlockBrickRowIndexFromTop(visitedObject:any){
+    //     const {pawnLayer: layer} = visitedObject;
+    //     const result = layer.findIndex((row:(0 | 1)[] ) => this.isRowEngaged(row))
+    //     return result;
+    // }
+
+    // findFirstBlockBrickRowIndexFromBottom(visitedObject:any){
+    //     const {pawnLayer: layer} = visitedObject;
+    //     // const result = layer.findLastIndex((row:(0 | 1)[] ) => this.isRowEngaged(row))
+    //     const result = findLastIndex(layer, (row:(0 | 1)[] ) => this.isRowEngaged(row));
+    //     return result;
+    // }
+
+    // isRowEngaged(row: (0 | 1)[]){
+    //     return row.some(bit => bit === 1)
+    // }
 
     setNewBrick(visitedObject: any) {
         // visitedObject.currentBrick = visitedObject.blocksMaker.randomBlock;
         visitedObject.currentBlock = visitedObject.blocksMaker.getBlock(0);
+    }
+
+    setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number){
+        // this.move(visitedObject, 1, 0);
+        // move down,
+        // check if should be merged permanently with background,
+        // merge if should be merged
     }
 
     placeNewBlock(visitedObject:any) {
@@ -87,20 +160,29 @@ class TetrisVisitor extends NextStateCalculator {
     }
 
     mergeBlockToLayer(visitedObject:any){
-        const { col, row } = visitedObject.pawnCords;
         const {pawnLayer, currentBlock} = visitedObject;
         const {currentFigure, currentHandlePoint} = currentBlock;
         visitedObject.resetLayer();
+
+        visitedObject.pawnLayer = this.mergeSomeBlockToLayer({
+            layer: pawnLayer, block: currentFigure, cords: visitedObject.pawnCords
+        });
+    }
+
+
+    mergeSomeBlockToLayer({ layer, block, cords }: { layer: BrickMap, block: NextFigure, cords:PawnCords }) {
+        const { col, row } = cords;
+        
         const mergeRow = (rowIndex: number) => {
-            currentFigure[rowIndex].forEach(
+            block[rowIndex].forEach(
                 (bit: 0 | 1, colIndex: number) => {
                     console.log(rowIndex, colIndex, row, col, bit)
-                    pawnLayer[rowIndex + row][colIndex + col] = bit;
+                    layer[rowIndex + row][colIndex + col] = bit;
                 }
             )
         }
-        currentFigure.forEach((row: (0 | 1)[], rowIndex:number) => { mergeRow(rowIndex); })
-        visitedObject.pawnLayer = pawnLayer;
+        block.forEach((row: (0 | 1)[], rowIndex:number) => { mergeRow(rowIndex); })
+        return layer;
     }
 
 
