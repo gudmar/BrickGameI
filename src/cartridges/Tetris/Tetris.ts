@@ -1,7 +1,8 @@
 import { findLastIndex } from "../../functions/findLastIndex";
+import { sumArrayElements } from "../../functions/sumArrayElements";
 import { BrickMap, KeyPress, NextFigure } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
-import { EMPTY_BOARD } from "../constants";
+import { EMPTY_BOARD, getEmptyBoard } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { Blocks } from "./blocks";
 
@@ -80,38 +81,59 @@ class TetrisVisitor extends NextStateCalculator {
     //     }
     // }
 
-    tryMoving( visitedObject: any, keyPresses: KeyPress ) {
-        console.log('try moving')
-        if (keyPresses === KeyPress.Down) this.tryMoveDown(visitedObject);
-        if (keyPresses === KeyPress.Up) this.tryMoveUp(visitedObject);
-        if (keyPresses === KeyPress.Left) this.tryMoveLeft(visitedObject);
-        if (keyPresses === KeyPress.Right) this.tryMoveRight(visitedObject);
-    }
+    // tryMoving( visitedObject: any, keyPresses: KeyPress ) {
+    //     console.log('try moving')
+    //     if (keyPresses === KeyPress.Down) this.tryMoveDown(visitedObject);
+    //     if (keyPresses === KeyPress.Up) this.tryMoveUp(visitedObject);
+    //     if (keyPresses === KeyPress.Left) this.tryMoveLeft(visitedObject);
+    //     if (keyPresses === KeyPress.Right) this.tryMoveRight(visitedObject);
+    // }
 
-    tryMoveDown(visitedObject:any) {
-        visitedObject.pawnCords.row += 1;
-        this.move(visitedObject);
-    }
-    tryMoveUp(visitedObject:any) {
-        visitedObject.pawnCords.row -= 1;
-        this.move(visitedObject);
-    }
-    tryMoveLeft(visitedObject:any) {
-        visitedObject.pawnCords.col -= 1;
-        this.move(visitedObject);
-    }
-    tryMoveRight(visitedObject:any){
-        visitedObject.pawnCords.col += 1;
-        this.move(visitedObject);
-    }
+    // tryMoveDown(visitedObject:any) {
+    //     visitedObject.pawnCords.row += 1;
+    //     this.move(visitedObject);
+    // }
+    // tryMoveUp(visitedObject:any) {
+    //     visitedObject.pawnCords.row -= 1;
+    //     this.move(visitedObject);
+    // }
+    // tryMoveLeft(visitedObject:any) {
+    //     visitedObject.pawnCords.col -= 1;
+    //     this.move(visitedObject);
+    // }
+    // tryMoveRight(visitedObject:any){
+    //     visitedObject.pawnCords.col += 1;
+    //     this.move(visitedObject);
+    // }
 
-    move(visitedObject:any) {
-        visitedObject.resetLayer();
-        this.mergeBlockToLayer(visitedObject);
+    move(visitedObject:any, deltaRow:number, deltaCol:number) {
+        const {row, col} = visitedObject.pawnCords
+        if (this.isNextMoveValid(visitedObject, {row: deltaRow + row, col:deltaCol + col})){
+            visitedObject.resetLayer();
+            visitedObject.pawnCords.row = row + deltaRow;
+            visitedObject.pawnCords.col = col + deltaCol;
+            this.mergeCurrentBlockToLayer(visitedObject);    
+        }
     }
 
     isNextMoveValid(visitedObject:any, newCords:PawnCords) {
+        const isInBoundries = this.isNextMoveInBoundries(visitedObject, newCords);
+        return isInBoundries;
+    }
 
+    isNextMoveInBoundries(visitedObject:any, newCords:PawnCords) {
+        if (newCords.row < 0 || newCords.col < 0) return false;
+        console.log(newCords)
+        const { pawnLayer, currentBlock } = visitedObject;
+        const newLayer = this.mergeBlockToLayer({
+            layer:getEmptyBoard(),
+            block: currentBlock.currentFigure,
+            cords: newCords,
+        })
+        const sumOfCurrentLayer = sumArrayElements(pawnLayer);
+        const sumOfNewLayer = sumArrayElements(newLayer);
+        console.log(sumOfNewLayer, sumOfCurrentLayer, sumOfCurrentLayer === sumOfNewLayer)
+        return sumOfCurrentLayer === sumOfNewLayer;
     }
 
 
@@ -155,28 +177,27 @@ class TetrisVisitor extends NextStateCalculator {
 
     placeNewBlock(visitedObject:any) {
         const { col, row } = visitedObject.currentBlock.currentHandlePoint;
-        this.mergeBlockToLayer(visitedObject);
+        this.mergeCurrentBlockToLayer(visitedObject);
         // visitedObject.pawnCords.row = row;
     }
 
-    mergeBlockToLayer(visitedObject:any){
+    mergeCurrentBlockToLayer(visitedObject:any){
         const {pawnLayer, currentBlock} = visitedObject;
         const {currentFigure, currentHandlePoint} = currentBlock;
         visitedObject.resetLayer();
 
-        visitedObject.pawnLayer = this.mergeSomeBlockToLayer({
+        visitedObject.pawnLayer = this.mergeBlockToLayer({
             layer: pawnLayer, block: currentFigure, cords: visitedObject.pawnCords
         });
     }
 
 
-    mergeSomeBlockToLayer({ layer, block, cords }: { layer: BrickMap, block: NextFigure, cords:PawnCords }) {
+    mergeBlockToLayer({ layer, block, cords }: { layer: BrickMap, block: NextFigure, cords:PawnCords }) {
         const { col, row } = cords;
         
         const mergeRow = (rowIndex: number) => {
             block[rowIndex].forEach(
                 (bit: 0 | 1, colIndex: number) => {
-                    console.log(rowIndex, colIndex, row, col, bit)
                     layer[rowIndex + row][colIndex + col] = bit;
                 }
             )
