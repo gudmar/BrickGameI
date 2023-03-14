@@ -132,6 +132,7 @@ class TetrisVisitor extends NextStateCalculator {
         })
         const sumOfCurrentLayer = sumArrayElements(pawnLayer);
         const sumOfNewLayer = sumArrayElements(newLayer);
+        console.log(newLayer)
         console.log(sumOfNewLayer, sumOfCurrentLayer, sumOfCurrentLayer === sumOfNewLayer)
         return sumOfCurrentLayer === sumOfNewLayer;
     }
