@@ -106,6 +106,7 @@ export class GameCreator extends GameLogic {
         return (this.isGameOver || !this.isGameStarted || this.isPaused || this.isGameWon )
     }
 
+    public rotate() { this.nextStateCalculator.rotate(this) }
     public increaseSpeed() { this.speed > 9 ? this.speed = 1 : this.speed++; console.log('speed', this.speed) }
     public increaseLevel() { this.level > 9 ? this.level = 1 : this.level++ }
     public startGame() { 

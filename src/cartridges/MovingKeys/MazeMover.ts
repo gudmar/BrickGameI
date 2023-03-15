@@ -83,6 +83,8 @@ class PawnMover extends NextStateCalculator {
         visitedObject.pawnLayer[oldPawnCords.row][oldPawnCords.col] = 0;
     }
 
+    rotate() {}
+
     informJugdeMove(oldCords: PawnCords, newCords: PawnCords, visitedObject:any) {
         const {col: oldCol, row: oldRow} = oldCords;
         const {col: newCol, row: newRow} = newCords;

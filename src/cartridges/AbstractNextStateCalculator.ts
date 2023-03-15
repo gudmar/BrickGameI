@@ -19,11 +19,14 @@ export abstract class NextStateCalculator {
             this.restart(visitedObject);
             visitedObject.startGame();
         }
+        if (keyPresses === KeyPress.Rotate) { visitedObject.rotate() }
         if (keyPresses === KeyPress.Pause) {visitedObject.pauseGame()}
         if (!visitedObject.checkIfGameLocked()) {
             this.tryMoving(visitedObject, keyPresses);
         }
     }
+
+    rotate(visitedObject:any){throw new Error('NextStateCalculator: rotate not implemented')}
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number){
         throw new Error('NextStateCalculator: setVisitorToNextStateOnSpeedTick should be overwritten')

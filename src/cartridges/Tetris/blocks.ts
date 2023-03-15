@@ -63,6 +63,16 @@ export class Block {
         // return this.variants[index];
     }
 
+    rotate(){
+        this._currentVariant >= 3 ? this._currentVariant = 0 : this._currentVariant++;
+        this.currentFigure = this.variants[this._currentVariant]
+    }
+
+    foretellFigureAfterRotation(){
+        const nextIndex = this._currentVariant >= 3 ? 0 : this._currentVariant + 1;
+        return this.variants[nextIndex]
+    }
+
     setCurrentVariant(nr:Variant) {
         this._currentVariant = nr;
     }
