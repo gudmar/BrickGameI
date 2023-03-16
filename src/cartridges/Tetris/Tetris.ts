@@ -4,7 +4,7 @@ import { BrickMap, KeyPress, NextFigure } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { EMPTY_BOARD, getEmptyBoard } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
-import { Blocks } from "./blocks";
+import { BlockData, Blocks } from "./blocks";
 
 export class TetrisDecorator {
     constructor() {
@@ -38,11 +38,11 @@ enum MoveDirection {
     down, up, left, right,
 }
 
-class TetrisVisitor extends NextStateCalculator {
+export class TetrisVisitor extends NextStateCalculator {
     initiate(visitedObject: any){
         const blocksInstance = new Blocks()
         visitedObject.name = 'Tetris'
-        visitedObject.pawnCords = { col: 5, row: 0 };
+        visitedObject.pawnCords = { col: 3, row: 5 };
         visitedObject.blocksMaker = blocksInstance;
         this.setNewBrick(visitedObject); // visitedObject.currentBlock
         this.placeBlock(visitedObject);
@@ -83,7 +83,8 @@ class TetrisVisitor extends NextStateCalculator {
         const { pawnLayer, currentBlock } = visitedObject;
         const newLayer = this.mergeBlockToLayer({
             layer:getEmptyBoard(),
-            block: currentBlock.currentFigure,
+            // block: currentBlock.currentFigure,
+            block: currentBlock.blockDescriptor,
             cords: newCords,
         })
         const sumOfCurrentLayer = sumArrayElements(pawnLayer);
@@ -102,7 +103,7 @@ class TetrisVisitor extends NextStateCalculator {
 
     setNewBrick(visitedObject: any) {
         // visitedObject.currentBrick = visitedObject.blocksMaker.randomBlock;
-        visitedObject.currentBlock = visitedObject.blocksMaker.getBlock(1);
+        visitedObject.currentBlock = visitedObject.blocksMaker.getBlock(0);
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number){
@@ -113,31 +114,20 @@ class TetrisVisitor extends NextStateCalculator {
     }
 
     placeBlock(visitedObject:any) {
-        // const { col, row } = visitedObject.currentBlock.currentHandlePoint;
         this.mergeCurrentBlockToLayer(visitedObject);
-        // visitedObject.pawnCords.row = row;
     }
-
-    // mergeCurrentBlockToLayer(visitedObject:any){
-    //     // const {pawnLayer, currentBlock} = visitedObject;
-    //     visitedObject.resetLayer();
-    //     const {pawnLayer, currentBlock} = visitedObject;
-    //     const {currentFigure, currentHandlePoint} = currentBlock;
-    //     visitedObject.pawnLayer = this.mergeBlockToLayer({
-    //         // layer: pawnLayer, block: currentFigure, cords: visitedObject.pawnCords
-    //         layer: pawnLayer, block: currentFigure, cords: visitedObject.pawnCords
-    //     });
-    // }
 
     mergeCurrentBlockToLayer(visitedObject:any){
         visitedObject.resetLayer();
         const {pawnLayer, currentBlock} = visitedObject;
         const {currentFigure, currentHandlePoint} = currentBlock;
-        visitedObject.pawnLayer = this.getMergedBlockToFreshLayer(visitedObject, currentFigure)
+        // visitedObject.pawnLayer = this.getMergedBlockToFreshLayer(visitedObject, currentBlock)
+        visitedObject.pawnLayer = this.getMergedBlockToFreshLayer(visitedObject, {figure: currentFigure, handlePoint: currentHandlePoint})
     }
 
-    getMergedBlockToFreshLayer(visitedObject:any, block:NextFigure) {
+    getMergedBlockToFreshLayer(visitedObject:any, block:BlockData) {
         const layer = getEmptyBoard();
+        const {currentBlock} = visitedObject;
         const result = this.mergeBlockToLayer({
             layer, block, cords: visitedObject.pawnCords
         });
@@ -145,19 +135,23 @@ class TetrisVisitor extends NextStateCalculator {
     }
 
 
-    mergeBlockToLayer({ layer, block, cords }: { layer: BrickMap, block: NextFigure, cords:PawnCords }) {
+    // mergeBlockToLayer({ layer, block, cords }: { layer: BrickMap, block: NextFigure, cords:PawnCords }) {
+    mergeBlockToLayer({ layer, block, cords }: { layer: BrickMap, block: BlockData, cords:PawnCords }) {
         const { col, row } = cords;
-        
+        const {figure, handlePoint} = block;
+        console.log(handlePoint)
+        const { col: deltaCol, row: deltaRow } = handlePoint;
         const mergeRow = (rowIndex: number) => {
-            block[rowIndex].forEach(
+            figure[rowIndex].forEach(
                 (bit: 0 | 1, colIndex: number) => {
-                    if (layer.length - 1 >= rowIndex + row && layer[0].length - 1 >= colIndex) {
-                        layer[rowIndex + row][colIndex + col] = bit;
+                    if (layer.length - 1 >= rowIndex + row&& layer[0].length - 1 >= colIndex) {
+                        console.log('deltaRow', deltaRow, 'deltaCol', deltaCol, 'row', row, 'col', col)
+                        layer[rowIndex + row - 2][colIndex + col + 2] = bit;
                     }
                 }
             )
         }
-        block.forEach((row: (0 | 1)[], rowIndex:number) => { mergeRow(rowIndex); })
+        figure.forEach((row: (0 | 1)[], rowIndex:number) => { mergeRow(rowIndex); })
         return layer;
     }
 

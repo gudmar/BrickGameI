@@ -6,6 +6,11 @@ enum BlockClasses {
     LongBlock, TBlock, SBlock, ZBlock, LeftLBlock, RightLBlock,
 }
 
+export interface BlockData {
+    figure: NextFigure,
+    handlePoint: FigureHandlePoint,
+}
+
 export class Blocks {
     private listOfBlocks: any[] = [
          LongBlock, TBlock, SBlock, ZBlock, LeftLBlock, RightLBlock,
@@ -63,6 +68,13 @@ export class Block {
         // return this.variants[index];
     }
 
+    get blockDescriptor() {
+        return {
+            figure: this.variants[this._currentVariant],
+            handlePoint: this.figureHandlePoints[this._currentVariant],
+        }
+    }
+
     rotate(){
         this._currentVariant >= 3 ? this._currentVariant = 0 : this._currentVariant++;
         this.currentFigure = this.variants[this._currentVariant]
@@ -70,7 +82,10 @@ export class Block {
 
     foretellFigureAfterRotation(){
         const nextIndex = this._currentVariant >= 3 ? 0 : this._currentVariant + 1;
-        return this.variants[nextIndex]
+        return {
+            figure: this.variants[nextIndex],
+            handlePoint: this.figureHandlePoints[nextIndex]
+        }
     }
 
     setCurrentVariant(nr:Variant) {
@@ -130,7 +145,7 @@ export class LongBlock extends Block {
                 {row: 0, col: 2},
                 {row: 2, col: 0},
                 {row: 0, col: 2},
-                {row: 0, col: 0},
+                {row: 2, col: 0},
             ]
         )
     }
