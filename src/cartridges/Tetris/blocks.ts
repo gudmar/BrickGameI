@@ -65,7 +65,6 @@ export class Block {
             figure: this.variants[index],
             handlePoint: this.figureHandlePoints[index],
         }
-        // return this.variants[index];
     }
 
     get blockDescriptor() {
@@ -78,6 +77,7 @@ export class Block {
     rotate(){
         this._currentVariant >= 3 ? this._currentVariant = 0 : this._currentVariant++;
         this.currentFigure = this.variants[this._currentVariant]
+        this.currentHandlePoint = this.figureHandlePoints[this._currentVariant]
     }
 
     foretellFigureAfterRotation(){
@@ -142,10 +142,10 @@ export class LongBlock extends Block {
         super(
             BLOCK_LONG,
             [
-                {row: 0, col: 2},
-                {row: 2, col: 0},
-                {row: 0, col: 2},
-                {row: 2, col: 0},
+                {row: 0, col: -2},
+                {row: -2, col: 0},
+                {row: 0, col: -2},
+                {row: -2, col: 0},
             ]
         )
     }

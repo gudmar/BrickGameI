@@ -44,14 +44,12 @@ export class TetrisVisitor extends NextStateCalculator {
         visitedObject.name = 'Tetris'
         visitedObject.pawnCords = { col: 3, row: 5 };
         visitedObject.blocksMaker = blocksInstance;
-        this.setNewBrick(visitedObject); // visitedObject.currentBlock
+        this.setNewBrick(visitedObject);
         this.placeBlock(visitedObject);
-        console.log(visitedObject)
     }
 
     rotate(visitedObject:any) {
         if (this.isNextRotationValid(visitedObject)) {
-            // visitedObject.currentBlock.currentFigure = visitedObject.currentBlock.rotateOnce();
             visitedObject.currentBlock.rotate();
             this.placeBlock(visitedObject);
             console.log(visitedObject)
@@ -83,7 +81,6 @@ export class TetrisVisitor extends NextStateCalculator {
         const { pawnLayer, currentBlock } = visitedObject;
         const newLayer = this.mergeBlockToLayer({
             layer:getEmptyBoard(),
-            // block: currentBlock.currentFigure,
             block: currentBlock.blockDescriptor,
             cords: newCords,
         })
@@ -102,7 +99,6 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     setNewBrick(visitedObject: any) {
-        // visitedObject.currentBrick = visitedObject.blocksMaker.randomBlock;
         visitedObject.currentBlock = visitedObject.blocksMaker.getBlock(0);
     }
 
@@ -121,7 +117,6 @@ export class TetrisVisitor extends NextStateCalculator {
         visitedObject.resetLayer();
         const {pawnLayer, currentBlock} = visitedObject;
         const {currentFigure, currentHandlePoint} = currentBlock;
-        // visitedObject.pawnLayer = this.getMergedBlockToFreshLayer(visitedObject, currentBlock)
         visitedObject.pawnLayer = this.getMergedBlockToFreshLayer(visitedObject, {figure: currentFigure, handlePoint: currentHandlePoint})
     }
 
@@ -135,7 +130,6 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
 
-    // mergeBlockToLayer({ layer, block, cords }: { layer: BrickMap, block: NextFigure, cords:PawnCords }) {
     mergeBlockToLayer({ layer, block, cords }: { layer: BrickMap, block: BlockData, cords:PawnCords }) {
         const { col, row } = cords;
         const {figure, handlePoint} = block;
@@ -146,7 +140,7 @@ export class TetrisVisitor extends NextStateCalculator {
                 (bit: 0 | 1, colIndex: number) => {
                     if (layer.length - 1 >= rowIndex + row&& layer[0].length - 1 >= colIndex) {
                         console.log('deltaRow', deltaRow, 'deltaCol', deltaCol, 'row', row, 'col', col)
-                        layer[rowIndex + row - 2][colIndex + col + 2] = bit;
+                        layer[rowIndex + row + deltaRow][colIndex + col + deltaCol] = bit;
                     }
                 }
             )
