@@ -100,7 +100,7 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     setNewBrick(visitedObject: any) {
-        visitedObject.currentBlock = visitedObject.blocksMaker.getBlock(0);
+        visitedObject.currentBlock = visitedObject.blocksMaker.getBlock(1);
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number){
@@ -139,7 +139,7 @@ export class TetrisVisitor extends NextStateCalculator {
         const mergeRow = (rowIndex: number) => {
             figure[rowIndex].forEach(
                 (bit: 0 | 1, colIndex: number) => {
-                    if (layer.length - 1 >= rowIndex + row + deltaRow&& layer[0].length - 1 >= colIndex) {
+                    if (layer.length - 1 >= rowIndex + row + deltaRow && layer[0].length - 1 >= colIndex) {
                         layer[rowIndex + row + deltaRow][colIndex + col + deltaCol] = bit;
                     }
                 }

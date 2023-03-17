@@ -3,7 +3,7 @@ import { FigureHandlePoint, NextFigure } from "../../types/types";
 type Variant = 0 | 1 | 2 | 3;
 
 enum BlockClasses {
-    LongBlock, TBlock, SBlock, ZBlock, LeftLBlock, RightLBlock,
+    LongBlock, TBlock, SBlock, ZBlock, LeftLBlock, RightLBlock, SquareBlock
 }
 
 export interface BlockData {
@@ -13,7 +13,7 @@ export interface BlockData {
 
 export class Blocks {
     private listOfBlocks: any[] = [
-         LongBlock, TBlock, SBlock, ZBlock, LeftLBlock, RightLBlock,
+         LongBlock, TBlock, SBlock, ZBlock, LeftLBlock, RightLBlock, SquareBlock,
     ]
     private instances: any = this.listOfBlocks.map(b => {
        const block = new b();
@@ -155,12 +155,12 @@ export class TBlock extends Block {
     constructor() {
         super(
                 BLOCK_T,
-            [
-                {row: 1, col: 1},
-                {row: 1, col: 1},
-                {row: 1, col: 1},
-                {row: 1, col: 1},
-            ]
+                [
+                    {row: 0, col: 0},
+                    {row: -1, col: 0},
+                    {row: 0, col: 0},
+                    {row: -1, col: 0},
+                ]
         )
     }
 }
@@ -170,10 +170,10 @@ export class LeftLBlock extends Block {
         super(
                 BLOCK_L_LEFT,
             [
-                {row: 1, col: 1},
-                {row: 1, col: 1},
-                {row: 1, col: 1},
-                {row: 1, col: 1},
+                {row: 0, col: 0},
+                {row: -1, col: 0},
+                {row: 0, col: 0},
+                {row: -1, col: 0},
             ]
         )
     }
@@ -183,12 +183,12 @@ export class RightLBlock extends Block {
     constructor() {
         super(
                 BLOCK_L_RIGHT,
-            [
-                {row: 1, col: 1},
-                {row: 1, col: 1},
-                {row: 1, col: 1},
-                {row: 1, col: 1},
-            ]
+                [
+                    {row: 0, col: 0},
+                    {row: -1, col: 0},
+                    {row: 0, col: 0},
+                    {row: -1, col: 0},
+                ]
         )
     }
 }
@@ -197,12 +197,12 @@ export class SBlock extends Block {
     constructor() {
         super(
                 BLOCK_S,
-            [
-                {row: 1, col: 1},
-                {row: 1, col: 1},
-                {row: 1, col: 1},
-                {row: 1, col: 1},
-            ]
+                [
+                    {row: 0, col: 0},
+                    {row: -1, col: 0},
+                    {row: 0, col: 0},
+                    {row: -1, col: 0},
+                ]
         )
     }
 }
@@ -211,11 +211,25 @@ export class ZBlock extends Block {
     constructor() {
         super(
                 BLOCK_Z,
+                [
+                    {row: 0, col: 0},
+                    {row: -1, col: 0},
+                    {row: 0, col: 0},
+                    {row: -1, col: 0},
+                ]
+        )
+    }
+}
+
+export class SquareBlock extends Block {
+    constructor() {
+        super(
+                BLOCK_SQUARE,
             [
-                {row: 1, col: 1},
-                {row: 1, col: 1},
-                {row: 1, col: 1},
-                {row: 1, col: 1},
+                {row: 0, col: 0},
+                {row: 0, col: 0},
+                {row: 0, col: 0},
+                {row: 0, col: 0},
             ]
         )
     }
@@ -247,3 +261,7 @@ export const BLOCK_Z: NextFigure = [
         [0, 1, 1],
     ];
 
+export const BLOCK_SQUARE: NextFigure = [
+    [1, 1],
+    [1, 1],
+];
