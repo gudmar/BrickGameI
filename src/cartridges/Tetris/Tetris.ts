@@ -5,7 +5,7 @@ import { BrickMap, KeyPress, NextFigure } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { EMPTY_BOARD, getEmptyBoard } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
-import { and } from "../layers/toggle/toggleFunction";
+import { and, or } from "../layers/toggle/toggleFunction";
 import { BlockData, Blocks } from "./blocks";
 
 
@@ -115,11 +115,31 @@ export class TetrisVisitor extends NextStateCalculator {
             block: currentBlock.blockDescriptor,
             cords: newCords,
         })
+        const pawnLayerWithBg = this.combineLayers(pawnLayer, visitedObject.background);
+        const nextLayerWithBg = this.combineLayers(newLayer, visitedObject.background);
+        const sumCurrentBg = sumArrayElements(pawnLayerWithBg);
+        const sumNextBg = sumArrayElements(nextLayerWithBg);
         const sumOfCurrentLayer = sumArrayElements(pawnLayer);
         const sumOfNewLayer = sumArrayElements(newLayer);
         // console.log(newLayer)
         // console.log(sumOfNewLayer, sumOfCurrentLayer, sumOfCurrentLayer === sumOfNewLayer)
+        console.log(sumCurrentBg, sumNextBg, sumCurrentBg === sumNextBg)
+        return sumCurrentBg === sumNextBg;
         return sumOfCurrentLayer === sumOfNewLayer;
+    }
+
+    combineLayers(l1:BrickMap, l2: BrickMap):BrickMap {
+        const result = l1.map((layerRow: number[], index: number) => {
+            return this.combineRow(layerRow, l2[index])
+        })
+        return result;
+    }
+    private combineRow(layerRow: number[], boardRow: number[]):number[] {
+        return layerRow.map((layerBrick:number, index:number) => this.combineBrick(layerBrick, boardRow[index]))
+    }
+
+    private combineBrick(currentBrick:number, layerBrick:number):number {
+        return or(currentBrick, layerBrick);
     }
 
     isNextMoveDownDirection(visitedObject:any, newCords:PawnCords) {
@@ -137,7 +157,7 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     setNewBrick(visitedObject: any) {
-        visitedObject.currentBlock = visitedObject.blocksMaker.getBlock(1);
+        visitedObject.currentBlock = visitedObject.blocksMaker.getBlock(0);
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number){

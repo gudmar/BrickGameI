@@ -22,7 +22,9 @@ export class Blocks {
     // private _currentBlock = this.instances[0];
     private _randomBlock = this.getBlock(0);
     reset() {this.instances.forEach((instance:any) => {instance.reset();})}
-    getBlock(index: BlockClasses) { return this.instances[index]; }
+    getBlock(index: BlockClasses) { 
+        return this.instances[index]; 
+    }
     setRandomBlock() {
         const index = Math.floor(Math.random() * this.instances.length);
         this._randomBlock = this.instances[index];
@@ -58,7 +60,7 @@ export class Block {
     public getNewRandomVariant() {
         const index: Variant = Math.floor(Math.random() * this.variants.length) as Variant;
         this._currentVariant = index;
-        this._currentVariant = 0; // !!!!!!!!!!!!!!
+        console.log(this.variants.length, index)
         this.currentHandlePoint = this.figureHandlePoints[index];
         this.currentFigure = this.variants[index];
         return {
