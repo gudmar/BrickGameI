@@ -77,7 +77,6 @@ export class TetrisVisitor extends NextStateCalculator {
 
     isNextMoveInBoundries(visitedObject:any, newCords:PawnCords) {
         if (newCords.row < 0 || newCords.col < 0) return false;
-        console.log(newCords)
         const { pawnLayer, currentBlock } = visitedObject;
         const newLayer = this.mergeBlockToLayer({
             layer:getEmptyBoard(),
@@ -86,8 +85,8 @@ export class TetrisVisitor extends NextStateCalculator {
         })
         const sumOfCurrentLayer = sumArrayElements(pawnLayer);
         const sumOfNewLayer = sumArrayElements(newLayer);
-        console.log(newLayer)
-        console.log(sumOfNewLayer, sumOfCurrentLayer, sumOfCurrentLayer === sumOfNewLayer)
+        // console.log(newLayer)
+        // console.log(sumOfNewLayer, sumOfCurrentLayer, sumOfCurrentLayer === sumOfNewLayer)
         return sumOfCurrentLayer === sumOfNewLayer;
     }
 
@@ -95,6 +94,8 @@ export class TetrisVisitor extends NextStateCalculator {
         const figureAfterRotation = visitedObject.currentBlock.foretellFigureAfterRotation();
         const sumOfCurrentLayer = sumArrayElements(visitedObject.pawnLayer);
         const sumOfnextLayer = sumArrayElements(this.getMergedBlockToFreshLayer(visitedObject, figureAfterRotation));
+        console.log(figureAfterRotation)
+        console.log(sumOfCurrentLayer, sumOfnextLayer)
         return sumOfCurrentLayer === sumOfnextLayer;
     }
 
@@ -122,7 +123,7 @@ export class TetrisVisitor extends NextStateCalculator {
 
     getMergedBlockToFreshLayer(visitedObject:any, block:BlockData) {
         const layer = getEmptyBoard();
-        const {currentBlock} = visitedObject;
+        // const {currentBlock} = visitedObject;
         const result = this.mergeBlockToLayer({
             layer, block, cords: visitedObject.pawnCords
         });
@@ -133,19 +134,20 @@ export class TetrisVisitor extends NextStateCalculator {
     mergeBlockToLayer({ layer, block, cords }: { layer: BrickMap, block: BlockData, cords:PawnCords }) {
         const { col, row } = cords;
         const {figure, handlePoint} = block;
-        console.log(handlePoint)
         const { col: deltaCol, row: deltaRow } = handlePoint;
+        console.log(handlePoint)
         const mergeRow = (rowIndex: number) => {
             figure[rowIndex].forEach(
                 (bit: 0 | 1, colIndex: number) => {
-                    if (layer.length - 1 >= rowIndex + row&& layer[0].length - 1 >= colIndex) {
-                        console.log('deltaRow', deltaRow, 'deltaCol', deltaCol, 'row', row, 'col', col)
+                    if (layer.length - 1 >= rowIndex + row + deltaRow&& layer[0].length - 1 >= colIndex) {
                         layer[rowIndex + row + deltaRow][colIndex + col + deltaCol] = bit;
                     }
                 }
             )
         }
         figure.forEach((row: (0 | 1)[], rowIndex:number) => { mergeRow(rowIndex); })
+        console.log(layer)
+        console.log(block)
         return layer;
     }
 
