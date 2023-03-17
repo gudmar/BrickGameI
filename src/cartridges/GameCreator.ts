@@ -1,7 +1,7 @@
 import { BrickMap, GameLogicArgs, KeyPress, OneToTen } from "../types/types";
 import { GameLogic } from "./AbstractGameLogic";
 import { getEmptyBoard, EMPTY_NEXT_FIGURE } from "./constants";
-import { xor } from "./layers/toggle/toggleFunction";
+import { and, or, xor } from "./layers/toggle/toggleFunction";
 
 export interface PawnCords {
     row: number,
@@ -155,7 +155,22 @@ export class GameCreator extends GameLogic {
         return layerRow.map((layerBrick:number, index:number) => this.mergeBrick(layerBrick, boardRow[index]))
     }
 
-    private mergeBrick(currentBrick: number, layerBrick: number) {
+    public mergeBrick(currentBrick: number, layerBrick: number) {
         return xor(currentBrick, layerBrick);
+    }
+
+    private embedLayer():BrickMap {
+        const result = this.pawnLayer.map((layerRow: number[], index: number) => {
+            return this.embedRow(layerRow, this.background[index])
+        })
+        return result;
+    }
+
+    private embedRow(layerRow: number[], boardRow: number[]) {
+        return layerRow.map((layerBrick:number, index:number) => this.embedBrick(layerBrick, boardRow[index]))
+    }
+
+    private embedBrick(currentBrick:number, layerBrick:number) {
+        return or(currentBrick, layerBrick);
     }
 }

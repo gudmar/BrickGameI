@@ -6,6 +6,16 @@ export const xor = (currentBrick: number, layerBrick: number) => {
     return 0;
 }
 
+export const and = (currentBrick: number, layerBrick: number) => {
+    if (!currentBrick || !layerBrick) return 0
+    return 1;
+}
+
+export const or = (currentBrick: number, layerBrick: number) => {
+    if (!currentBrick && !layerBrick) return 0
+    return 1;
+}
+
 export const spiral = (currentBrick: number, layerBrick: number) => {
     // 0 0 => 0 
     // 0 1 => 1
