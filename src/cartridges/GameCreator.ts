@@ -101,7 +101,7 @@ export class GameCreator extends GameLogic {
     public getNextStateOnSpeedTick(time:number): GameLogicArgs {
         // Faster game actions
         if (this.checkIfGameLocked()) return this.state;
-        if (!this.isGameOver && !this.isGameWon){
+        if (!this.isGameOver && !this.isGameWon && !this.isAnimating){
             this.nextStateCalculator.setVisitorToNextStateOnSpeedTick(this, time)
             this.brickMap = this.mergeLayer();
         }
@@ -109,10 +109,10 @@ export class GameCreator extends GameLogic {
     }
 
     public getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {
-        // if (!this.isGameOver && !this.isGameWon){
+        if (!this.isGameOver && !this.isGameWon && !this.isAnimating){
             this.nextStateCalculator.setVisitorToNextStateOnKeyPress(this, keyPresses)
             this.brickMap = this.mergeLayer()    
-        // }
+        }
         return this.state;
     }
 

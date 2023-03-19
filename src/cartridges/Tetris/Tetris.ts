@@ -68,7 +68,8 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     setVisitorToNextStateOnTick(visitedObject:any){
-        //////////////////////////
+
+        visitedObject.juggernaut.tick();
     }
 
     async move(visitedObject:any, deltaRow:number, deltaCol:number) {
@@ -206,8 +207,7 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number){
-        console.log(time)
-        visitedObject.juggernaut.tick();
+        //////////////////////
     }
 
     placeBlock(visitedObject:any) {
@@ -267,7 +267,7 @@ export class TetrisVisitor extends NextStateCalculator {
 
 
 class Juggernaut {
-    private ANIMATION_DELAY_DIVIDER = 100;
+    private ANIMATION_DELAY_DIVIDER = 5;
     // private isAnimating:boolean = false;
     private nrOfTicksSinceStartedAnimation: number = 0;
     private demolitionsQueue: any[] = [];
@@ -308,26 +308,28 @@ class Juggernaut {
         const orderedDevastations = indexesForDemolition.map((indexForDemolition) => {
             const devastationProces = this.getDevastationProces(indexForDemolition);
             return devastationProces;
-        }).reverse();
+        });
         this.demolitionsQueue = orderedDevastations;
-        console.log(this.demolitionsQueue)
+        console.log(indexesForDemolition, this.demolitionsQueue)
     }
 
     getCopy(obj:any) { return JSON.parse(JSON.stringify(obj))}
 
     getDevastationProces(indexForDemolition:number) {
-        let ticks = 0;
+        let ticks = 1;
         const devastateTick = () => {
-            if (ticks === 0) {
+            if (ticks === 1) {
                 this.controlledObject.pawnLayer[indexForDemolition] = this.controlledObject.getEmptyRow();
                 console.log('Getting empty row')
             }
-            if (ticks % this.ANIMATION_DELAY_DIVIDER === 0){
-                this.controlledObject.pawnLayer.splice(indexForDemolition, 1);
+            if (ticks % this.ANIMATION_DELAY_DIVIDER === 0 && ticks % (2 * this.ANIMATION_DELAY_DIVIDER) !== 0){
+                // this.controlledObject.pawnLayer.splice(indexForDemolition, 1);
+                this.controlledObject.background[indexForDemolition] = this.controlledObject.getEmptyRow();
                 console.log('After remove', this.getCopy(this.controlledObject.pawnLayer))
             }
-            if (ticks % (2 * this.ANIMATION_DELAY_DIVIDER) === 0 && ticks % this.ANIMATION_DELAY_DIVIDER !== 0) {
-                this.controlledObject.pawnLayer.unshift(this.controlledObject.getEmptyRow());
+            if (ticks % (2 * this.ANIMATION_DELAY_DIVIDER) === 0) {
+                this.controlledObject.background.splice(indexForDemolition, 1);
+                this.controlledObject.background.unshift(this.controlledObject.getEmptyRow());
                 console.log('After addeing empty', this.getCopy(this.controlledObject.pawnLayer))
                 return true;
             }
