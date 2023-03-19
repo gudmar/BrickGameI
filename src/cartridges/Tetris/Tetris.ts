@@ -1,4 +1,4 @@
-import { addSyntheticLeadingComment } from "typescript";
+import { addSyntheticLeadingComment, DiagnosticCategory } from "typescript";
 import { findLastIndex } from "../../functions/findLastIndex";
 import { sumArrayElements } from "../../functions/sumArrayElements";
 import { BrickMap, KeyPress, NextFigure } from "../../types/types";
@@ -8,7 +8,7 @@ import { GameCreator, PawnCords } from "../GameCreator";
 import { and, or } from "../layers/toggle/toggleFunction";
 import { BlockData, Blocks } from "./blocks";
 
-
+const SINGLE_ANIMATION_DELAY = 500;
 
 export class TetrisDecorator {
     constructor() {
@@ -18,6 +18,7 @@ export class TetrisDecorator {
 }
 
 const gameEvents = {
+    NO_DEMOLITION: 'Dont demolish',
     DEMOLISH_SINGLE: 'Single score', // 11500 - 10800 = 700
     DEMOLISH_DOUBLE: 'Double score',
     DEMOLISH_TRIPLE: 'Triple score',
@@ -32,9 +33,9 @@ class Judge {
             case gameEvents.DEMOLISH_TRIPLE: visitedObject.score += 700; break;
             case gameEvents.DEMOLISH_QUATRO: visitedObject.score += 1100;
         }
-        if (visitedObject.score % 10000) {
-            visitedObject.speed += 1;
-        }
+        // if (visitedObject.score % 10000) {
+        //     visitedObject.speed += 1;
+        // }
     }
 }
 
@@ -45,8 +46,10 @@ enum MoveDirection {
 export class TetrisVisitor extends NextStateCalculator {
     initiate(visitedObject: any){
         const blocksInstance = new Blocks()
+        const juggernaut = new Juggernaut(visitedObject);
         visitedObject.name = 'Tetris'
         visitedObject.blocksMaker = blocksInstance;
+        visitedObject.juggernaut = juggernaut;
         this.setNewBrick(visitedObject);
         visitedObject.pawnCords = this.getStartingCords(visitedObject.currentBlock)
         this.placeBlock(visitedObject);
@@ -65,14 +68,13 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     setVisitorToNextStateOnTick(visitedObject:any){
-
+        //////////////////////////
     }
 
-    move(visitedObject:any, deltaRow:number, deltaCol:number) {
+    async move(visitedObject:any, deltaRow:number, deltaCol:number) {
         const {row, col} = visitedObject.pawnCords
         const newCords = {row: deltaRow + row, col:deltaCol + col};
         const isNextMoveValid = this.isNextMoveValid(visitedObject, newCords)
-        console.log(this.isNextMoveDownDirection(visitedObject, newCords), console.log(deltaRow))
         if (isNextMoveValid){
             visitedObject.resetLayer();
             visitedObject.pawnCords.row = row + deltaRow;
@@ -80,15 +82,60 @@ export class TetrisVisitor extends NextStateCalculator {
             this.mergeCurrentBlockToLayer(visitedObject);    
         }
         const wasBrickEmbeded = this.tryEmbedBrick(visitedObject, isNextMoveValid, newCords);
-        console.log('Was embeded', wasBrickEmbeded)
         if (wasBrickEmbeded) {
+            this.handleDemolition(visitedObject)
             this.placeNextBlock(visitedObject)
         }
     }
 
+    handleDemolition(visitedObject:any) {
+        visitedObject.juggernaut.tryDemolition();
+    }
+
+    // async tryDemolition(visitedObject:any) {
+    //     const indexesForDemolition = this.findRowIndexesForDemolition(visitedObject);
+    //     if (indexesForDemolition.length > 0) {
+    //         await this.devastateAll(visitedObject, indexesForDemolition)
+    //     }
+    // }
+
+    // async devastateAll(visitedObject:any, indexesForDemolition:number[]){
+    //     visitedObject.isAnimating = true;
+    //     for (let index = indexesForDemolition.length -1; index--; index >=0) {
+    //         await this.devastateSingle(visitedObject, indexesForDemolition[index])
+    //     }
+    //     visitedObject.isAnimating = false;
+    // }
+
+    // async devastateSingle(visitedObject:any, index:number) {
+    //     visitedObject.pawnLayer[index] = visitedObject.getEmptyRow();
+    //     await visitedObject.delay(SINGLE_ANIMATION_DELAY);
+    //     visitedObject.pawnLayer.splice(index, 1);
+    //     visitedObject.pawnLayer.unshift(visitedObject.getEmptyRow());
+    //     await visitedObject.delay(SINGLE_ANIMATION_DELAY);
+    //     return true;
+    // }
+
+    // informJudge(indexesForDemolition:number[]){
+    //     const  { length: nrOfDemolitions } = indexesForDemolition;
+    //     const eventsList = [gameEvents.NO_DEMOLITION, gameEvents.DEMOLISH_SINGLE, gameEvents.DEMOLISH_DOUBLE, gameEvents.DEMOLISH_TRIPLE, gameEvents.DEMOLISH_QUATRO];
+    //     const properEvent = eventsList[nrOfDemolitions];
+    //     return properEvent;
+    // }
+
+    // findRowIndexesForDemolition(visitedObject:any){
+    //     const { background } = visitedObject;
+    //     const indexesForDemolition = background.reduce((indexes:number[], row:number[], index:number) => {
+    //         if (this.isRowForDemolition(row)) { indexes.push(index)}
+    //     }, [])
+    //     return indexesForDemolition;
+    // }
+    // isRowForDemolition(row: number[]){
+    //     return row.every(item => item > 0);
+    // }
+
     tryEmbedBrick(visitedObject: any, wasMoveMade: boolean, newCords:PawnCords) {
         const isNextMoveDown = this.isNextMoveDownDirection(visitedObject, newCords);
-        console.log(wasMoveMade, isNextMoveDown)
         if (!wasMoveMade && isNextMoveDown) {
             this.embedBrick(visitedObject);
             return true;
@@ -99,7 +146,6 @@ export class TetrisVisitor extends NextStateCalculator {
     embedBrick(visitedObject:any) {
         const newBackground = visitedObject.embedLayer();
         visitedObject.background = newBackground;
-        console.log(visitedObject)
     }
 
     isNextMoveValid(visitedObject:any, newCords:PawnCords) {
@@ -123,7 +169,6 @@ export class TetrisVisitor extends NextStateCalculator {
         const sumOfNewLayer = sumArrayElements(newLayer);
         // console.log(newLayer)
         // console.log(sumOfNewLayer, sumOfCurrentLayer, sumOfCurrentLayer === sumOfNewLayer)
-        console.log(sumCurrentBg, sumNextBg, sumCurrentBg === sumNextBg)
         return sumCurrentBg === sumNextBg;
         return sumOfCurrentLayer === sumOfNewLayer;
     }
@@ -161,10 +206,8 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number){
-        // this.move(visitedObject, 1, 0);
-        // move down,
-        // check if should be merged permanently with background,
-        // merge if should be merged
+        console.log(time)
+        visitedObject.juggernaut.tick();
     }
 
     placeBlock(visitedObject:any) {
@@ -219,5 +262,100 @@ export class TetrisVisitor extends NextStateCalculator {
         return layer;
     }
 
+
+}
+
+
+class Juggernaut {
+    private ANIMATION_DELAY_DIVIDER = 100;
+    // private isAnimating:boolean = false;
+    private nrOfTicksSinceStartedAnimation: number = 0;
+    private demolitionsQueue: any[] = [];
+    private controlledObject: any;
+    constructor(controlledObject:any){
+        this.controlledObject = controlledObject;
+    }
+
+    tick(){
+        if (this.controlledObject.isAnimating) this.nrOfTicksSinceStartedAnimation++;
+        this.runQueue();
+    }
+
+    runQueue() {
+        if (this.demolitionsQueue.length !== 0) {
+            this.tickTask();
+        } else {
+            this.controlledObject.isAnimating = false;
+            this.nrOfTicksSinceStartedAnimation = 0;
+        }
+    }
+
+    tickTask() {
+        const result = this.demolitionsQueue[0]();
+        if (result) this.demolitionsQueue.shift();
+    }
+
+    tryDemolition() {
+        if (this.controlledObject.isAnimating) {this.tick(); return;}
+        const indexesForDemolition = this.findRowIndexesForDemolition(this.controlledObject);
+        if (indexesForDemolition.length > 0) {
+            this.queueAllDevastations(indexesForDemolition)
+        }
+    }
+
+    queueAllDevastations(indexesForDemolition:number[]){
+        this.controlledObject.isAnimating = true;
+        const orderedDevastations = indexesForDemolition.map((indexForDemolition) => {
+            const devastationProces = this.getDevastationProces(indexForDemolition);
+            return devastationProces;
+        }).reverse();
+        this.demolitionsQueue = orderedDevastations;
+        console.log(this.demolitionsQueue)
+    }
+
+    getCopy(obj:any) { return JSON.parse(JSON.stringify(obj))}
+
+    getDevastationProces(indexForDemolition:number) {
+        let ticks = 0;
+        const devastateTick = () => {
+            if (ticks === 0) {
+                this.controlledObject.pawnLayer[indexForDemolition] = this.controlledObject.getEmptyRow();
+                console.log('Getting empty row')
+            }
+            if (ticks % this.ANIMATION_DELAY_DIVIDER === 0){
+                this.controlledObject.pawnLayer.splice(indexForDemolition, 1);
+                console.log('After remove', this.getCopy(this.controlledObject.pawnLayer))
+            }
+            if (ticks % (2 * this.ANIMATION_DELAY_DIVIDER) === 0 && ticks % this.ANIMATION_DELAY_DIVIDER !== 0) {
+                this.controlledObject.pawnLayer.unshift(this.controlledObject.getEmptyRow());
+                console.log('After addeing empty', this.getCopy(this.controlledObject.pawnLayer))
+                return true;
+            }
+            ticks++;
+            return false;
+        }
+        return devastateTick.bind(this);
+    }
+
+
+    informJudge(indexesForDemolition:number[]){
+        const  { length: nrOfDemolitions } = indexesForDemolition;
+        const eventsList = [gameEvents.NO_DEMOLITION, gameEvents.DEMOLISH_SINGLE, gameEvents.DEMOLISH_DOUBLE, gameEvents.DEMOLISH_TRIPLE, gameEvents.DEMOLISH_QUATRO];
+        const properEvent = eventsList[nrOfDemolitions];
+        return properEvent;
+    }
+
+    findRowIndexesForDemolition(visitedObject:any){
+        const { background } = visitedObject;
+        const indexesForDemolition = background.reduce((indexes:number[], row:number[], index:number) => {
+            if (this.isRowForDemolition(row)) { indexes.push(index)}
+            return indexes;
+        }, [])
+        console.log('For demo', indexesForDemolition)
+        return indexesForDemolition;
+    }
+    isRowForDemolition(row: number[]){
+        return row.every(item => item > 0);
+    }
 
 }

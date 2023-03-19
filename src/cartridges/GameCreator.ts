@@ -45,6 +45,22 @@ export class GameCreator extends GameLogic {
         this.pawnLayer = getEmptyBoard();
     }
 
+    public getEmptyRow() {
+        return getEmptyBoard()[0];
+    }
+
+    public async delay(time: number) {
+        const waiter = new Promise((resolve) => {
+            const timeout = setTimeout(() => {
+                resolve(true);
+                clearTimeout(timeout)
+            }, time)
+        })
+        await waiter;
+        return true;
+    } 
+
+
     public informJudge(information: string, payload?: any) {
         this.judge.inform(this, information, payload);
     }
