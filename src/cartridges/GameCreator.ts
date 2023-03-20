@@ -91,10 +91,10 @@ export class GameCreator extends GameLogic {
 
     public getNextStateOnTick(time:number): GameLogicArgs {
         // Blinking pawn
-        if (!this.isGameOver && !this.isGameWon){
+        // if (!this.isGameOver && !this.isGameWon){
             this.nextStateCalculator.setVisitorToNextStateOnTick(this, time)
             this.brickMap = this.mergeLayer();
-        }
+        // }
         return this.state;
     }
 
@@ -108,8 +108,15 @@ export class GameCreator extends GameLogic {
         return this.state;
     }
 
+    // private isGameUnlocked() {
+    //     return !this.isGameOver && !this.isGameWon && !this.isAnimating
+    // }
+
     public getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {
-        if (!this.isGameOver && !this.isGameWon && !this.isAnimating){
+        if (keyPresses === KeyPress.Start) this.startGame();
+        if (keyPresses === KeyPress.Speed) this.increaseSpeed();
+        if (keyPresses === KeyPress.Level) this.increaseLevel();
+        if (!this.checkIfGameLocked()){
             this.nextStateCalculator.setVisitorToNextStateOnKeyPress(this, keyPresses)
             this.brickMap = this.mergeLayer()    
         }
@@ -122,9 +129,15 @@ export class GameCreator extends GameLogic {
         return (this.isGameOver || !this.isGameStarted || this.isPaused || this.isGameWon )
     }
 
-    public rotate() { this.nextStateCalculator.rotate(this) }
+    public rotate() { 
+        if (!this.checkIfGameLocked()){
+            this.nextStateCalculator.rotate(this)
+        }
+    }
     public increaseSpeed() { this.speed > 9 ? this.speed = 1 : this.speed++; console.log('speed', this.speed) }
+
     public increaseLevel() { this.level > 9 ? this.level = 1 : this.level++ }
+
     public startGame() { 
         this.isGameStarted = true;
         this.isGameOver = false;

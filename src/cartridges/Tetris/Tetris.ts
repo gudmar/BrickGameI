@@ -1,14 +1,11 @@
-import { addSyntheticLeadingComment, DiagnosticCategory } from "typescript";
-import { findLastIndex } from "../../functions/findLastIndex";
+
 import { sumArrayElements } from "../../functions/sumArrayElements";
-import { BrickMap, KeyPress, NextFigure } from "../../types/types";
+import { BrickMap } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { EMPTY_BOARD, getEmptyBoard } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
-import { and, or } from "../layers/toggle/toggleFunction";
+import { or } from "../layers/toggle/toggleFunction";
 import { BlockData, Blocks } from "./blocks";
-
-const SINGLE_ANIMATION_DELAY = 500;
 
 export class TetrisDecorator {
     constructor() {
@@ -56,8 +53,16 @@ export class TetrisVisitor extends NextStateCalculator {
 
     }
 
-    getStartingCords(block: BlockData){
-        return { col: 3, row: 5 };
+    getStartingCords(block: any){
+        const { col, row } = block.currentHandlePoint;
+        const { currentFigure } = block;
+        const figureHeight = currentFigure.length;
+        const figureWidth = currentFigure[0].length;
+        const getCeilingDistance = () => {
+
+        }
+        console.log(block, row, col, figureHeight, figureWidth,row >= 0 ? row : 0)
+        return { col: col + 5, row: row >= 0 ? row : 0 };
     }
 
     rotate(visitedObject:any) {
@@ -72,7 +77,8 @@ export class TetrisVisitor extends NextStateCalculator {
         visitedObject.juggernaut.tick();
     }
 
-    async move(visitedObject:any, deltaRow:number, deltaCol:number) {
+    move(visitedObject:any, deltaRow:number, deltaCol:number) {
+        if (!visitedObject.frozen && deltaRow < 0) return;
         const {row, col} = visitedObject.pawnCords
         const newCords = {row: deltaRow + row, col:deltaCol + col};
         const isNextMoveValid = this.isNextMoveValid(visitedObject, newCords)
@@ -124,12 +130,7 @@ export class TetrisVisitor extends NextStateCalculator {
         const nextLayerWithBg = this.combineLayers(newLayer, visitedObject.background);
         const sumCurrentBg = sumArrayElements(pawnLayerWithBg);
         const sumNextBg = sumArrayElements(nextLayerWithBg);
-        const sumOfCurrentLayer = sumArrayElements(pawnLayer);
-        const sumOfNewLayer = sumArrayElements(newLayer);
-        // console.log(newLayer)
-        // console.log(sumOfNewLayer, sumOfCurrentLayer, sumOfCurrentLayer === sumOfNewLayer)
         return sumCurrentBg === sumNextBg;
-        return sumOfCurrentLayer === sumOfNewLayer;
     }
 
     combineLayers(l1:BrickMap, l2: BrickMap):BrickMap {
@@ -168,6 +169,7 @@ export class TetrisVisitor extends NextStateCalculator {
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number){
         //////////////////////
+        this.move(visitedObject, 1, 0);
     }
 
     placeBlock(visitedObject:any) {
@@ -182,7 +184,6 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     placeNextBlock(visitedObject:any){
-        // this.setNewBrick(visitedObject);
         visitedObject.currentBlock = this.getNextBlock();
         visitedObject.pawnCords = this.getStartingCords(visitedObject.currentBlock);
         this.placeBlock(visitedObject)
@@ -197,7 +198,6 @@ export class TetrisVisitor extends NextStateCalculator {
 
     getMergedBlockToFreshLayer(visitedObject:any, block:BlockData) {
         const layer = getEmptyBoard();
-        // const {currentBlock} = visitedObject;
         const result = this.mergeBlockToLayer({
             layer, block, cords: visitedObject.pawnCords
         });
@@ -209,11 +209,13 @@ export class TetrisVisitor extends NextStateCalculator {
         const { col, row } = cords;
         const {figure, handlePoint} = block;
         const { col: deltaCol, row: deltaRow } = handlePoint;
+        const positiveDeltaRow = deltaRow < 0 ? 0 : deltaRow;
         const mergeRow = (rowIndex: number) => {
             figure[rowIndex].forEach(
                 (bit: 0 | 1, colIndex: number) => {
-                    if (layer.length - 1 >= rowIndex + row + deltaRow && layer[0].length - 1 >= colIndex) {
-                        layer[rowIndex + row + deltaRow][colIndex + col + deltaCol] = bit;
+                    if (layer.length - 1 >= rowIndex + row + positiveDeltaRow && layer[0].length - 1 >= colIndex) {
+                        console.log(rowIndex, row, positiveDeltaRow, colIndex, col, deltaCol)
+                        layer[rowIndex + row + positiveDeltaRow][colIndex + col + deltaCol] = bit;
                     }
                 }
             )
@@ -257,6 +259,7 @@ class Juggernaut {
     tryDemolition() {
         if (this.controlledObject.isAnimating) {this.tick(); return;}
         const indexesForDemolition = this.findRowIndexesForDemolition(this.controlledObject);
+        this.informJudge(indexesForDemolition);
         if (indexesForDemolition.length > 0) {
             this.queueAllDevastations(indexesForDemolition)
         }
@@ -296,10 +299,12 @@ class Juggernaut {
 
 
     informJudge(indexesForDemolition:number[]){
+        const judge = new Judge();
         const  { length: nrOfDemolitions } = indexesForDemolition;
         const eventsList = [gameEvents.NO_DEMOLITION, gameEvents.DEMOLISH_SINGLE, gameEvents.DEMOLISH_DOUBLE, gameEvents.DEMOLISH_TRIPLE, gameEvents.DEMOLISH_QUATRO];
         const properEvent = eventsList[nrOfDemolitions];
-        return properEvent;
+        judge.inform(this.controlledObject, properEvent)
+        // return properEvent;
     }
 
     findRowIndexesForDemolition(visitedObject:any){
