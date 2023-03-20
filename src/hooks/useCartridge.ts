@@ -124,6 +124,7 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
     }
     const handlePause = () => {
         const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Pause);
+        console.log(nextState)
         setGameState(nextState);
         return {};
     }

@@ -1,7 +1,8 @@
-import React, { memo } from 'react';
-import { NextFigurePreview, OneToTen } from '../../../../../types/types';
+import React, { memo, useEffect } from 'react';
+import { NextFigure, NextFigurePreview, OneToTen } from '../../../../../types/types';
 import { Digit } from '../../../../Digit/Digit';
 import { getDigits } from '../../../../Digit/Digits';
+import { NextFigureDisplay } from '../../NextFigure/NextFigureDisplay';
 import styles from './styles.module.css';
 
 interface ScoreBarProps {
@@ -18,13 +19,14 @@ interface ScoreBarProps {
 
 function ScoreBar(
   {
-    score, level, speed, isGameOver, isGameWon, isGameStarted, isAnimating, isPaused
+    score, level, speed, isGameOver, isGameWon, isGameStarted, isAnimating, isPaused, nextFigure
   }: ScoreBarProps) {
   const shouldTurnOffScoreBar = () => {
     if (isAnimating) return true;
     // if (!isGameStarted) return true;
     return false;
   }
+  useEffect(() => {console.log(nextFigure)}, [ nextFigure]);
   
     return (
         <div className={styles.container}>
@@ -34,6 +36,7 @@ function ScoreBar(
             isOff={shouldTurnOffScoreBar()}
             nrOfDigits={5}
           />
+          <NextFigureDisplay nextFigure={nextFigure as NextFigure} />
           <GameAttribute
             label='Speed'
             value={speed}

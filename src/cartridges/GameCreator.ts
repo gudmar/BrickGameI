@@ -113,13 +113,8 @@ export class GameCreator extends GameLogic {
     // }
 
     public getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {
-        if (keyPresses === KeyPress.Start) this.startGame();
-        if (keyPresses === KeyPress.Speed) this.increaseSpeed();
-        if (keyPresses === KeyPress.Level) this.increaseLevel();
-        if (!this.checkIfGameLocked()){
             this.nextStateCalculator.setVisitorToNextStateOnKeyPress(this, keyPresses)
             this.brickMap = this.mergeLayer()    
-        }
         return this.state;
     }
 
@@ -143,7 +138,10 @@ export class GameCreator extends GameLogic {
         this.isGameOver = false;
         this.isGameWon = false;
     }
-    public pauseGame() { this.isPaused = !this.isPaused;}
+    public pauseGame() { 
+        console.trace('Togging pause')
+        this.isPaused = !this.isPaused;
+    }
 
     // private updateState(nextState: GameLogicArgs) {
     //     const {

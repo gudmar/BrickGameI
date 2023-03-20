@@ -20,18 +20,28 @@ export class Blocks {
        return block;
     })
     // private _currentBlock = this.instances[0];
-    private _randomBlock = this.getBlock(0);
+    private _currentBlock = this.getBlock(0);
+    private _nextBlock = this.getRandomBloc();
     reset() {this.instances.forEach((instance:any) => {instance.reset();})}
+
     getBlock(index: BlockClasses) { 
         return this.instances[index]; 
     }
-    setRandomBlock() {
+
+    getRandomBloc() {
         const index = Math.floor(Math.random() * this.instances.length);
-        this._randomBlock = this.instances[index];
-        this._randomBlock.getNewRandomVariant();
+        return this.instances[index];
     }
 
-    get randomBlock() { return this._randomBlock; }
+    setNewBlock() {
+        const index = Math.floor(Math.random() * this.instances.length);
+        this._currentBlock = this._nextBlock;
+        this._nextBlock = this.instances[index];
+        this._nextBlock.getNewRandomVariant();
+    }
+
+    get currentBlock() { return this._currentBlock; }
+    get nextBlock() { return this._nextBlock; }
 }
 
 export class Block {

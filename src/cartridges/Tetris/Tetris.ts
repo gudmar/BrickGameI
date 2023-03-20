@@ -48,20 +48,21 @@ export class TetrisVisitor extends NextStateCalculator {
         visitedObject.blocksMaker = blocksInstance;
         visitedObject.juggernaut = juggernaut;
         this.setNewBrick(visitedObject);
+        this.placeNewBlocks(visitedObject);
         visitedObject.pawnCords = this.getStartingCords(visitedObject.currentBlock)
-        this.placeBlock(visitedObject);
+        // this.placeBlock(visitedObject);
 
     }
 
     getStartingCords(block: any){
         const { col, row } = block.currentHandlePoint;
-        const { currentFigure } = block;
-        const figureHeight = currentFigure.length;
-        const figureWidth = currentFigure[0].length;
-        const getCeilingDistance = () => {
+        // const { currentFigure } = block;
+        // const figureHeight = currentFigure.length;
+        // const figureWidth = currentFigure[0].length;
+        // const getCeilingDistance = () => {
 
-        }
-        console.log(block, row, col, figureHeight, figureWidth,row >= 0 ? row : 0)
+        // }
+        // console.log(block, row, col, figureHeight, figureWidth,row >= 0 ? row : 0)
         return { col: col + 5, row: row >= 0 ? row : 0 };
     }
 
@@ -91,7 +92,7 @@ export class TetrisVisitor extends NextStateCalculator {
         const wasBrickEmbeded = this.tryEmbedBrick(visitedObject, isNextMoveValid, newCords);
         if (wasBrickEmbeded) {
             this.handleDemolition(visitedObject)
-            this.placeNextBlock(visitedObject)
+            this.placeNewBlocks(visitedObject)
         }
     }
 
@@ -176,22 +177,25 @@ export class TetrisVisitor extends NextStateCalculator {
         this.mergeCurrentBlockToLayer(visitedObject);
     }
 
-    getNextBlock() {
-        const blocks = new Blocks();
-        blocks.setRandomBlock();
-        const randomBlock = blocks.randomBlock;
-        return randomBlock;
+    takeNewBlocks(visitedObject:any) {
+        const blocks = visitedObject.blocksMaker;
+        blocks.setNewBlock();
+        const { currentBlock, nextBlock } = blocks;
+        return { currentBlock, nextBlock}
     }
 
-    placeNextBlock(visitedObject:any){
-        visitedObject.currentBlock = this.getNextBlock();
+    placeNewBlocks(visitedObject:any){
+        const { currentBlock, nextBlock } = this.takeNewBlocks(visitedObject);
+        visitedObject.currentBlock = currentBlock;
+        visitedObject.nextBlock = nextBlock;
+        visitedObject.nextFigure =  nextBlock.blockDescriptor.figure;
         visitedObject.pawnCords = this.getStartingCords(visitedObject.currentBlock);
         this.placeBlock(visitedObject)
     }
 
     mergeCurrentBlockToLayer(visitedObject:any){
         visitedObject.resetLayer();
-        const {pawnLayer, currentBlock} = visitedObject;
+        const {currentBlock} = visitedObject;
         const {currentFigure, currentHandlePoint} = currentBlock;
         visitedObject.pawnLayer = this.getMergedBlockToFreshLayer(visitedObject, {figure: currentFigure, handlePoint: currentHandlePoint})
     }
@@ -214,7 +218,6 @@ export class TetrisVisitor extends NextStateCalculator {
             figure[rowIndex].forEach(
                 (bit: 0 | 1, colIndex: number) => {
                     if (layer.length - 1 >= rowIndex + row + positiveDeltaRow && layer[0].length - 1 >= colIndex) {
-                        console.log(rowIndex, row, positiveDeltaRow, colIndex, col, deltaCol)
                         layer[rowIndex + row + positiveDeltaRow][colIndex + col + deltaCol] = bit;
                     }
                 }

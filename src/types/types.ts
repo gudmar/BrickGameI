@@ -6,7 +6,9 @@ export type Speed = OneToTen;
 
 export type Level = OneToTen;
 
+// export type NextFigurePreview = number[][]
 export type NextFigurePreview = number[][]
+
 export type BrickMap = number[][];
 
 export interface ScheaduleProps {
