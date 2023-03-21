@@ -36,7 +36,9 @@ function ScoreBar(
             isOff={shouldTurnOffScoreBar()}
             nrOfDigits={5}
           />
+          <div className={styles.space} />
           <NextFigureDisplay nextFigure={nextFigure as NextFigure} />
+          <div className={styles.space} />
           <GameAttribute
             label='Speed'
             value={speed}

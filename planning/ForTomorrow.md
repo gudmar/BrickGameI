@@ -1,4 +1,4 @@
-* Next block is not displayed,
++ * Next block is not displayed,
 * speed is too slow,
 * level not implemented,
 * Locking nextOnspeed (block falling) with game code

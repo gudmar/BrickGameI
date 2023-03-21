@@ -1,4 +1,9 @@
-import { KeyReader, errors } from '../KeyReader'
+import { KeyReader, errors, EVERY_KEY, keyCodes } from '../KeyReader'
+
+class KeyMemorizer{
+    public result: string = '';
+    cbFunction(key?:string){this.result+=key;}
+}
 
 describe('Testing KeyReader', () => {
     afterEach(() => { delete KeyReader.instance })
@@ -554,6 +559,119 @@ describe('Testing KeyReader', () => {
             expect(cb_4).not.toHaveBeenCalled();
 
         })
+    });
+    describe('Testing subscription to all keys', () => {
+        it('Should subscribe to all keys if modifier not defined and type is ALL_KEYS', () => {
+            const keyReader = new KeyReader();
+            const id_1 = '1';
+            const id_2 = '2';
+            const cb_1 = jest.fn();
+            const cb_2 = jest.fn();
+            const expected = {
+                '1': cb_1, '2': cb_2,
+            }
+            keyReader.subscribe({id: id_1, eventType: EVERY_KEY, callback: cb_1});
+            keyReader.subscribe({id: id_2, eventType: EVERY_KEY, callback: cb_2});
+            expect(keyReader.subscribtionsALL).toEqual(expected);
+
+        });
+        it ('Should unsubscribe from subscription to all keys if unsubscribe that with proper id called', () => {
+            const keyReader = new KeyReader();
+            const id_1 = '1';
+            const id_2 = '2';
+            const cb_1 = jest.fn();
+            const cb_2 = jest.fn();
+            const expected = {
+                '2': cb_2,
+            }
+            keyReader.subscribe({id: id_1, eventType: EVERY_KEY, callback: cb_1});
+            keyReader.subscribe({id: id_2, eventType: EVERY_KEY, callback: cb_2});
+            keyReader.unsubscribe({id: id_1, eventType: EVERY_KEY});
+            expect(keyReader.subscribtionsALL).toEqual(expected);
+        })
+        it ('Should launch callback function 5 times if subscribed to all and "1egy4" called', () => {
+            const keyReader = new KeyReader();
+            const keyMemorizer = new KeyMemorizer();
+            const id_1 = '1';
+            keyReader.subscribe({id: id_1, eventType: EVERY_KEY, callback: keyMemorizer.cbFunction.bind(keyMemorizer)});
+            'legy4'.split('').forEach((char) => {
+                keyReader.onKeyDown({
+                    altKey: false,
+                    ctrlKey: false,
+                    key: char,
+                    repeat: false,
+                    shiftKey: false,
+                    preventDefault: () => {},
+                })
+            })
+            const expected = 'legy4'
+            expect(keyMemorizer.result).toEqual(expected);
+        })
+        it ('Should lauch callback function 3 times, once if i$F passed (note, shift moidfier here)', () => {
+            // Shift not implemented at the moment, as not needed for this app
+        })
+        it('Should launch callback function 3 times if "ctrl, d, 3" clicked', () => {
+            const keyReader = new KeyReader();
+            const keyMemorizer = new KeyMemorizer();
+            const id_1 = '1';
+            keyReader.subscribe({id: id_1, eventType: EVERY_KEY, callback: keyMemorizer.cbFunction.bind(keyMemorizer)});
+            [keyCodes.CTRL, 'd', '3'].forEach((char) => {
+                keyReader.onKeyDown({
+                    altKey: false,
+                    ctrlKey: false,
+                    key: char,
+                    repeat: false,
+                    shiftKey: false,
+                    preventDefault: () => {},
+                })
+            })
+            const expected = `${keyCodes.CTRL}d3`
+            expect(keyMemorizer.result).toEqual(expected);
+        })
+        it('Shoud inform callback even if default behaviour is not prevented', () => {
+            const keyReader = new KeyReader([keyCodes.F12]);
+            const keyMemorizer = new KeyMemorizer();
+            const id_1 = '1';
+            keyReader.subscribe({id: id_1, eventType: EVERY_KEY, callback: keyMemorizer.cbFunction.bind(keyMemorizer)});
+            
+                keyReader.onKeyDown({
+                    altKey: false,
+                    ctrlKey: false,
+                    key: keyCodes.F12,
+                    repeat: false,
+                    shiftKey: false,
+                    preventDefault: () => {},
+                })
+            
+            const expected = keyCodes.F12
+            expect(keyMemorizer.result).toEqual(expected);
+        })
+    })
+    describe('Testing subscription to all keys with subscription to a single key', () => {
+        it('Should call 1 callback 3 times and second 5 times if subscribed to a, and subscrbed to all and hit "atama"', () => {
+            const keyReader = new KeyReader([keyCodes.F12]);
+            const keyMemorizer = new KeyMemorizer();
+            const noneCb = jest.fn();
+            const id_1 = 'all';
+            const id_3 = 'none'
+            keyReader.subscribe({id: id_1, eventType: EVERY_KEY, callback: keyMemorizer.cbFunction.bind(keyMemorizer)});
+            keyReader.subscribe({id: id_3, eventType: keyCodes.A, callback: noneCb});
+            
+            'atama'.split('').forEach((char) => {
+                keyReader.onKeyDown({
+                    altKey: false,
+                    ctrlKey: false,
+                    key: char,
+                    repeat: false,
+                    shiftKey: false,
+                    preventDefault: () => {},
+                })
+            })
+            
+            const expected = 'atama'
+            expect(keyMemorizer.result).toEqual(expected);
+            expect(noneCb).toHaveBeenCalledTimes(3);
+
+        })
     })
 })
-// });

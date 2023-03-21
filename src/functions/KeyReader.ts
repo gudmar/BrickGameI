@@ -3,8 +3,12 @@ import { findAllByAltText } from "@testing-library/react";
 
 const KEYDOWN = 'keydown';
 
+export const EVERY_KEY = 'Every key';
+
+export type KeyReaderCallback = (key?:string) => void
+
 interface Subscribtion {
-    id: string, eventType: string, callback: (() => {}), typeModifier?: string,
+    id: string, eventType: string, callback: KeyReaderCallback, typeModifier?: string,
 }
 
 interface Unsubscribtion {
@@ -110,6 +114,7 @@ export class KeyReader {
     holdReadingInputs = false;
     private _subscribtions: any = {};
     private _subscribtionsCTRL: any = {};
+    private _subscribtionsALL: any = {};
     private notPrevented: string[] = [];
 
     constructor(listOfNotPreventedDefaultBehavours?:string[]) {
@@ -121,6 +126,7 @@ export class KeyReader {
 
     public get subscribtions() { return this._subscribtions }
     public get subscribtionsCTRL() { return this._subscribtionsCTRL }
+    public get subscribtionsALL() { return this._subscribtionsALL }
 
     private createPath({eventType, id, root}: PathCreationable):void{
         if (!root[eventType]) root[eventType] = {};
@@ -129,6 +135,10 @@ export class KeyReader {
 
     subscribe({ id, eventType, callback, typeModifier }: Subscribtion) {
         this.throwIfTypeNotAllowed(eventType);
+        if (eventType === EVERY_KEY) {
+            this.subscribeAll(id, callback);
+            return;
+        }
         switch( typeModifier ){
             case undefined: {
                 this.subscribeNoModifier({id, eventType, callback});
@@ -142,8 +152,12 @@ export class KeyReader {
         }
     }
 
+    private subscribeAll(id: string, callback: KeyReaderCallback ) {
+        this._subscribtionsALL[id] = callback;
+    }
+
     private throwIfTypeNotAllowed = (type:string) => {
-        const allowedTypes = Object.values(KeyReader.keys);
+        const allowedTypes = [ ...Object.values(KeyReader.keys), EVERY_KEY ];
         if (!allowedTypes.find(t => t === type)) {
             throw new Error(KeyReader.errors.WRONG_TYPE)
         }
@@ -161,6 +175,10 @@ export class KeyReader {
 
     unsubscribe({ id, eventType, typeModifier }: Unsubscribtion) {
         this.throwIfTypeNotAllowed(eventType);
+        if (eventType === EVERY_KEY) {
+            delete this._subscribtionsALL[id];
+            return;
+        }
         switch(typeModifier){
             case undefined: {
                 delete this._subscribtions[eventType][id];
@@ -186,6 +204,7 @@ export class KeyReader {
             event.preventDefault();
         }
         console.log('Key pressed: ', key)
+        this.runCallbacksForAll({key, shiftKey, ctrlKey, altKey});
         if(altKey){throw new Error(errors.NOT_IMPLEMENTED)}
         if(shiftKey){throw new Error(errors.NOT_IMPLEMENTED)}
         if(ctrlKey){this.runCallbacks(this.subscribtionsCTRL, key)}
@@ -193,6 +212,11 @@ export class KeyReader {
             this.runCallbacks(this.subscribtions, key);
         }
     };
+
+    runCallbacksForAll({key, shiftKey, ctrlKey, altKey}: {key:string, shiftKey:boolean, ctrlKey:boolean, altKey:boolean}) {
+        const callbacks = Object.values(this._subscribtionsALL);
+        callbacks.forEach( ( cb ) => { (cb as KeyReaderCallback)(key)})
+    }
 
     runCallbacks(root:any, eventType:string){
         if (!root[eventType]) return;
