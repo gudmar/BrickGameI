@@ -1,6 +1,4 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { useState } from 'react';
-import { act } from 'react-dom/test-utils';
 import { KeyReader } from '../../functions/KeyReader';
 import { useGameCodes } from '../useGameCodes';
 

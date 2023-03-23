@@ -8,6 +8,8 @@ import { Animations } from '../cartridges/Animations/Animations';
 import { keys, useKeyboard } from './useKeyboard';
 import { MazeMoverDecorator } from '../cartridges/MovingKeys/MazeMover';
 import { TetrisDecorator } from '../cartridges/Tetris/Tetris';
+import { gameCodes } from '../constants/gameCodes';
+import { useGameCodes } from './useGameCodes';
 
 export const cartridges = {
     'TEST': "Test display",
@@ -83,6 +85,11 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
     const [gameState, setGameState] = useState(initialGameState);
     const timeEveryTick = useTimer();
     const timeSpeed = useTimer(gameState.speed);
+    const matchedCode = useGameCodes(gameCodes)
+
+    useEffect(() => {
+        cartridgeInstance.passCode(matchedCode);
+    }, [matchedCode, cartridgeInstance])
 
 
     const handleMoveUp = () => {

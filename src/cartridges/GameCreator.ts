@@ -65,6 +65,10 @@ export class GameCreator extends GameLogic {
         this.judge.inform(this, information, payload);
     }
 
+    public passCode(code:string) {
+        this.nextStateCalculator.passCode(this, code);
+    }
+
     public restart(){
         this.paused = false;
         this.isGameOver = false;

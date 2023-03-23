@@ -1,4 +1,5 @@
 
+import { START_TIMER, STOP_TIMER } from "../../constants/gameCodes";
 import { sumArrayElements } from "../../functions/sumArrayElements";
 import { BrickMap } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
@@ -54,6 +55,19 @@ export class TetrisVisitor extends NextStateCalculator {
 
     }
 
+    passCode(visitedObject:any, code:string) {
+        console.log(code)
+        switch (code){
+            case START_TIMER:
+                console.log('SetTotRue')
+                visitedObject.cheatStopTimer = true;
+                break;
+            case STOP_TIMER:
+                visitedObject.cheatStopTimer = false;
+                console.log('steToFalse')
+        }
+    }
+
     getStartingCords(block: any){
         const { col, row } = block.currentHandlePoint;
         // const { currentFigure } = block;
@@ -74,8 +88,9 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     setVisitorToNextStateOnTick(visitedObject:any){
-
-        visitedObject.juggernaut.tick();
+        if (!visitedObject.cheatStopTimer) {
+            visitedObject.juggernaut.tick();
+        }
     }
 
     move(visitedObject:any, deltaRow:number, deltaCol:number) {
@@ -170,7 +185,11 @@ export class TetrisVisitor extends NextStateCalculator {
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number){
         //////////////////////
-        this.move(visitedObject, 1, 0);
+        console.log(visitedObject.cheatStopTimer)
+        if (!visitedObject.cheatStopTimer){
+            this.move(visitedObject, 1, 0);
+        }
+        
     }
 
     placeBlock(visitedObject:any) {
