@@ -5,6 +5,7 @@ export abstract class NextStateCalculator {
     initiate(visitedObject:any){
         visitedObject.name = 'Overwrite name';
         visitedObject.pawnCords  = { col: 0, row: 0 }
+        visitedObject.isCheater = false;
         throw new Error('NextStateCalculator: initialte should be overwritten')
     }
 

@@ -1,5 +1,5 @@
 
-import { START_TIMER, STOP_TIMER } from "../../constants/gameCodes";
+import { ADD_POINTS, START_TIMER, STOP_TIMER, UP_LOCK, UP_UNLOCK } from "../../constants/gameCodes";
 import { sumArrayElements } from "../../functions/sumArrayElements";
 import { BrickMap } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
@@ -21,6 +21,7 @@ const gameEvents = {
     DEMOLISH_DOUBLE: 'Double score',
     DEMOLISH_TRIPLE: 'Triple score',
     DEMOLISH_QUATRO: 'Quatro score',
+    CHEATER_MONEY: 'Cheater money',
 }
 
 class Judge {
@@ -29,7 +30,8 @@ class Judge {
             case gameEvents.DEMOLISH_SINGLE: visitedObject.score += 100; break;
             case gameEvents.DEMOLISH_DOUBLE: visitedObject.score += 300; break;
             case gameEvents.DEMOLISH_TRIPLE: visitedObject.score += 700; break;
-            case gameEvents.DEMOLISH_QUATRO: visitedObject.score += 1100;
+            case gameEvents.DEMOLISH_QUATRO: visitedObject.score += 1100; break;
+            case gameEvents.CHEATER_MONEY: visitedObject.score += 5000; break;
         }
         // if (visitedObject.score % 10000) {
         //     visitedObject.speed += 1;
@@ -51,6 +53,8 @@ export class TetrisVisitor extends NextStateCalculator {
         this.setNewBrick(visitedObject);
         this.placeNewBlocks(visitedObject);
         visitedObject.pawnCords = this.getStartingCords(visitedObject.currentBlock)
+        visitedObject.upLock = true;
+        visitedObject.isCheater = false;
         // this.placeBlock(visitedObject);
 
     }
@@ -60,11 +64,24 @@ export class TetrisVisitor extends NextStateCalculator {
         switch (code){
             case START_TIMER:
                 console.log('SetTotRue')
-                visitedObject.cheatStopTimer = true;
+                visitedObject.cheatStopTimer = false;
+                visitedObject.isCheater = true;
                 break;
             case STOP_TIMER:
-                visitedObject.cheatStopTimer = false;
-                console.log('steToFalse')
+                visitedObject.cheatStopTimer = true;
+                visitedObject.isCheater = true;
+                console.log('steToFalse');
+                break;
+            case UP_UNLOCK:
+                visitedObject.upLock = false;
+                visitedObject.isCheater = true;
+                break;
+            case UP_LOCK:
+                visitedObject.upLock = true;
+                break;
+            case ADD_POINTS:
+                visitedObject.informJudge(gameEvents.CHEATER_MONEY);
+                visitedObject.isCheater = true;
         }
     }
 
@@ -94,10 +111,13 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     move(visitedObject:any, deltaRow:number, deltaCol:number) {
-        if (!visitedObject.frozen && deltaRow < 0) return;
+        // if (!visitedObject.frozen) return;
+        // if (visitedObject.frozen) return;
+        if (deltaRow < 0 && visitedObject.upLock) return;
         const {row, col} = visitedObject.pawnCords
         const newCords = {row: deltaRow + row, col:deltaCol + col};
         const isNextMoveValid = this.isNextMoveValid(visitedObject, newCords)
+        console.log('isNextValid', isNextMoveValid)
         if (isNextMoveValid){
             visitedObject.resetLayer();
             visitedObject.pawnCords.row = row + deltaRow;
@@ -184,8 +204,6 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number){
-        //////////////////////
-        console.log(visitedObject.cheatStopTimer)
         if (!visitedObject.cheatStopTimer){
             this.move(visitedObject, 1, 0);
         }

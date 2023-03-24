@@ -20,6 +20,7 @@ function Display(
     isGameOver,
     isGameWon,
     isGameStarted,
+    isCheater,
    } = useCartridge(currentGameDescription);
 
    useEffect(() => {
@@ -42,6 +43,7 @@ function Display(
               nextFigure={nextFigure}
               isAnimating={isAnimating}
               isGameStarted={isGameStarted}
+              isCheater={isCheater}
             />
           </div>
         </div>

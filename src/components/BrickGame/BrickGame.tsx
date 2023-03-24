@@ -4,8 +4,27 @@ import Navigation from '../Navigation/Navigation';
 import Console from '../Console/Console';
 import { OneToTen } from '../../types/types'
 import { GameLogic } from '../../cartridges/AbstractGameLogic';
-import { cartridges } from '../../hooks/useCartridge'
 import { KeyReader } from '../../functions/KeyReader';
+import { cartridges } from '../../constants/games';
+import { codesDescription } from '../../constants/gameCodes';
+
+
+function CodeDescriptions({currentGame}: {currentGame: string}) {
+
+  if (!codesDescription[currentGame]) return <></>
+  return (
+    <>
+      <h3>Game codes for {currentGame}</h3>
+      <b>NOTE: </b><i>Inserted code makes you a cheater</i>
+      <ul>
+        {
+          codesDescription[currentGame].map(({code, description}) => 
+            <li><b>{code}</b>: <i>{description}</i></li>)
+        }
+      </ul>
+    </>
+  )
+}
 
 function BrickGame() {
   // const [currentGame, setCurrentGame] = useState(cartridges.LAYERS);
@@ -42,6 +61,7 @@ function BrickGame() {
               <div><b>Space</b> <i>Rotate</i></div>
               <div><b>Enter</b> <i>Start game, restart game after finished</i></div>
             </div>
+            <CodeDescriptions currentGame={currentGame} />
         </div>
   );
 }

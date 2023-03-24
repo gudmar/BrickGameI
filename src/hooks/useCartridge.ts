@@ -10,14 +10,7 @@ import { MazeMoverDecorator } from '../cartridges/MovingKeys/MazeMover';
 import { TetrisDecorator } from '../cartridges/Tetris/Tetris';
 import { gameCodes } from '../constants/gameCodes';
 import { useGameCodes } from './useGameCodes';
-
-export const cartridges = {
-    'TEST': "Test display",
-    'LAYERS': 'Animate layers',
-    'ANIMATIONS': 'Animations',
-    'MAZE': 'Maze',
-    'TETRIS': 'Tetris',
-}
+import { cartridges } from '../constants/games';
 
 interface LogicDescriptor {
     logicHandler: any, // GameLogic, !!!!!!!!!!!!!!!!!!!!!!!!!

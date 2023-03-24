@@ -35,6 +35,7 @@ export interface GameLogicArgs {
     isGameOver?: boolean,
     isGameWon?: boolean,
     isGameStarted?: boolean,
+    isCheater?: boolean,
 }
 
 export interface GameState {
@@ -48,7 +49,10 @@ export interface GameState {
     isGameOver: boolean,
     isGameWon?: boolean,
     isGameStarted?: boolean,
+    isCheater?:boolean,
 }
+
+console.warn('GameState and GameLogicArgs seem too similar. Combine them')
 
 // export interface KeyPress {
 //     up: number,

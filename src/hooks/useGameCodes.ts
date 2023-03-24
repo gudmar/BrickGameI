@@ -1,10 +1,10 @@
-import { useEffect, useId, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { EVERY_KEY, keyCodes, KeyReader } from "../functions/KeyReader";
 import { StringPatternMatcher } from "../functions/StringPatternsMatcher";
 
 export const useGameCodes = (listOfCodes:string[]) => {
     const keyReader = new KeyReader([keyCodes.F12, keyCodes.F5]);
-    const matcher = new StringPatternMatcher(listOfCodes);
+    const matcher = useMemo(() => new StringPatternMatcher(listOfCodes), [listOfCodes]);
     const [ matchedCode, setMatchedCode ] = useState<string>('');
 
     const id =useId();
@@ -26,6 +26,13 @@ export const useGameCodes = (listOfCodes:string[]) => {
     },
     // eslint-disable-next-line
     [])
+
+    useEffect(() => {
+        console.log(matchedCode)
+        if (matchedCode !== '') {
+            matcher.clearBufor();
+        }
+    }, [matchedCode, matcher])
 
     return matchedCode;
 }

@@ -15,11 +15,12 @@ interface ScoreBarProps {
   isPaused?: boolean,
   nextFigure: NextFigurePreview,
   isAnimating: boolean,
+  isCheater?: boolean,
 }
 
 function ScoreBar(
   {
-    score, level, speed, isGameOver, isGameWon, isGameStarted, isAnimating, isPaused, nextFigure
+    score, level, speed, isGameOver, isGameWon, isGameStarted, isAnimating, isPaused, nextFigure, isCheater
   }: ScoreBarProps) {
   const shouldTurnOffScoreBar = () => {
     if (isAnimating) return true;
@@ -71,6 +72,12 @@ function ScoreBar(
             isVisible={!isGameStarted}
             isOff={shouldTurnOffScoreBar()}
           />
+          <Band
+            label='CHEATER !!!'
+            isVisible={isCheater}
+            isOff={shouldTurnOffScoreBar()}
+          />
+
         </div>
   );
 }

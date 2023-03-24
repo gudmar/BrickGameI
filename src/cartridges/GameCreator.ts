@@ -25,8 +25,8 @@ export class GameCreator extends GameLogic {
     private nextStateCalculator: any;    
     private judge:any;
     private isGameWon: boolean = false;
+    isCheater: boolean = false;
     private isGameStarted: boolean = false; // false by default, 
-    // if !isGameStarted then animation is displayed
     private pawnCords: PawnCords = { row: 0, col: 0 };
 
     constructor(nextStateCalculator: any, judge: any, background: BrickMap) {
@@ -75,6 +75,7 @@ export class GameCreator extends GameLogic {
         this.isGameWon = false;
         this.isPaused = false;
         this.isGameStarted = true;
+        this.isCheater = false;
         this.pawnLayer = getEmptyBoard();
     }
 
@@ -90,6 +91,7 @@ export class GameCreator extends GameLogic {
             isGameOver: this.isGameOver,
             isGameWon: this.isGameWon,
             isGameStarted: this.isGameStarted,
+            isCheater: this.isCheater,
         }
     }
 
@@ -112,10 +114,6 @@ export class GameCreator extends GameLogic {
         return this.state;
     }
 
-    // private isGameUnlocked() {
-    //     return !this.isGameOver && !this.isGameWon && !this.isAnimating
-    // }
-
     public getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {
             this.nextStateCalculator.setVisitorToNextStateOnKeyPress(this, keyPresses)
             this.brickMap = this.mergeLayer()    
@@ -123,8 +121,6 @@ export class GameCreator extends GameLogic {
     }
 
     public checkIfGameLocked() {
-        // console.log('over', this.isGameOver, 'started', this.isGameStarted, 'paused', this.isPaused, 'won', this.isGameWon)
-        // console.log('Layer', this.pawnLayer)
         return (this.isGameOver || !this.isGameStarted || this.isPaused || this.isGameWon )
     }
 
@@ -172,6 +168,7 @@ export class GameCreator extends GameLogic {
             isGameOver: this.isGameOver,
             isGameWon: this.isGameWon,
             isGameStarted: this.isGameStarted,
+            isCheater: this.isCheater,
         }
     }
 
