@@ -1,11 +1,11 @@
 
 import { ADD_POINTS, START_TIMER, STOP_TIMER, UP_LOCK, UP_UNLOCK } from "../../constants/gameCodes";
 import { sumArrayElements } from "../../functions/sumArrayElements";
-import { BrickMap } from "../../types/types";
+import { BrickMap, FigureHandlePoint, NextFigure } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { EMPTY_BOARD, getEmptyBoard } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
-import { or } from "../layers/toggle/toggleFunction";
+import { and, or } from "../layers/toggle/toggleFunction";
 import { BlockData, Blocks } from "./blocks";
 
 export class TetrisDecorator {
@@ -51,7 +51,7 @@ export class TetrisVisitor extends NextStateCalculator {
         visitedObject.blocksMaker = blocksInstance;
         visitedObject.juggernaut = juggernaut;
         this.setNewBrick(visitedObject);
-        this.placeNewBlocks(visitedObject);
+        this.tryToPlaceNewBlock(visitedObject);
         visitedObject.pawnCords = this.getStartingCords(visitedObject.currentBlock)
         visitedObject.upLock = true;
         visitedObject.isCheater = false;
@@ -105,14 +105,10 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     setVisitorToNextStateOnTick(visitedObject:any){
-        if (!visitedObject.cheatStopTimer) {
             visitedObject.juggernaut.tick();
-        }
     }
 
     move(visitedObject:any, deltaRow:number, deltaCol:number) {
-        // if (!visitedObject.frozen) return;
-        // if (visitedObject.frozen) return;
         if (deltaRow < 0 && visitedObject.upLock) return;
         const {row, col} = visitedObject.pawnCords
         const newCords = {row: deltaRow + row, col:deltaCol + col};
@@ -127,7 +123,7 @@ export class TetrisVisitor extends NextStateCalculator {
         const wasBrickEmbeded = this.tryEmbedBrick(visitedObject, isNextMoveValid, newCords);
         if (wasBrickEmbeded) {
             this.handleDemolition(visitedObject)
-            this.placeNewBlocks(visitedObject)
+            this.tryToPlaceNewBlock(visitedObject)
         }
     }
 
@@ -214,20 +210,55 @@ export class TetrisVisitor extends NextStateCalculator {
         this.mergeCurrentBlockToLayer(visitedObject);
     }
 
-    takeNewBlocks(visitedObject:any) {
+    takeNextAndCurrentBlocks(visitedObject:any) {
         const blocks = visitedObject.blocksMaker;
         blocks.setNewBlock();
         const { currentBlock, nextBlock } = blocks;
         return { currentBlock, nextBlock}
     }
 
-    placeNewBlocks(visitedObject:any){
-        const { currentBlock, nextBlock } = this.takeNewBlocks(visitedObject);
+    tryToPlaceNewBlock(visitedObject:any){
+        const { currentBlock, nextBlock } = this.takeNextAndCurrentBlocks(visitedObject);
+        const nextFigure = nextBlock.blockDescriptor.figure;
+        const newPawnCords = this.getStartingCords(currentBlock);
+        const isGameOver = !this.canAddNewBlock(visitedObject, nextFigure, newPawnCords);
+        if (isGameOver) { this.endGame(); return; }
         visitedObject.currentBlock = currentBlock;
         visitedObject.nextBlock = nextBlock;
-        visitedObject.nextFigure =  nextBlock.blockDescriptor.figure;
-        visitedObject.pawnCords = this.getStartingCords(visitedObject.currentBlock);
+        visitedObject.nextFigure =  nextFigure;
+        // visitedObject.pawnCords = this.getStartingCords(visitedObject.currentBlock);
+        visitedObject.pawnCords = newPawnCords;
         this.placeBlock(visitedObject)
+    }
+
+    canAddNewBlock(visitedObject:any, nextFigure: NextFigure, newPawnCords: FigureHandlePoint) {
+        const summOfBoard = this.summArrayOfArrays(visitedObject.background);
+        const summOfNextFigure = this.summArrayOfArrays(nextFigure)
+        const nextSimulatedBoard = this.getSimulatedMergedBlockAndLayer(newPawnCords, nextFigure, visitedObject.background);
+        const summOfNextSimulatedBoard = this.summArrayOfArrays(nextSimulatedBoard);
+        const result = summOfBoard + summOfNextFigure === summOfNextSimulatedBoard
+        console.table([
+            ['summBoard', summOfBoard],
+            ['summNextSimulatedBoard', summOfNextSimulatedBoard],
+            ['summNExtFigure', summOfNextFigure],
+            ['result', result]
+        ])
+        return result;
+
+    }
+
+    getSimulatedMergedBlockAndLayer(startPoint: FigureHandlePoint, block: NextFigure, layer: BrickMap){
+        const blockLayer = this.mergeBlockToLayer({
+            layer: getEmptyBoard(),
+            block: {figure: block, handlePoint: {col: 0, row: 0}},
+            cords: startPoint,
+        })
+        const simulatedBlockAndBackground = this.getNewMergedLayer(blockLayer, layer, or);
+        return simulatedBlockAndBackground;
+    }
+
+    endGame() {
+
     }
 
     mergeCurrentBlockToLayer(visitedObject:any){

@@ -1,4 +1,4 @@
-import { KeyPress } from "../types/types";
+import { BrickMap, KeyPress, NextFigure } from "../types/types";
 import { PawnCords } from "./GameCreator";
 
 export abstract class NextStateCalculator {
@@ -79,6 +79,29 @@ export abstract class NextStateCalculator {
 
     move(visitedObject:any, deltaRow: number, deltaCol: number) {
         throw new Error('NextStateCalculator: move should be overwritten')
+    }
+
+    summArrayOfArrays<T extends number[][] >(arrayOfArrays:T )  {
+        const summRow = (row: number[]) => row.reduce((acc, item) => {
+            acc += item;
+            return acc;
+        }, 0)
+        const summ = arrayOfArrays.reduce((acc: number, row:number[]) => {
+            acc += summRow(row);
+            return acc;
+        }, 0);
+        return summ;
+    }
+
+    getNewMergedLayer<T extends number[][]> (l1:T, l2:T, mergeFunction: (n1:number, n2:number) => number) {
+        if (l1.length !== l2.length) { throw new Error('getNewMergedLayer: lenghts not compatible')};
+        const mergeRows = (r1:number[], r2:number[]) => {
+            if (r1.length !== r2.length) { throw new Error('Rows not compatibile')}
+            const result = r1.map((item, index) => mergeFunction(item, r2[index]));
+            return result;
+        }
+        const merged = l1.map((row, index) => mergeRows(row, l2[index]));
+        return merged;
     }
 
 }
