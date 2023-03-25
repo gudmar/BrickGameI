@@ -1,4 +1,4 @@
-import { BrickMap, KeyPress, NextFigure } from "../types/types";
+import { KeyPress } from "../types/types";
 import { PawnCords } from "./GameCreator";
 
 export abstract class NextStateCalculator {
@@ -14,12 +14,13 @@ export abstract class NextStateCalculator {
     }
 
     setVisitorToNextStateOnKeyPress(visitedObject:any, keyPresses: KeyPress){
+        if (keyPresses === KeyPress.Start) {
+            if (visitedObject.isGameOver) { this.restart(visitedObject) }
+            else { visitedObject.startGame(); }
+        }
+        if (visitedObject.isGameOver) return;
         if (keyPresses === KeyPress.Speed) {visitedObject.increaseSpeed()}
         if (keyPresses === KeyPress.Level) {visitedObject.increaseLevel()}
-        if (keyPresses === KeyPress.Start) {
-            this.restart(visitedObject);
-            visitedObject.startGame();
-        }
         if (keyPresses === KeyPress.Rotate) { visitedObject.rotate() }
         if (keyPresses === KeyPress.Pause) {visitedObject.pauseGame()}
         if (!visitedObject.checkIfGameLocked()) {
@@ -72,9 +73,14 @@ export abstract class NextStateCalculator {
 
     restart(visitedObject:any){
         if (visitedObject.isGameWon || visitedObject.isGameOver){
+            visitedObject.restart();
+            this.restartSpecificAttributes(visitedObject);
             this.initiate(visitedObject);
-            visitedObject.restart();    
         }
+    }
+
+    restartSpecificAttributes(visitedObject:any) {
+        console.warn('restartSpecificAttributes in AbstractNextStateCalculator should be overwritten');
     }
 
     move(visitedObject:any, deltaRow: number, deltaCol: number) {

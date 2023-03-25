@@ -55,8 +55,15 @@ export class TetrisVisitor extends NextStateCalculator {
         visitedObject.pawnCords = this.getStartingCords(visitedObject.currentBlock)
         visitedObject.upLock = true;
         visitedObject.isCheater = false;
-        // this.placeBlock(visitedObject);
+    }
 
+    restartSpecificAttributes(visitedObject: any): void {
+        const speceficAttributes = [
+            'upLock', 'blocksMaster', 'juggernaut, cheatStopTimer',
+            'cheatStopTimer',
+        ];
+        speceficAttributes.forEach((attrib) => delete visitedObject[attrib]);
+        visitedObject.background = getEmptyBoard();        
     }
 
     passCode(visitedObject:any, code:string) {
@@ -87,13 +94,6 @@ export class TetrisVisitor extends NextStateCalculator {
 
     getStartingCords(block: any){
         const { col, row } = block.currentHandlePoint;
-        // const { currentFigure } = block;
-        // const figureHeight = currentFigure.length;
-        // const figureWidth = currentFigure[0].length;
-        // const getCeilingDistance = () => {
-
-        // }
-        // console.log(block, row, col, figureHeight, figureWidth,row >= 0 ? row : 0)
         return { col: col + 5, row: row >= 0 ? row : 0 };
     }
 
@@ -124,6 +124,7 @@ export class TetrisVisitor extends NextStateCalculator {
         if (wasBrickEmbeded) {
             this.handleDemolition(visitedObject)
             this.tryToPlaceNewBlock(visitedObject)
+            this.endGameIfCannotAddNextBlock(visitedObject)
         }
     }
 
@@ -221,14 +222,19 @@ export class TetrisVisitor extends NextStateCalculator {
         const { currentBlock, nextBlock } = this.takeNextAndCurrentBlocks(visitedObject);
         const nextFigure = nextBlock.blockDescriptor.figure;
         const newPawnCords = this.getStartingCords(currentBlock);
-        const isGameOver = !this.canAddNewBlock(visitedObject, nextFigure, newPawnCords);
-        if (isGameOver) { this.endGame(); return; }
         visitedObject.currentBlock = currentBlock;
         visitedObject.nextBlock = nextBlock;
         visitedObject.nextFigure =  nextFigure;
-        // visitedObject.pawnCords = this.getStartingCords(visitedObject.currentBlock);
         visitedObject.pawnCords = newPawnCords;
         this.placeBlock(visitedObject)
+    }
+
+    endGameIfCannotAddNextBlock(visitedObject:any) {
+        const {nextBlock} = visitedObject.blocksMaker;
+        const newPawnCords = this.getStartingCords(nextBlock);
+        const nextFigure = nextBlock.blockDescriptor.figure;
+        const isGameOver = !this.canAddNewBlock(visitedObject, nextFigure, newPawnCords);
+        if (isGameOver) this.endGame(visitedObject)
     }
 
     canAddNewBlock(visitedObject:any, nextFigure: NextFigure, newPawnCords: FigureHandlePoint) {
@@ -257,8 +263,8 @@ export class TetrisVisitor extends NextStateCalculator {
         return simulatedBlockAndBackground;
     }
 
-    endGame() {
-
+    endGame(visitedObject: any) {
+        visitedObject.isGameOver = true;
     }
 
     mergeCurrentBlockToLayer(visitedObject:any){

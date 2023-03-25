@@ -121,7 +121,7 @@ export class GameCreator extends GameLogic {
     }
 
     public checkIfGameLocked() {
-        return (this.isGameOver || !this.isGameStarted || this.isPaused || this.isGameWon )
+        return (this.isGameOver || !this.isGameStarted || this.isPaused || this.isGameWon || this.isAnimating )
     }
 
     public rotate() { 
