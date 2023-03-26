@@ -107,10 +107,10 @@ export class GameCreator extends GameLogic {
     public getNextStateOnSpeedTick(time:number): GameLogicArgs {
         // Faster game actions
         if (this.checkIfGameLocked()) return this.state;
-        if (!this.isGameOver && !this.isGameWon && !this.isAnimating){
+        // if (!this.isGameOver && !this.isGameWon && !this.isAnimating){
             this.nextStateCalculator.setVisitorToNextStateOnSpeedTick(this, time)
             this.brickMap = this.mergeLayer();
-        }
+        // }
         return this.state;
     }
 
@@ -131,7 +131,10 @@ export class GameCreator extends GameLogic {
     }
     public increaseSpeed() { this.speed > 9 ? this.speed = 1 : this.speed++; console.log('speed', this.speed) }
 
-    public increaseLevel() { this.level > 9 ? this.level = 1 : this.level++ }
+    public increaseLevel() { 
+        this.level > 9 ? this.level = 1 : this.level++;
+        this.nextStateCalculator.setLevel(this);
+    }
 
     public startGame() { 
         this.isGameStarted = true;

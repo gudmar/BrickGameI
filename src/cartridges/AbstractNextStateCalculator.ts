@@ -18,9 +18,11 @@ export abstract class NextStateCalculator {
             if (visitedObject.isGameOver) { this.restart(visitedObject) }
             else { visitedObject.startGame(); }
         }
+        if (!visitedObject.isGameStarted) {
+            if (keyPresses === KeyPress.Speed) {visitedObject.increaseSpeed()}
+            if (keyPresses === KeyPress.Level) {visitedObject.increaseLevel()}    
+        }
         if (visitedObject.isGameOver) return;
-        if (keyPresses === KeyPress.Speed) {visitedObject.increaseSpeed()}
-        if (keyPresses === KeyPress.Level) {visitedObject.increaseLevel()}
         if (keyPresses === KeyPress.Rotate) { visitedObject.rotate() }
         if (keyPresses === KeyPress.Pause) {visitedObject.pauseGame()}
         if (!visitedObject.checkIfGameLocked()) {
