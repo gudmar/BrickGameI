@@ -5,42 +5,25 @@ import { BrickMap, FigureHandlePoint, NextFigure } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { EMPTY_BOARD, getEmptyBoard } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
+import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { and, or } from "../layers/toggle/toggleFunction";
 import { BlockData, Blocks } from "./blocks";
+import { gameEvents, Judge } from "./Judge";
+import { Juggernaut } from "./Juggernaut";
+import { LevelSetter } from "./LevelSetter";
 
 export class TetrisDecorator {
     constructor() {
-        const decoratedClass = new GameCreator(TetrisVisitor, Judge, EMPTY_BOARD);
+        const decoratedClass = new GameCreator(
+            {
+                nextStateCalculator: TetrisVisitor,
+                judge: Judge,
+                background: EMPTY_BOARD,
+                afterGameAnimation: AnimationAfterGame,
+            }
+        );
         return decoratedClass;
     }
-}
-
-const gameEvents = {
-    NO_DEMOLITION: 'Dont demolish',
-    DEMOLISH_SINGLE: 'Single score', // 11500 - 10800 = 700
-    DEMOLISH_DOUBLE: 'Double score',
-    DEMOLISH_TRIPLE: 'Triple score',
-    DEMOLISH_QUATRO: 'Quatro score',
-    CHEATER_MONEY: 'Cheater money',
-}
-
-class Judge {
-    inform(visitedObject: any, information: string, pyload?:any){
-        switch(information){
-            case gameEvents.DEMOLISH_SINGLE: visitedObject.score += 100; break;
-            case gameEvents.DEMOLISH_DOUBLE: visitedObject.score += 300; break;
-            case gameEvents.DEMOLISH_TRIPLE: visitedObject.score += 700; break;
-            case gameEvents.DEMOLISH_QUATRO: visitedObject.score += 1100; break;
-            case gameEvents.CHEATER_MONEY: visitedObject.score += 5000; break;
-        }
-        // if (visitedObject.score % 10000) {
-        //     visitedObject.speed += 1;
-        // }
-    }
-}
-
-enum MoveDirection {
-    down, up, left, right,
 }
 
 export class TetrisVisitor extends NextStateCalculator {
@@ -269,6 +252,7 @@ export class TetrisVisitor extends NextStateCalculator {
 
     endGame(visitedObject: any) {
         visitedObject.isGameOver = true;
+        visitedObject.gameEnded();
     }
 
 
@@ -307,147 +291,4 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
 
-}
-
-
-class Juggernaut {
-    private ANIMATION_DELAY_DIVIDER = 5;
-    private nrOfTicksSinceStartedAnimation: number = 0;
-    private demolitionsQueue: any[] = [];
-    private controlledObject: any;
-    constructor(controlledObject:any){
-        this.controlledObject = controlledObject;
-    }
-
-    tick(){
-        if (this.controlledObject.isAnimating) this.nrOfTicksSinceStartedAnimation++;
-        this.runQueue();
-    }
-
-    runQueue() {
-        if (this.demolitionsQueue.length !== 0) {
-            this.tickTask();
-        } else {
-            this.controlledObject.isAnimating = false;
-            this.nrOfTicksSinceStartedAnimation = 0;
-        }
-    }
-
-    tickTask() {
-        const result = this.demolitionsQueue[0]();
-        if (result) this.demolitionsQueue.shift();
-    }
-
-    tryDemolition() {
-        if (this.controlledObject.isAnimating) {this.tick(); return;}
-        const indexesForDemolition = this.findRowIndexesForDemolition(this.controlledObject);
-        this.informJudge(indexesForDemolition);
-        if (indexesForDemolition.length > 0) {
-            this.queueAllDevastations(indexesForDemolition)
-        }
-    }
-
-    queueAllDevastations(indexesForDemolition:number[]){
-        this.controlledObject.isAnimating = true;
-        const orderedDevastations = indexesForDemolition.map((indexForDemolition) => {
-            const devastationProces = this.getDevastationProces(indexForDemolition);
-            return devastationProces;
-        });
-        this.demolitionsQueue = orderedDevastations;
-        console.log(indexesForDemolition, this.demolitionsQueue)
-    }
-
-    getCopy(obj:any) { return JSON.parse(JSON.stringify(obj))}
-
-    getDevastationProces(indexForDemolition:number) {
-        let ticks = 1;
-        const devastateTick = () => {
-            if (ticks === 1) {
-                this.controlledObject.pawnLayer[indexForDemolition] = this.controlledObject.getEmptyRow();
-            }
-            if (ticks % this.ANIMATION_DELAY_DIVIDER === 0 && ticks % (2 * this.ANIMATION_DELAY_DIVIDER) !== 0){
-                this.controlledObject.background[indexForDemolition] = this.controlledObject.getEmptyRow();
-            }
-            if (ticks % (2 * this.ANIMATION_DELAY_DIVIDER) === 0) {
-                this.controlledObject.background.splice(indexForDemolition, 1);
-                this.controlledObject.background.unshift(this.controlledObject.getEmptyRow());
-                return true;
-            }
-            ticks++;
-            return false;
-        }
-        return devastateTick.bind(this);
-    }
-
-
-    informJudge(indexesForDemolition:number[]){
-        const judge = new Judge();
-        const  { length: nrOfDemolitions } = indexesForDemolition;
-        const eventsList = [gameEvents.NO_DEMOLITION, gameEvents.DEMOLISH_SINGLE, gameEvents.DEMOLISH_DOUBLE, gameEvents.DEMOLISH_TRIPLE, gameEvents.DEMOLISH_QUATRO];
-        const properEvent = eventsList[nrOfDemolitions];
-        judge.inform(this.controlledObject, properEvent)
-        // return properEvent;
-    }
-
-    findRowIndexesForDemolition(visitedObject:any){
-        const { background } = visitedObject;
-        const indexesForDemolition = background.reduce((indexes:number[], row:number[], index:number) => {
-            if (this.isRowForDemolition(row)) { indexes.push(index)}
-            return indexes;
-        }, [])
-        return indexesForDemolition;
-    }
-    isRowForDemolition(row: number[]){
-        return row.every(item => item > 0);
-    }
-
-}
-
-class LevelSetter {
-    static setLevel(visitedObject:any) {
-        const LEVEL_OFFSET = 1;
-        const level = visitedObject.level - LEVEL_OFFSET;
-        console.log('in LevelSetter', level)
-        if (level <= 0) {
-            visitedObject.background = getEmptyBoard();
-            return;
-        }
-        const { background } = visitedObject;
-        const lastIndex = background.length -1 ;
-        const nrOfNonZeroRowsOnBg = LevelSetter.getNonZeroRowsFromBg(visitedObject);
-        for(let i = lastIndex - nrOfNonZeroRowsOnBg; i > lastIndex - level; i--) {
-            background[i] = LevelSetter.getRandomBoardRow(background[0].length);
-        }
-    }
-
-    static getNonZeroRowsFromBg(visitedObject:any) {
-        const { background } = visitedObject;
-        const lastIndex = background.length - 1;
-        const firstNonZero = background.findIndex((row:number[]) => {
-            return row.some((brick:number) => brick === 1);
-        });
-        return firstNonZero === -1 ? 0 : lastIndex - firstNonZero;
-    }
-
-    static getRandomBoardRow(size:number) {        
-        const row = new Array(size).fill((() => 1)());
-        const indexes = new Array(size).fill(null).map((_, index) => index);
-        LevelSetter.applyGaps(row, indexes);
-        return row;
-    }
-
-    static takeRandomIndex(indexes: number[]){
-        const { length } = indexes;
-        const randIndex = Math.floor(Math.random() * length);
-        const result = indexes[randIndex];
-        indexes.splice(randIndex, 1);
-        return result;
-    }
-    static applyGaps(row: number[], indexes: number[]){
-        const nrOfGaps = 2;
-        for(let gap = 0; gap < nrOfGaps; gap++) {
-            const index = LevelSetter.takeRandomIndex(indexes);
-            row[index] = 0;
-        }
-    }
 }

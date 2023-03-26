@@ -8,6 +8,13 @@ export interface PawnCords {
     col: number,
 }
 
+export interface GameCreatorInterface {
+    nextStateCalculator: { new(...args: any[]): any },
+    judge: { new(...args: any[]): any },
+    afterGameAnimation: any,
+    background: BrickMap,
+}
+
 export class GameCreator extends GameLogic {
 
     static instance: any;
@@ -23,16 +30,25 @@ export class GameCreator extends GameLogic {
     private isAnimating: boolean = false;
     private isGameOver: boolean = false;
     private nextStateCalculator: any;    
+    private gameCalculator: any;
+    private animationAfterCalculator: any;
     private judge:any;
     private isGameWon: boolean = false;
     isCheater: boolean = false;
     private isGameStarted: boolean = false; // false by default, 
     private pawnCords: PawnCords = { row: 0, col: 0 };
 
-    constructor(nextStateCalculator: any, judge: any, background: BrickMap) {
+    constructor({
+        nextStateCalculator,
+        judge,
+        background,
+        afterGameAnimation,
+    }:GameCreatorInterface) {
         if(GameCreator.instance) return GameCreator.instance;
         super();
-        this.nextStateCalculator = new nextStateCalculator();
+        this.gameCalculator = new nextStateCalculator();
+        this.animationAfterCalculator = new afterGameAnimation();
+        this.nextStateCalculator = this.gameCalculator;
         this.background = background;
         this.nextStateCalculator.initiate(this);
         this.brickMap = this.mergeLayer();
@@ -112,6 +128,18 @@ export class GameCreator extends GameLogic {
             this.brickMap = this.mergeLayer();
         // }
         return this.state;
+    }
+
+    public gameEnded() {
+        this.nextStateCalculator.restartSpecificAttributes(this);
+        this.nextStateCalculator = this.animationAfterCalculator;
+        this.nextStateCalculator.initiate(this);
+    }
+
+    public afterGameAnimationEnded() {
+        this.nextStateCalculator.restartSpecificAttributes(this);
+        this.nextStateCalculator = this.gameCalculator;
+        this.nextStateCalculator.initiate(this);
     }
 
     public getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {

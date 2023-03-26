@@ -1,10 +1,16 @@
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { GAME_OVER, MAZE } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
+import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 
 export class MazeMoverDecorator {
     constructor() {
-        const decoratedClass = new GameCreator(PawnMover, Judge, MAZE);
+        const decoratedClass = new GameCreator({
+            nextStateCalculator: PawnMover, 
+            judge: Judge,
+            background: MAZE,
+            afterGameAnimation: AnimationAfterGame
+        });
         // const decoratedClass = new GameCreator(PawnMover, GAME_OVER);
         return decoratedClass;
     }
