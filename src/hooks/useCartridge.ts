@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTimer } from './useClock'
 import { TestCartridge } from '../cartridges/test'
-import { GameState, KeyPress } from '../types/types';
+import { GameState } from '../types/types';
 import { getNextFigureOfSymbols, getDojoOfSymbols } from '../cartridges/AbstractGameLogic';
 import { LayersApplayer } from '../cartridges/layers/LayersApplayer';
 import { Animations } from '../cartridges/Animations/Animations';
@@ -11,6 +11,7 @@ import { TetrisDecorator } from '../cartridges/Tetris/Tetris';
 import { gameCodes } from '../constants/gameCodes';
 import { useGameCodes } from './useGameCodes';
 import { cartridges } from '../constants/games';
+import { KeyPress } from '../types/KeyPress';
 
 interface LogicDescriptor {
     logicHandler: any, // GameLogic, !!!!!!!!!!!!!!!!!!!!!!!!!

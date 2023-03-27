@@ -1,6 +1,7 @@
 
 import { Logger } from "../../functions/Logger";
-import { KeyPress } from "../../types/types";
+import { KeyPress } from "../../types/KeyPress";
+
 
 enum Direction {up, down};
 
@@ -25,22 +26,18 @@ export class AnimationAfterGame {
 
     setVisitorToNextStateOnTick(visitedObject: any, time: number) {
         if (visitedObject.lastIndex === -1) visitedObject.lastIndex = visitedObject.pawnLayer.length;
-        this.moveUp(visitedObject);
-        this.moveDown(visitedObject);
-        // switch (visitedObject.direction) {
-        //     case Direction.up: this.moveUp(visitedObject); break;
-        //     case Direction.down: this.moveDown(visitedObject); break;
-        // }
+        this.tryMoveUp(visitedObject);
+        this.tryMoveDown(visitedObject);
     }
 
-    moveUp(visitedObject:any) {
+    tryMoveUp(visitedObject:any) {
         if (visitedObject.direction !== Direction.up) { return; }
         visitedObject.lastIndex -= 1;
         visitedObject.pawnLayer[visitedObject.lastIndex] = this.getRowOf(visitedObject.pawnLayer[0].length, 1)
         if (visitedObject.lastIndex < 1) visitedObject.direction = Direction.down;
     }
 
-    moveDown(visitedObject:any) {
+    tryMoveDown(visitedObject:any) {
         if (visitedObject.direction !== Direction.down) { return; }
         visitedObject.pawnLayer[visitedObject.lastIndex] = this.getRowOf(visitedObject.pawnLayer[0].length, 0)
         visitedObject.lastIndex += 1;

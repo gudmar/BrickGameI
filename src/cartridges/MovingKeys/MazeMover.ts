@@ -1,15 +1,26 @@
+import { GameCreatorInterface } from "../../types/GameCreatorInterface";
+import { BrickMap } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { GAME_OVER, MAZE } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
+import { GamesIntro } from "../GamesIntro/GamesIntro";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
+
+class GameIntroCloasure{
+    constructor() {
+        const gameIntro = new GamesIntro(MAZE);
+        return gameIntro;
+    }
+}
 
 export class MazeMoverDecorator {
     constructor() {
         const decoratedClass = new GameCreator({
-            nextStateCalculator: PawnMover, 
+            nextStateCalculator: PawnMover,
             judge: Judge,
             background: MAZE,
-            afterGameAnimation: AnimationAfterGame
+            afterGameAnimation: AnimationAfterGame,
+            beforeGameAnimation: GameIntroCloasure,
         });
         // const decoratedClass = new GameCreator(PawnMover, GAME_OVER);
         return decoratedClass;

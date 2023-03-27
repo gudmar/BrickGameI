@@ -1,7 +1,8 @@
-import {KeyPress, GameLogicArgs, Speed, DoWithBar, NextFigurePreview, BrickMap, OneToTen} from '../types/types'
+import { GameLogicArgs, Speed, DoWithBar, NextFigurePreview, BrickMap, OneToTen} from '../types/types'
 import { shouldGenerateNextMove } from '../functions/shouldGenerateNextMove';
 import { board, nextFigure } from '../constants/constants';
 import { INDEX_OUT_OF_RANGE, TYPE_MISMATCH } from './constants';
+import { KeyPress } from '../types/KeyPress';
 
 // type NextFigureFieldContent = [number[], number[], number[] ,number[]];
 // type NextFigureFieldContent = number[][];

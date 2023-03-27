@@ -1,4 +1,5 @@
-import { BrickMap, GameLogicArgs, KeyPress } from "../../types/types";
+import { KeyPress } from "../../types/KeyPress";
+import { BrickMap, GameLogicArgs } from "../../types/types";
 import { GameLogic, getDojoOfSymbols, getNextFigureOfSymbols } from "../AbstractGameLogic";
 import { EMPTY_NEXT_FIGURE, TWO_IN_ONE } from "../constants";
 import { BarDownLayer } from "./BarDownLayer";

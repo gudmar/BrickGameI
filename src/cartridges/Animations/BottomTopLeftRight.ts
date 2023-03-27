@@ -22,10 +22,10 @@ const sequencerConfigurations = [
 
 export class BottomTopLeftRight extends AnimationTemplate {
     public NAME = "BottomTopLeftRight";
-    constructor() {
+    constructor(background = TWO_IN_ONE) {
         super();
         this.animationSequencer = new AnimatorSequencersApplier({
-            background: TWO_IN_ONE,
+            background,
             sequencerConfigurations,
         })
     }

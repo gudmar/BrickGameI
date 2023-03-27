@@ -1,4 +1,5 @@
-import { GameLogicArgs, KeyPress, ScheaduleProps } from "../../types/types";
+import { KeyPress } from "../../types/KeyPress";
+import { GameLogicArgs, ScheaduleProps } from "../../types/types";
 import { GameLogic } from "../AbstractGameLogic";
 import { AnimationScheaduler } from "../AnimationSequencer/AnimationScheaduler";
 import { EMPTY_NEXT_FIGURE, TWO_IN_ONE } from "../constants";

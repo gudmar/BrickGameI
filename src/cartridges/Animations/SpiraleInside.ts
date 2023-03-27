@@ -14,10 +14,10 @@ const sequencerConfigurations = [
 
 class SpiralInside extends AnimationTemplate{
     public NAME = "SpiraleInside";
-    constructor() {
+    constructor(background = TWO_IN_ONE) {
         super();
         this.animationSequencer = new AnimatorSequencersApplier({
-            background: TWO_IN_ONE,
+            background,
             sequencerConfigurations: sequencerConfigurations,
         })
     }

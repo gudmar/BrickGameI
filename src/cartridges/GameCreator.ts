@@ -1,4 +1,5 @@
-import { BrickMap, GameLogicArgs, KeyPress, OneToTen } from "../types/types";
+import { KeyPress } from "../types/KeyPress";
+import { BrickMap, GameLogicArgs, OneToTen } from "../types/types";
 import { GameLogic } from "./AbstractGameLogic";
 import { getEmptyBoard, EMPTY_NEXT_FIGURE } from "./constants";
 import { and, or, xor } from "./layers/toggle/toggleFunction";
@@ -13,14 +14,15 @@ export interface GameCreatorInterface {
     judge: { new(...args: any[]): any },
     afterGameAnimation: any,
     background: BrickMap,
+    beforeGameAnimation: any,
 }
 
 export class GameCreator extends GameLogic {
 
     static instance: any;
     public NAME = "Maze mover";
-    private background = getEmptyBoard();
-    private pawnLayer: BrickMap = getEmptyBoard();
+    public background = getEmptyBoard();
+    public pawnLayer: BrickMap = getEmptyBoard();
     private brickMap = this.mergeLayer();
     level:OneToTen = 1;
     speed:OneToTen = 1;
@@ -32,23 +34,31 @@ export class GameCreator extends GameLogic {
     private nextStateCalculator: any;    
     private gameCalculator: any;
     private animationAfterCalculator: any;
+    private animationBeforeCalculator: any;
     private judge:any;
     private isGameWon: boolean = false;
     isCheater: boolean = false;
     private isGameStarted: boolean = false; // false by default, 
     private pawnCords: PawnCords = { row: 0, col: 0 };
+    private stateCalculators: any[] | null = null;
 
     constructor({
         nextStateCalculator,
         judge,
         background,
         afterGameAnimation,
+        beforeGameAnimation,
     }:GameCreatorInterface) {
         if(GameCreator.instance) return GameCreator.instance;
         super();
+        
         this.gameCalculator = new nextStateCalculator();
         this.animationAfterCalculator = new afterGameAnimation();
-        this.nextStateCalculator = this.gameCalculator;
+        this.animationBeforeCalculator = new beforeGameAnimation();
+        // this.nextStateCalculator = this.gameCalculator;
+        
+        this.stateCalculators = [this.animationBeforeCalculator, this.gameCalculator, this.animationAfterCalculator]
+        this.nextStateCalculator = this.stateCalculators[0];
         this.background = background;
         this.nextStateCalculator.initiate(this);
         this.brickMap = this.mergeLayer();

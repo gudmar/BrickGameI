@@ -1,4 +1,4 @@
-import { KeyPress } from "../types/types";
+import { KeyPress } from "../types/KeyPress";
 import { PawnCords } from "./GameCreator";
 
 export abstract class NextStateCalculator {

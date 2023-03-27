@@ -14,10 +14,10 @@ const sequencerConfigurations = [
 
 export class PauseBlackAnimation extends AnimationTemplate {
     public NAME = "Pause white";
-    constructor() {
+    constructor(background = TWO_IN_ONE) {
         super();
         this.animationSequencer = new AnimatorSequencersApplier({
-            background: TWO_IN_ONE,
+            background,
             sequencerConfigurations,
         })
     }

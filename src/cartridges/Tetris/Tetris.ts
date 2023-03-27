@@ -5,6 +5,7 @@ import { BrickMap, FigureHandlePoint, NextFigure } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { EMPTY_BOARD, getEmptyBoard } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
+import { GamesIntro } from "../GamesIntro/GamesIntro";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { and, or } from "../layers/toggle/toggleFunction";
 import { BlockData, Blocks } from "./blocks";
@@ -12,14 +13,23 @@ import { gameEvents, Judge } from "./Judge";
 import { Juggernaut } from "./Juggernaut";
 import { LevelSetter } from "./LevelSetter";
 
+class GameIntroCloasure{
+    constructor() {
+        const gameIntro = new GamesIntro(getEmptyBoard());
+        return gameIntro;
+    }
+}
+
 export class TetrisDecorator {
     constructor() {
+
         const decoratedClass = new GameCreator(
             {
                 nextStateCalculator: TetrisVisitor,
                 judge: Judge,
                 background: EMPTY_BOARD,
                 afterGameAnimation: AnimationAfterGame,
+                beforeGameAnimation: GameIntroCloasure,
             }
         );
         return decoratedClass;

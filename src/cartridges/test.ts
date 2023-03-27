@@ -1,7 +1,8 @@
 import { GameLogic } from './AbstractGameLogic';
-import { KeyPress, GameLogicArgs } from '../types/types';
+import { GameLogicArgs } from '../types/types';
 import { EMPTY_NEXT_FIGURE, TWO_IN_ONE } from './constants';
 import { BarLeft } from './test/BarLeft';
+import { KeyPress } from '../types/KeyPress';
 
 export class TestCartridge extends GameLogic {
     static instance: any;

@@ -17,10 +17,10 @@ const sequencerConfigurations = [
 
 export class RandomPixelsAnimation extends AnimationTemplate {
     public NAME = "Random pixel animation";
-    constructor() {
+    constructor(background = TWO_IN_ONE) {
         super();
         this.animationSequencer = new AnimatorSequencersApplier({
-            background: TWO_IN_ONE,
+            background,
             sequencerConfigurations,
         })
     }

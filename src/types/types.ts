@@ -67,9 +67,9 @@ export interface FigureHandlePoint {
     row: number, col: number,
 };
 
-export enum KeyPress {
-    Up, Down, Left, Right, Level, Speed, Pause, Rotate, Start
-}
+// export enum KeyPress {
+//     Up, Down, Left, Right, Level, Speed, Pause, Rotate, Start
+// }
 
 export interface ConsoleArgs {
     currentGame: string,
