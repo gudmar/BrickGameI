@@ -56,7 +56,8 @@ export class TetrisVisitor extends NextStateCalculator {
             'cheatStopTimer',
         ];
         speceficAttributes.forEach((attrib) => delete visitedObject[attrib]);
-        visitedObject.background = getEmptyBoard();        
+        visitedObject.background = getEmptyBoard();
+        visitedObject.pawnLayer = getEmptyBoard();
     }
 
     passCode(visitedObject:any, code:string) {

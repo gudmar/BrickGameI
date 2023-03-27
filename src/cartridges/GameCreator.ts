@@ -42,6 +42,8 @@ export class GameCreator extends GameLogic {
     private pawnCords: PawnCords = { row: 0, col: 0 };
     private stateCalculators: any[] | null = null;
 
+    private gameCreator: any;
+
     constructor({
         nextStateCalculator,
         judge,
@@ -52,15 +54,19 @@ export class GameCreator extends GameLogic {
         if(GameCreator.instance) return GameCreator.instance;
         super();
         
+        this.gameCreator = nextStateCalculator;
         this.gameCalculator = new nextStateCalculator();
+        this.gameCalculator.initiate(this)
         this.animationAfterCalculator = new afterGameAnimation();
         this.animationBeforeCalculator = new beforeGameAnimation();
+        this.animationBeforeCalculator.initiate(this);
+        this.animationAfterCalculator.initiate(this);
         // this.nextStateCalculator = this.gameCalculator;
         
         this.stateCalculators = [this.animationBeforeCalculator, this.gameCalculator, this.animationAfterCalculator]
         this.nextStateCalculator = this.stateCalculators[0];
         this.background = background;
-        this.nextStateCalculator.initiate(this);
+        // this.nextStateCalculator.initiate(this);
         this.brickMap = this.mergeLayer();
         this.judge = new judge();
         GameCreator.instance = this;
@@ -175,9 +181,14 @@ export class GameCreator extends GameLogic {
     }
 
     public startGame() { 
+        console.log('Should start')
         this.isGameStarted = true;
         this.isGameOver = false;
         this.isGameWon = false;
+        this.nextStateCalculator = this.stateCalculators![1];
+        this.nextStateCalculator.restartSpecificAttributes();
+        // this.nextStateCalculator.initialte(this);
+        // this.nextStateCalculator = new this.gameCreator();
     }
     public pauseGame() { 
         console.trace('Togging pause')

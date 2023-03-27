@@ -166,7 +166,9 @@ export class GamesIntro extends GameLogic implements GameCreatorInterface{
         visitedObject.pawnLayer = brickMap;
     }
     setVisitorToNextStateOnKeyPress(visitedObject: GameCreator, keyPresses: KeyPress) {
-
+        if (keyPresses === KeyPress.Start) {
+            visitedObject.startGame();
+        }
     }
 
     
