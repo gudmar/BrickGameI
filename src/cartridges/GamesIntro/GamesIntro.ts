@@ -154,6 +154,11 @@ export class GamesIntro extends GameLogic implements GameCreatorInterface{
         visitedObject.background = getEmptyBoard();
     }
 
+    clean(visitedObject:GameCreator){
+        visitedObject.background = getEmptyBoard();
+        visitedObject.pawnLayer = getEmptyBoard();
+    }
+
     passCode(visitedObject:GameCreator, code:string) {}
     setVisitorToNextStateOnSpeedTick(visitedObject:GameCreator, time:number) {}
     restartSpecificAttributes(visitedObject: GameCreator) {}
@@ -168,6 +173,10 @@ export class GamesIntro extends GameLogic implements GameCreatorInterface{
     setVisitorToNextStateOnKeyPress(visitedObject: GameCreator, keyPresses: KeyPress) {
         if (keyPresses === KeyPress.Start) {
             visitedObject.startGame();
+        }
+        if (!visitedObject.isGameStarted) {
+            if (keyPresses === KeyPress.Speed) {visitedObject.increaseSpeed()}
+            if (keyPresses === KeyPress.Level) {visitedObject.increaseLevel()}    
         }
     }
 

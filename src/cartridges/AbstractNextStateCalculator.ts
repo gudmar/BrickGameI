@@ -66,7 +66,6 @@ export abstract class NextStateCalculator {
     }
 
     tryMoving( visitedObject: any, keyPresses: KeyPress ) {
-        console.log('try moving')
         if (keyPresses === KeyPress.Down) this.move(visitedObject, 1, 0);
         if (keyPresses === KeyPress.Up) this.move(visitedObject, -1, 0);
         if (keyPresses === KeyPress.Left) this.move(visitedObject, 0, -1);

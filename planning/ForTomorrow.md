@@ -1,13 +1,16 @@
-+ * Next block is not displayed,
+
 * speed is too slow,
-* level not implemented,
-+ * Locking nextOnspeed (block falling) with game code  /// 
-    THis is in progress, written StringPatternsMatcher and functionality added to KeyReader, still a hook needed to take array of codes, and returning matched code
-* Game lost not implemented. Getting stuck with blocks does not make game stop
-  -- Long flat brick not falling right
 
+Code cleaning needed badly:
 
-Warning: Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
+GameCreator:
+  - state calculators need state cloasure, they are not static classes, no point in not implementing constructor and keeping whole state in GameCreator,
+  This approach polutes GameCreator, and because gaceCalculator is switched 
+  dynamicly it is hard to clean after it. 
+  All calculator specific state should be kept in calculator,
 
+  - Delete state from GameCreator, as there is too much of it,
 
-Passed to GameCreator, passed to Tetris, just debugg...
+  - On GameCreator start all 3 calculator instances should be created, but not started, some 'Start' method should start calculator, and stop sould remove old one, because calulators may interfere with one another,
+
+  

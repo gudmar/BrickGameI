@@ -13,9 +13,32 @@ import { gameEvents, Judge } from "./Judge";
 import { Juggernaut } from "./Juggernaut";
 import { LevelSetter } from "./LevelSetter";
 
+const INTRO_BACKGROUND = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 0, 1, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0, 1, 0],
+    [0, 0, 1, 0, 1, 1, 0, 0, 1, 0],
+    [0, 1, 1, 0, 1, 1, 0, 0, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 1, 0, 1, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 0, 0, 1, 0, 0, 0],
+    [0, 1, 0, 1, 0, 1, 1, 0, 0, 0],
+    [0, 1, 0, 1, 0, 0, 1, 0, 0, 0],
+    [0, 1, 0, 1, 0, 0, 1, 0, 0, 0],
+    [0, 1, 1, 1, 0, 1, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+]
+
 class GameIntroCloasure{
     constructor() {
-        const gameIntro = new GamesIntro(getEmptyBoard());
+        const gameIntro = new GamesIntro(INTRO_BACKGROUND);
         return gameIntro;
     }
 }
@@ -48,9 +71,10 @@ export class TetrisVisitor extends NextStateCalculator {
         visitedObject.pawnCords = this.getStartingCords(visitedObject.currentBlock)
         visitedObject.upLock = true;
         visitedObject.isCheater = false;
+        this.setLevel(visitedObject);
     }
 
-    restartSpecificAttributes(visitedObject: any): void {
+    clean(visitedObject: any): void {
         const speceficAttributes = [
             'upLock', 'blocksMaster', 'juggernaut, cheatStopTimer',
             'cheatStopTimer',
@@ -64,14 +88,12 @@ export class TetrisVisitor extends NextStateCalculator {
         console.log(code)
         switch (code){
             case START_TIMER:
-                console.log('SetTotRue')
                 visitedObject.cheatStopTimer = false;
                 visitedObject.isCheater = true;
                 break;
             case STOP_TIMER:
                 visitedObject.cheatStopTimer = true;
                 visitedObject.isCheater = true;
-                console.log('steToFalse');
                 break;
             case UP_UNLOCK:
                 visitedObject.upLock = false;
@@ -111,7 +133,6 @@ export class TetrisVisitor extends NextStateCalculator {
         const {row, col} = visitedObject.pawnCords
         const newCords = {row: deltaRow + row, col:deltaCol + col};
         const isNextMoveValid = this.isNextMoveValid(visitedObject, newCords)
-        console.log('isNextValid', isNextMoveValid)
         if (isNextMoveValid){
             visitedObject.resetLayer();
             visitedObject.pawnCords.row = row + deltaRow;
@@ -241,12 +262,6 @@ export class TetrisVisitor extends NextStateCalculator {
         const nextSimulatedBoard = this.getSimulatedMergedBlockAndLayer(newPawnCords, nextFigure, visitedObject.background);
         const summOfNextSimulatedBoard = this.summArrayOfArrays(nextSimulatedBoard);
         const result = summOfBoard + summOfNextFigure === summOfNextSimulatedBoard
-        console.table([
-            ['summBoard', summOfBoard],
-            ['summNextSimulatedBoard', summOfNextSimulatedBoard],
-            ['summNExtFigure', summOfNextFigure],
-            ['result', result]
-        ])
         return result;
 
     }

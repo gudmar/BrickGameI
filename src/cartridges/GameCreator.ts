@@ -17,32 +17,32 @@ export interface GameCreatorInterface {
     beforeGameAnimation: any,
 }
 
+enum StateCalculatorIndex { beforeAnimation, game, afterAnimation };
+
 export class GameCreator extends GameLogic {
 
     static instance: any;
-    public NAME = "Maze mover";
+    public name = "";
     public background = getEmptyBoard();
     public pawnLayer: BrickMap = getEmptyBoard();
     private brickMap = this.mergeLayer();
-    level:OneToTen = 1;
-    speed:OneToTen = 1;
+    public level:OneToTen = 1;
+    public speed:OneToTen = 1;
     private nextFigure = EMPTY_NEXT_FIGURE;
-    score:number = 0;
-    private isPaused: boolean = false;
-    private isAnimating: boolean = false;
-    private isGameOver: boolean = false;
-    private nextStateCalculator: any;    
-    private gameCalculator: any;
+    public score:number = 0;
+    public isPaused: boolean = false;
+    public isAnimating: boolean = false;
+    public isGameOver: boolean = false;
+    public nextStateCalculator: any;    
+    public gameCalculator: any;
     private animationAfterCalculator: any;
     private animationBeforeCalculator: any;
-    private judge:any;
-    private isGameWon: boolean = false;
-    isCheater: boolean = false;
-    private isGameStarted: boolean = false; // false by default, 
-    private pawnCords: PawnCords = { row: 0, col: 0 };
+    public judge:any;
+    public isGameWon: boolean = false;
+    public isCheater: boolean = false;
+    public isGameStarted: boolean = false; // false by default, 
+    public pawnCords: PawnCords = { row: 0, col: 0 };
     private stateCalculators: any[] | null = null;
-
-    private gameCreator: any;
 
     constructor({
         nextStateCalculator,
@@ -52,22 +52,14 @@ export class GameCreator extends GameLogic {
         beforeGameAnimation,
     }:GameCreatorInterface) {
         if(GameCreator.instance) return GameCreator.instance;
-        super();
-        
-        this.gameCreator = nextStateCalculator;
-        this.gameCalculator = new nextStateCalculator();
-        this.gameCalculator.initiate(this)
-        this.animationAfterCalculator = new afterGameAnimation();
-        this.animationBeforeCalculator = new beforeGameAnimation();
-        this.animationBeforeCalculator.initiate(this);
-        this.animationAfterCalculator.initiate(this);
-        // this.nextStateCalculator = this.gameCalculator;
-        
-        this.stateCalculators = [this.animationBeforeCalculator, this.gameCalculator, this.animationAfterCalculator]
-        this.nextStateCalculator = this.stateCalculators[0];
+        super();        
         this.background = background;
-        // this.nextStateCalculator.initiate(this);
         this.brickMap = this.mergeLayer();
+        this.gameCalculator = new nextStateCalculator();
+        this.animationAfterCalculator = new afterGameAnimation();
+        this.animationBeforeCalculator = new beforeGameAnimation();        
+        this.stateCalculators = [this.animationBeforeCalculator, this.gameCalculator, this.animationAfterCalculator]
+        this.switchStateCalculator(StateCalculatorIndex.beforeAnimation);
         this.judge = new judge();
         GameCreator.instance = this;
         return this;
@@ -77,21 +69,15 @@ export class GameCreator extends GameLogic {
         this.pawnLayer = getEmptyBoard();
     }
 
+    private switchStateCalculator(newCalculatorIndex: number) {
+        if (this.nextStateCalculator) this.nextStateCalculator.clean(this);
+        this.nextStateCalculator = this.stateCalculators![newCalculatorIndex];
+        this.nextStateCalculator.initiate(this);
+    }
+
     public getEmptyRow() {
         return getEmptyBoard()[0];
     }
-
-    public async delay(time: number) {
-        const waiter = new Promise((resolve) => {
-            const timeout = setTimeout(() => {
-                resolve(true);
-                clearTimeout(timeout)
-            }, time)
-        })
-        await waiter;
-        return true;
-    } 
-
 
     public informJudge(information: string, payload?: any) {
         this.judge.inform(this, information, payload);
@@ -128,34 +114,24 @@ export class GameCreator extends GameLogic {
     }
 
     public getNextStateOnTick(time:number): GameLogicArgs {
-        // Blinking pawn
-        // if (!this.isGameOver && !this.isGameWon){
             this.nextStateCalculator.setVisitorToNextStateOnTick(this, time)
             this.brickMap = this.mergeLayer();
-        // }
         return this.state;
     }
 
     public getNextStateOnSpeedTick(time:number): GameLogicArgs {
-        // Faster game actions
         if (this.checkIfGameLocked()) return this.state;
-        // if (!this.isGameOver && !this.isGameWon && !this.isAnimating){
-            this.nextStateCalculator.setVisitorToNextStateOnSpeedTick(this, time)
-            this.brickMap = this.mergeLayer();
-        // }
+        this.nextStateCalculator.setVisitorToNextStateOnSpeedTick(this, time)
+        this.brickMap = this.mergeLayer();
         return this.state;
     }
 
     public gameEnded() {
-        this.nextStateCalculator.restartSpecificAttributes(this);
-        this.nextStateCalculator = this.animationAfterCalculator;
-        this.nextStateCalculator.initiate(this);
+        this.switchStateCalculator(StateCalculatorIndex.afterAnimation);
     }
 
     public afterGameAnimationEnded() {
-        this.nextStateCalculator.restartSpecificAttributes(this);
-        this.nextStateCalculator = this.gameCalculator;
-        this.nextStateCalculator.initiate(this);
+        this.switchStateCalculator(StateCalculatorIndex.game);
     }
 
     public getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {
@@ -185,28 +161,12 @@ export class GameCreator extends GameLogic {
         this.isGameStarted = true;
         this.isGameOver = false;
         this.isGameWon = false;
-        this.nextStateCalculator = this.stateCalculators![1];
-        this.nextStateCalculator.restartSpecificAttributes();
-        // this.nextStateCalculator.initialte(this);
-        // this.nextStateCalculator = new this.gameCreator();
+        this.switchStateCalculator(StateCalculatorIndex.game)
     }
     public pauseGame() { 
         console.trace('Togging pause')
         this.isPaused = !this.isPaused;
     }
-
-    // private updateState(nextState: GameLogicArgs) {
-    //     const {
-    //         brickMap, level, speed, nextFigure, score, isPaused, isAnimating
-    //     } = nextState;
-    //     this.brickMap = brickMap;
-    //     this.level = level;
-    //     this.speed = speed;
-    //     this.nextFigure = nextFigure;
-    //     this.score = score;
-    //     this.isPaused = isPaused;
-    //     this.isAnimating = isAnimating;
-    // }
 
     private get state() {
         return {
