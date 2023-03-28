@@ -50,7 +50,7 @@ export class TetrisDecorator {
             {
                 nextStateCalculator: TetrisVisitor,
                 judge: Judge,
-                background: EMPTY_BOARD,
+                // background: EMPTY_BOARD,
                 afterGameAnimation: AnimationAfterGame,
                 beforeGameAnimation: GameIntroCloasure,
             }
@@ -60,26 +60,27 @@ export class TetrisDecorator {
 }
 
 export class TetrisVisitor extends NextStateCalculator {
+
+    private blockMaker: Blocks = new Blocks();
+    private juggernaut: Juggernaut | null = null;
+    private upLock: boolean = true;
+    private cheatStopTimer: boolean = false;
+
     initiate(visitedObject: any){
-        const blocksInstance = new Blocks()
-        const juggernaut = new Juggernaut(visitedObject);
         visitedObject.name = 'Tetris'
-        visitedObject.blocksMaker = blocksInstance;
-        visitedObject.juggernaut = juggernaut;
+        visitedObject.background = getEmptyBoard();
+        this.juggernaut = new Juggernaut(visitedObject);
         this.setNewBrick(visitedObject);
         this.tryToPlaceNewBlock(visitedObject);
         visitedObject.pawnCords = this.getStartingCords(visitedObject.currentBlock)
-        visitedObject.upLock = true;
+        
         visitedObject.isCheater = false;
         this.setLevel(visitedObject);
     }
 
     clean(visitedObject: any): void {
-        const speceficAttributes = [
-            'upLock', 'blocksMaster', 'juggernaut, cheatStopTimer',
-            'cheatStopTimer',
-        ];
-        speceficAttributes.forEach((attrib) => delete visitedObject[attrib]);
+        this.upLock = false;
+        this.cheatStopTimer = false;
         visitedObject.background = getEmptyBoard();
         visitedObject.pawnLayer = getEmptyBoard();
     }
@@ -88,19 +89,19 @@ export class TetrisVisitor extends NextStateCalculator {
         console.log(code)
         switch (code){
             case START_TIMER:
-                visitedObject.cheatStopTimer = false;
+                this.cheatStopTimer = false;
                 visitedObject.isCheater = true;
                 break;
             case STOP_TIMER:
-                visitedObject.cheatStopTimer = true;
+                this.cheatStopTimer = true;
                 visitedObject.isCheater = true;
                 break;
             case UP_UNLOCK:
-                visitedObject.upLock = false;
+                this.upLock = false;
                 visitedObject.isCheater = true;
                 break;
             case UP_LOCK:
-                visitedObject.upLock = true;
+                this.upLock = true;
                 break;
             case ADD_POINTS:
                 visitedObject.informJudge(gameEvents.CHEATER_MONEY);
@@ -121,7 +122,7 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     setVisitorToNextStateOnTick(visitedObject:any){
-            visitedObject.juggernaut.tick();
+            this.juggernaut!.tick();
     }
 
     setLevel(visitedObject: any) {
@@ -129,7 +130,7 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     move(visitedObject:any, deltaRow:number, deltaCol:number) {
-        if (deltaRow < 0 && visitedObject.upLock) return;
+        if (deltaRow < 0 && this.upLock) return;
         const {row, col} = visitedObject.pawnCords
         const newCords = {row: deltaRow + row, col:deltaCol + col};
         const isNextMoveValid = this.isNextMoveValid(visitedObject, newCords)
@@ -148,7 +149,7 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     handleDemolition(visitedObject:any) {
-        visitedObject.juggernaut.tryDemolition();
+        this.juggernaut!.tryDemolition();
     }
 
     tryEmbedBrick(visitedObject: any, wasMoveMade: boolean, newCords:PawnCords) {
@@ -216,14 +217,13 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     setNewBrick(visitedObject: any) {
-        visitedObject.currentBlock = visitedObject.blocksMaker.getBlock(0);
+        visitedObject.currentBlock = this.blockMaker.getBlock(0);
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number){
-        if (!visitedObject.cheatStopTimer){
+        if (!this.cheatStopTimer){
             this.move(visitedObject, 1, 0);
         }
-        
     }
 
     placeBlock(visitedObject:any) {
@@ -231,9 +231,8 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     takeNextAndCurrentBlocks(visitedObject:any) {
-        const blocks = visitedObject.blocksMaker;
-        blocks.setNewBlock();
-        const { currentBlock, nextBlock } = blocks;
+        this.blockMaker.setNewBlock();
+        const { currentBlock, nextBlock } = this.blockMaker;
         return { currentBlock, nextBlock}
     }
 
@@ -249,7 +248,7 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     endGameIfCannotAddNextBlock(visitedObject:any) {
-        const {nextBlock} = visitedObject.blocksMaker;
+        const {nextBlock} = this.blockMaker;
         const newPawnCords = this.getStartingCords(nextBlock);
         const nextFigure = nextBlock.blockDescriptor.figure;
         const isGameOver = !this.canAddNewBlock(visitedObject, nextFigure, newPawnCords);

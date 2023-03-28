@@ -9,9 +9,11 @@ export const START_TIMER = 'heat'
 export const UP_LOCK = 'burden'
 export const ADD_POINTS = 'extortion'
 export const UP_UNLOCK = 'feather'
+export const DONT_BUMP = 'lagiewka'
+export const BUMP = 'hit'
 
 export const gameCodes = [
-    STOP_TIMER, START_TIMER, UP_LOCK, ADD_POINTS, UP_UNLOCK,
+    STOP_TIMER, START_TIMER, UP_LOCK, ADD_POINTS, UP_UNLOCK, DONT_BUMP, BUMP
 ]
 
 export const codesDescription = {
@@ -36,5 +38,23 @@ export const codesDescription = {
             code: ADD_POINTS,
             description: 'Get 5000',
         },
+    ],
+    [cartridges.MAZE]: [
+        {
+            code: STOP_TIMER,
+            description: 'Stop decrementing points when time passes'
+        },
+        {
+            code: START_TIMER,
+            description: 'Start decrementing points when time passes'
+        },
+        {
+            code: DONT_BUMP,
+            description: 'Don`t decrement score on wall hit',
+        },
+        {
+            code: BUMP,
+            description: 'Decrement score on wall hit',
+        }
     ]
 }

@@ -13,7 +13,7 @@ export interface GameCreatorInterface {
     nextStateCalculator: { new(...args: any[]): any },
     judge: { new(...args: any[]): any },
     afterGameAnimation: any,
-    background: BrickMap,
+    // background: BrickMap,
     beforeGameAnimation: any,
 }
 
@@ -47,13 +47,13 @@ export class GameCreator extends GameLogic {
     constructor({
         nextStateCalculator,
         judge,
-        background,
+        // background,
         afterGameAnimation,
         beforeGameAnimation,
     }:GameCreatorInterface) {
         if(GameCreator.instance) return GameCreator.instance;
         super();        
-        this.background = background;
+        // this.background = background;
         this.brickMap = this.mergeLayer();
         this.gameCalculator = new nextStateCalculator();
         this.animationAfterCalculator = new afterGameAnimation();
