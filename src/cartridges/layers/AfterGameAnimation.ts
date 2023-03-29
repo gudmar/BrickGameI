@@ -1,23 +1,28 @@
 
 import { Logger } from "../../functions/Logger";
 import { KeyPress } from "../../types/KeyPress";
+import { getEmptyBoard } from "../constants";
 
 
 enum Direction {up, down};
 
 export class AnimationAfterGame {
 
+    private lastAnimatedRowIndex = -1;
+    private direction = Direction.up;
     initiate(visitedObject: any) {
-        visitedObject.direction = Direction.up;
-        visitedObject.lastIndex = -1;
         Logger.inform('AnimationAfterGame instance initilted')
         console.log('Animation after game initialized')
     }
 
+    clean(visitedObject:any){
+        console.log(visitedObject.pawnLayer, visitedObject.pawnLayer.length)
+    };
+
     restartSpecificAttributes(visitedObject:any) {
-        'direction,lastIndex'.split(',').forEach(
-            (key) => delete visitedObject[key],
-        )
+        // 'direction,lastAnimatedRowIndex'.split(',').forEach(
+        //     (key) => delete visitedObject[key],
+        // )
     }
 
     passCode(){
@@ -25,23 +30,25 @@ export class AnimationAfterGame {
     }
 
     setVisitorToNextStateOnTick(visitedObject: any, time: number) {
-        if (visitedObject.lastIndex === -1) visitedObject.lastIndex = visitedObject.pawnLayer.length;
+        if (this.lastAnimatedRowIndex === -1) this.lastAnimatedRowIndex = visitedObject.pawnLayer.length; // NOT THIS
         this.tryMoveUp(visitedObject);
         this.tryMoveDown(visitedObject);
     }
 
     tryMoveUp(visitedObject:any) {
-        if (visitedObject.direction !== Direction.up) { return; }
-        visitedObject.lastIndex -= 1;
-        visitedObject.pawnLayer[visitedObject.lastIndex] = this.getRowOf(visitedObject.pawnLayer[0].length, 1)
-        if (visitedObject.lastIndex < 1) visitedObject.direction = Direction.down;
+        if (this.direction !== Direction.up) { return; }
+        
+        this.lastAnimatedRowIndex -= 1;
+        visitedObject.pawnLayer[this.lastAnimatedRowIndex] = this.getRowOf(visitedObject.pawnLayer[0].length, 1)
+        if (this.lastAnimatedRowIndex < 1) this.direction = Direction.down;
     }
 
     tryMoveDown(visitedObject:any) {
-        if (visitedObject.direction !== Direction.down) { return; }
-        visitedObject.pawnLayer[visitedObject.lastIndex] = this.getRowOf(visitedObject.pawnLayer[0].length, 0)
-        visitedObject.lastIndex += 1;
-        if (visitedObject.lastIndex > visitedObject.background.length) this.animationEnded(visitedObject);
+        if (this.direction !== Direction.down) { return; }
+        
+        visitedObject.pawnLayer[this.lastAnimatedRowIndex] = this.getRowOf(visitedObject.pawnLayer[0].length, 0)
+        this.lastAnimatedRowIndex += 1;
+        if (this.lastAnimatedRowIndex >= visitedObject.background.length) this.animationEnded(visitedObject);
     }
 
     private animationEnded(visitedObject:any) {

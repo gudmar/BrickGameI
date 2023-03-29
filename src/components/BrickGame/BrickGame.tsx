@@ -33,7 +33,7 @@ function BrickGame() {
   const [currentGame, setCurrentGame] = useState(cartridges.TETRIS);
   const [speed, setSpeed]: [OneToTen, any] = useState(1);
   const [level, setLevel]: [OneToTen, any] = useState(1);
-
+  const [isGameStarted, setIsGameStarted]: [boolean, (val:boolean)=>void] = useState(false);
   
 
   useEffect(() => {
@@ -43,12 +43,14 @@ function BrickGame() {
     return (
         <div className="root">
             <Navigation />
+            {isGameStarted ? 'Game is started' : 'Game is STOPPED'}
             <Console 
                 currentGame={currentGame}
                 speed = {speed}
                 setSpeed = {setSpeed}
                 level = {level}
                 setLevel = {setLevel}
+                setIsGameStarted = {setIsGameStarted}
             />
             <div>
               <div><b>Up</b> <i>Go up</i></div>

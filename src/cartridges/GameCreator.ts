@@ -24,7 +24,7 @@ export class GameCreator extends GameLogic {
     static instance: any;
     public name = "";
     public background = getEmptyBoard();
-    public pawnLayer: BrickMap = getEmptyBoard();
+    private _pawnLayer: BrickMap = getEmptyBoard();
     private brickMap = this.mergeLayer();
     public level:OneToTen = 1;
     public speed:OneToTen = 1;
@@ -63,6 +63,19 @@ export class GameCreator extends GameLogic {
         this.judge = new judge();
         GameCreator.instance = this;
         return this;
+    }
+
+    get pawnLayer() {
+        if (this._pawnLayer.length > 20) {
+            console.error('Pawne layer length', this._pawnLayer.length)
+        }
+        return this._pawnLayer.slice(0, 20)
+    }
+    set pawnLayer(val:BrickMap) {
+        if (val.length > 20) {
+            throw new Error(`Attempt to set pawnLayer to ${val}`)
+        }
+        this._pawnLayer = val;
     }
 
     public resetLayer() {
@@ -131,7 +144,7 @@ export class GameCreator extends GameLogic {
     }
 
     public afterGameAnimationEnded() {
-        this.switchStateCalculator(StateCalculatorIndex.game);
+        this.switchStateCalculator(StateCalculatorIndex.beforeAnimation);
     }
 
     public getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {
@@ -157,14 +170,12 @@ export class GameCreator extends GameLogic {
     }
 
     public startGame() { 
-        console.log('Should start')
         this.isGameStarted = true;
         this.isGameOver = false;
         this.isGameWon = false;
         this.switchStateCalculator(StateCalculatorIndex.game)
     }
     public pauseGame() { 
-        console.trace('Togging pause')
         this.isPaused = !this.isPaused;
     }
 
@@ -192,7 +203,12 @@ export class GameCreator extends GameLogic {
     }
 
     private mergeRow(layerRow: number[], boardRow: number[]) {
-        return layerRow.map((layerBrick:number, index:number) => this.mergeBrick(layerBrick, boardRow[index]))
+        
+        return layerRow.map((layerBrick:number, index:number) => {
+            if (boardRow === undefined) console.error(boardRow, this.background, this.pawnLayer)
+            return this.mergeBrick(layerBrick, boardRow[index])
+        })
+            
     }
 
     public mergeBrick(currentBrick: number, layerBrick: number) {

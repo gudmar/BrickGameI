@@ -66,6 +66,9 @@ export abstract class NextStateCalculator {
     }
 
     tryMoving( visitedObject: any, keyPresses: KeyPress ) {
+        const gameLocked = visitedObject.checkIfGameLocked.call(visitedObject);
+        console.log(gameLocked, visitedObject.pawnLayer)
+        if (gameLocked) return;
         if (keyPresses === KeyPress.Down) this.move(visitedObject, 1, 0);
         if (keyPresses === KeyPress.Up) this.move(visitedObject, -1, 0);
         if (keyPresses === KeyPress.Left) this.move(visitedObject, 0, -1);

@@ -1,16 +1,14 @@
 
 * speed is too slow,
 
-Code cleaning needed badly:
+* Binding games together:
+  - add isGameOn to state returned by GameCreator, true only if game is being played,
+  - Arrows to switch game in BrickGame component implementation. Only if !isGameOn
 
-GameCreator:
-  - state calculators need state cloasure, they are not static classes, no point in not implementing constructor and keeping whole state in GameCreator,
-  This approach polutes GameCreator, and because gaceCalculator is switched 
-  dynamicly it is hard to clean after it. 
-  All calculator specific state should be kept in calculator,
+* Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
 
-  - Delete state from GameCreator, as there is too much of it,
-
-  - On GameCreator start all 3 calculator instances should be created, but not started, some 'Start' method should start calculator, and stop sould remove old one, because calulators may interfere with one another,
+* Snake
+  - maze is a starting point,
+  - attach tail to maze blinking head,
 
   

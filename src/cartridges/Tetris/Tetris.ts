@@ -131,6 +131,7 @@ export class TetrisVisitor extends NextStateCalculator {
 
     move(visitedObject:any, deltaRow:number, deltaCol:number) {
         if (deltaRow < 0 && this.upLock) return;
+        if (visitedObject.isGameOver) return;
         const {row, col} = visitedObject.pawnCords
         const newCords = {row: deltaRow + row, col:deltaCol + col};
         const isNextMoveValid = this.isNextMoveValid(visitedObject, newCords)
@@ -173,7 +174,7 @@ export class TetrisVisitor extends NextStateCalculator {
 
     isNextMoveInBoundries(visitedObject:any, newCords:PawnCords) {
         if (newCords.row < 0 || newCords.col < 0) return false;
-        const { pawnLayer, currentBlock } = visitedObject;
+        const { pawnLayer, currentBlock } = visitedObject;        
         const newLayer = this.mergeBlockToLayer({
             layer:getEmptyBoard(),
             block: currentBlock.blockDescriptor,

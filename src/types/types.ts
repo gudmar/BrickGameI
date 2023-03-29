@@ -77,6 +77,7 @@ export interface ConsoleArgs {
     level: OneToTen,
     setSpeed: (val: OneToTen) => void,
     setLevel: (val: OneToTen) => void,
+    setIsGameStarted: (val: boolean) => void,
 }
 
 export interface DoWithBar {

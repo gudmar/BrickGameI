@@ -6,7 +6,12 @@ import ScoreBar from './ScoreBar/__test__/ScoreBar';
 import styles from './styles.module.css';
 
 function Display(
-   {speed: initialSpeed, level: initialLevel, currentGameDescription}: DisplayProps
+   {
+    speed: initialSpeed,
+    level: initialLevel,
+    currentGameDescription,
+    setIsGameStarted,
+  }: DisplayProps
 ) {
 
   const { 
@@ -22,6 +27,10 @@ function Display(
     isGameStarted,
     isCheater,
    } = useCartridge(currentGameDescription);
+
+   useEffect(() => {
+      setIsGameStarted(isGameStarted || false);
+   }, [setIsGameStarted, isGameStarted])
 
    useEffect(() => {
     console.log(`GAME STATE: score: ${score}, isGameOver: ${isGameOver}, isGameWon: ${isGameWon}, isGameStarted, ${isGameStarted}`)
