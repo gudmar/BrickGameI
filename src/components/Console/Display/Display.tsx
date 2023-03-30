@@ -32,6 +32,8 @@ function Display(
       setIsGameStarted(isGameStarted || false);
    }, [setIsGameStarted, isGameStarted])
 
+   useEffect(() => { console.log('Display, currentGame', currentGameDescription)}, [currentGameDescription])
+
    useEffect(() => {
     console.log(`GAME STATE: score: ${score}, isGameOver: ${isGameOver}, isGameWon: ${isGameWon}, isGameStarted, ${isGameStarted}`)
    }, [score, isGameOver, isGameWon])

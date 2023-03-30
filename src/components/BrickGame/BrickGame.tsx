@@ -7,6 +7,7 @@ import { GameLogic } from '../../cartridges/AbstractGameLogic';
 import { KeyReader } from '../../functions/KeyReader';
 import { cartridges } from '../../constants/games';
 import { codesDescription } from '../../constants/gameCodes';
+import { keys, useKeyboard } from '../../hooks/useKeyboard';
 
 
 function CodeDescriptions({currentGame}: {currentGame: string}) {
@@ -30,15 +31,30 @@ function BrickGame() {
   // const [currentGame, setCurrentGame] = useState(cartridges.LAYERS);
   // const [currentGame, setCurrentGame] = useState(cartridges.ANIMATIONS);
   // const [currentGame, setCurrentGame] = useState(cartridges.MAZE);
+  const c = [cartridges.MAZE, cartridges.TETRIS]
   const [currentGame, setCurrentGame] = useState(cartridges.TETRIS);
   const [speed, setSpeed]: [OneToTen, any] = useState(1);
   const [level, setLevel]: [OneToTen, any] = useState(1);
   const [isGameStarted, setIsGameStarted]: [boolean, (val:boolean)=>void] = useState(false);
-  
 
-  useEffect(() => {
-    new KeyReader();
-  }, [])
+  const cartridgeUp = () => {
+    if (isGameStarted) return{};
+    if (currentGame === cartridges.MAZE) {
+      setCurrentGame(cartridges.TETRIS)
+    } else {
+      setCurrentGame(cartridges.MAZE)
+    }
+    return {}
+  }
+
+  useEffect(()=>{console.log(currentGame)}, [currentGame])
+  
+  useKeyboard({ key: keys.UP, callback: cartridgeUp })
+  useKeyboard({ key: keys.DOWN, callback: cartridgeUp })
+
+  // useEffect(() => {
+  //   new KeyReader();
+  // }, [])
 
     return (
         <div className="root">

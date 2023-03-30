@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import BrickGame from './components/BrickGame/BrickGame';
+import { KeyReader } from './functions/KeyReader';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+// new KeyReader();
 root.render(
   <React.StrictMode>
     <BrickGame />

@@ -51,9 +51,7 @@ export class GameCreator extends GameLogic {
         afterGameAnimation,
         beforeGameAnimation,
     }:GameCreatorInterface) {
-        if(GameCreator.instance) return GameCreator.instance;
-        super();        
-        // this.background = background;
+        super();
         this.brickMap = this.mergeLayer();
         this.gameCalculator = new nextStateCalculator();
         this.animationAfterCalculator = new afterGameAnimation();
@@ -61,7 +59,6 @@ export class GameCreator extends GameLogic {
         this.stateCalculators = [this.animationBeforeCalculator, this.gameCalculator, this.animationAfterCalculator]
         this.switchStateCalculator(StateCalculatorIndex.beforeAnimation);
         this.judge = new judge();
-        GameCreator.instance = this;
         return this;
     }
 

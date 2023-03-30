@@ -142,11 +142,9 @@ export class GamesIntro extends GameLogic implements GameCreatorInterface{
     private scheaduleProvider: ScheaduleProvider | null = null;
 
     constructor(background: BrickMap) {
-        if(GamesIntro.instance) return GamesIntro.instance;
         super();
         this.scheaduleProvider = new ScheaduleProvider(background);
         this.animationScheaduler = new AnimationScheaduler(this.scheaduleProvider.getScheadule())
-        GamesIntro.instance = this;
         return this;
     }
 

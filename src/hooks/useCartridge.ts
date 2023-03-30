@@ -52,10 +52,15 @@ const cartridgeLibrary: Library = {
 
 }
 
-const findCartridge = (cartridgeDescription: string) => 
+const findInitialCartridge = (cartridgeDescription: string) => 
     Object.values(cartridgeLibrary).find(
         ({ description }) => description === cartridgeDescription
     );
+
+const getInitialCartridgeInstance = (cartridgeToUseDescription: string) => {
+    const constructor = findInitialCartridge(cartridgeToUseDescription)!.logicHandler
+    return (new (constructor)()) 
+}
 
 const initialGameState: GameState = {
     brickMap: getDojoOfSymbols(0),
@@ -69,20 +74,40 @@ const initialGameState: GameState = {
 }
 
 export const useCartridge = (cartridgeToUseDescription: string) => {
-    const cartridgeInstance = useMemo( 
-            () => { 
-                const constructor = findCartridge(cartridgeToUseDescription)!.logicHandler
-                console.log('Construction ' + cartridgeToUseDescription)
-                return (new (constructor)()) 
-            }, [cartridgeToUseDescription]
+    // const cartridgeInstance = useMemo( 
+    //         () => { 
+    //             const constructor = findCartridge(cartridgeToUseDescription)!.logicHandler
+    //             console.log('Construction ' + cartridgeToUseDescription)
+    //             return (new (constructor)()) 
+    //         }, [cartridgeToUseDescription]
+    //     );
+    const [cartridgeInstance, setCartridgeInstance] = useState(getInitialCartridgeInstance(cartridgeToUseDescription));
+
+    useEffect(() => {
+        const findCartridge = (cartridgeDescription: string) => 
+        Object.values(cartridgeLibrary).find(
+            ({ description }) => description === cartridgeDescription
         );
+
+        const constructor = findCartridge(cartridgeToUseDescription)!.logicHandler
+        console.log('Construction ' + cartridgeToUseDescription, constructor)
+        const instance = (new (constructor)()) 
+
+        setCartridgeInstance(instance)
+    }, [cartridgeToUseDescription, setCartridgeInstance])
+
+    useEffect(()=>console.log(cartridgeInstance), [cartridgeInstance])
+
+
     const [gameState, setGameState] = useState(initialGameState);
     const timeEveryTick = useTimer();
     const timeSpeed = useTimer(gameState.speed);
     const matchedCode = useGameCodes(gameCodes)
 
+    useEffect(() => {console.log('useCartridge gameDescritpin',cartridgeToUseDescription)}, [cartridgeToUseDescription])
     useEffect(() => {
         cartridgeInstance.passCode(matchedCode);
+        console.log('Instance', cartridgeInstance)
     }, [matchedCode, cartridgeInstance])
 
 

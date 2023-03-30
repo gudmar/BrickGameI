@@ -20,9 +20,6 @@ export class AnimationAfterGame {
     };
 
     restartSpecificAttributes(visitedObject:any) {
-        // 'direction,lastAnimatedRowIndex'.split(',').forEach(
-        //     (key) => delete visitedObject[key],
-        // )
     }
 
     passCode(){
