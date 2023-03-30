@@ -9,8 +9,8 @@ describe('Testing test cardridge', () => {
         it('Should return GameLogicArgs with static brickCoordinantes', () => {
             const expected = {
                 score: 0,
-                level: 0,
-                speed: 0,
+                level: 1,
+                speed: 1,
                 brickMap: TWO_IN_ONE,
                 isAnimating: false,
                 isPaused: false,
