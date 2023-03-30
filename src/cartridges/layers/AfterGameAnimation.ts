@@ -16,7 +16,6 @@ export class AnimationAfterGame {
     }
 
     clean(visitedObject:any){
-        console.log(visitedObject.pawnLayer, visitedObject.pawnLayer.length)
     };
 
     restartSpecificAttributes(visitedObject:any) {

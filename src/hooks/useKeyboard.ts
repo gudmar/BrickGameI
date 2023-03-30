@@ -4,7 +4,8 @@ import { keyCodes, KeyReader } from "../functions/KeyReader"
 export interface useKeyboardProps {
     key: string,
     modifier?: string,
-    callback: ()=>{},
+    callback: () => void,
+    // callback: ()=>{},
 }
 
 export const keys = KeyReader.keys;

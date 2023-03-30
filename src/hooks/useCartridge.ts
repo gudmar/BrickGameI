@@ -81,6 +81,7 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
     //             return (new (constructor)()) 
     //         }, [cartridgeToUseDescription]
     //     );
+    const [initialCartridgeName] = useState(cartridgeToUseDescription);
     const [cartridgeInstance, setCartridgeInstance] = useState(getInitialCartridgeInstance(cartridgeToUseDescription));
 
     useEffect(() => {
@@ -90,13 +91,12 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
         );
 
         const constructor = findCartridge(cartridgeToUseDescription)!.logicHandler
-        console.log('Construction ' + cartridgeToUseDescription, constructor)
         const instance = (new (constructor)()) 
 
         setCartridgeInstance(instance)
     }, [cartridgeToUseDescription, setCartridgeInstance])
 
-    useEffect(()=>console.log(cartridgeInstance), [cartridgeInstance])
+    const resetConsole = () => {setCartridgeInstance(getInitialCartridgeInstance(initialCartridgeName))}
 
 
     const [gameState, setGameState] = useState(initialGameState);
@@ -114,51 +114,42 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
     const handleMoveUp = () => {
         const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Up);
         setGameState(nextState);
-        return {};
     }
     const handleMoveDown = () => {
         const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Down);
         setGameState(nextState);
-        return {};
     }
 
     const handleMoveLeft = () => {
         const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Left);
         setGameState(nextState);
-        return {};
     }
     const handleMoveRight = () => {
         const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Right);
         setGameState(nextState);
-        return {};
     }
 
     const handleRotate = () => {
         const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Rotate);
         setGameState(nextState);
-        return {};
     }
     const handleLevelChange = () => {
         const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Level);
         setGameState(nextState);
-        return {};
     }
     const handleSpeedChange = () => {
         const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Speed);
         setGameState(nextState);
-        return {};
     }
     const handlePause = () => {
         const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Pause);
         console.log(nextState)
         setGameState(nextState);
-        return {};
     }
 
     const handleGameStart = () => {
         const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Start);
         setGameState(nextState);
-        return {};
     }
 
 
@@ -171,6 +162,7 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
     useKeyboard({ key: keys.P, callback: handlePause })
     useKeyboard({ key: keys.SPACE, callback: handleRotate })
     useKeyboard({ key: keys.ENTER, callback: handleGameStart })
+    useKeyboard({ key: keys.R, callback: resetConsole })
 
 
 
