@@ -1,56 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTimer } from './useClock'
-import { TestCartridge } from '../cartridges/test'
 import { GameState } from '../types/types';
 import { getNextFigureOfSymbols, getDojoOfSymbols } from '../cartridges/AbstractGameLogic';
-import { LayersApplayer } from '../cartridges/layers/LayersApplayer';
-import { Animations } from '../cartridges/Animations/Animations';
 import { keys, useKeyboard } from './useKeyboard';
-import { MazeMoverDecorator } from '../cartridges/MovingKeys/MazeMover';
-import { TetrisDecorator } from '../cartridges/Tetris/Tetris';
 import { gameCodes } from '../constants/gameCodes';
 import { useGameCodes } from './useGameCodes';
-import { cartridges } from '../constants/games';
 import { KeyPress } from '../types/KeyPress';
+import { cartridgeLibrary } from '../constants/cartridgeLibrary';
 
-interface LogicDescriptor {
-    logicHandler: any, // GameLogic, !!!!!!!!!!!!!!!!!!!!!!!!!
-    description: string,
-    show: boolean
-}
 
-interface Library {
-    [name: string] : LogicDescriptor
-}
-
-const cartridgeLibrary: Library = {
-    [cartridges.TEST]: {
-        logicHandler: TestCartridge,
-        description: cartridges.TEST,
-        show: true,
-    },
-    [cartridges.LAYERS]: {
-        logicHandler: LayersApplayer,
-        description: cartridges.LAYERS,
-        show: true,
-    },
-    [cartridges.ANIMATIONS]: {
-        logicHandler: Animations,
-        description: cartridges.ANIMATIONS,
-        show: true,
-    },
-    [cartridges.MAZE]: {
-        logicHandler: MazeMoverDecorator,
-        description: cartridges.MAZE,
-        show: true,
-    },
-    [cartridges.TETRIS]: {
-        logicHandler: TetrisDecorator,
-        description: cartridges.TETRIS,
-        show: true,
-    },
-
-}
 
 const findInitialCartridge = (cartridgeDescription: string) => 
     Object.values(cartridgeLibrary).find(
@@ -162,7 +120,7 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
     useKeyboard({ key: keys.P, callback: handlePause })
     useKeyboard({ key: keys.SPACE, callback: handleRotate })
     useKeyboard({ key: keys.ENTER, callback: handleGameStart })
-    useKeyboard({ key: keys.R, callback: resetConsole })
+    useKeyboard({ key: keys.X, callback: resetConsole })
 
 
 

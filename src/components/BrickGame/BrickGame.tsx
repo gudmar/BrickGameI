@@ -3,9 +3,10 @@ import './styles.css';
 import Navigation from '../Navigation/Navigation';
 import Console from '../Console/Console';
 import { OneToTen } from '../../types/types'
-import { cartridges } from '../../constants/games';
 import { codesDescription } from '../../constants/gameCodes';
 import { keys, useKeyboard } from '../../hooks/useKeyboard';
+import { findLastIndex } from '../../functions/findLastIndex';
+import { CARTRIDGE_ORDER } from '../../constants/cartridgeLibrary';
 
 
 function CodeDescriptions({currentGame}: {currentGame: string}) {
@@ -26,22 +27,26 @@ function CodeDescriptions({currentGame}: {currentGame: string}) {
 }
 
 function BrickGame() {
-  // const [currentGame, setCurrentGame] = useState(cartridges.LAYERS);
-  // const [currentGame, setCurrentGame] = useState(cartridges.ANIMATIONS);
-  // const [currentGame, setCurrentGame] = useState(cartridges.MAZE);
-  const [currentGame, setCurrentGame] = useState(cartridges.TETRIS);
+  const [currentGame, setCurrentGame] = useState(CARTRIDGE_ORDER[1]);
   const [speed, setSpeed]: [OneToTen, any] = useState(1);
   const [level, setLevel]: [OneToTen, any] = useState(1);
   const [isGameStarted, setIsGameStarted]: [boolean, (val:boolean)=>void] = useState(false);
 
   const cartridgeUp = () => {
     if (isGameStarted) return{};
-    if (currentGame === cartridges.MAZE) {
-      setCurrentGame(cartridges.TETRIS)
-    } else {
-      setCurrentGame(cartridges.MAZE)
+    const findCurrentCartridgeIndex = () => CARTRIDGE_ORDER.findIndex((storedCartridge) => storedCartridge === currentGame)
+    const setNextCartridge = () => {
+      const currentIndex = findCurrentCartridgeIndex();
+      const nextIndex =  currentIndex + 1 >= CARTRIDGE_ORDER.length ? 0 : currentIndex + 1;
+      setCurrentGame(CARTRIDGE_ORDER[nextIndex])
     }
-    return {}
+    setNextCartridge()    
+    // if (currentGame === cartridges.MAZE) {
+    //   setCurrentGame(cartridges.TETRIS)
+    // } else {
+    //   setCurrentGame(cartridges.MAZE)
+    // }
+    // return {}
   }
 
   useEffect(()=>{console.log(currentGame)}, [currentGame])
@@ -69,7 +74,7 @@ function BrickGame() {
               <div><b>p</b> <i>Pause, unpause</i></div>
               <div><b>s</b> <i>Speed up</i></div>
               <div><b>l</b> <i>Level up</i></div>
-              <div><b>r</b> <i>Reset console</i></div>
+              <div><b>x</b> <i>Reset console</i></div>
               <div><b>Space</b> <i>Rotate</i></div>
               <div><b>Enter</b> <i>Start game, restart game after finished</i></div>
             </div>

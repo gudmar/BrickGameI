@@ -9,7 +9,7 @@ export interface PawnCords {
     col: number,
 }
 
-export interface GameCreatorInterface {
+export interface GameCreatorDecoratorInterface {
     nextStateCalculator: { new(...args: any[]): any },
     judge: { new(...args: any[]): any },
     afterGameAnimation: any,
@@ -50,7 +50,7 @@ export class GameCreator extends GameLogic {
         // background,
         afterGameAnimation,
         beforeGameAnimation,
-    }:GameCreatorInterface) {
+    }:GameCreatorDecoratorInterface) {
         super();
         this.brickMap = this.mergeLayer();
         this.gameCalculator = new nextStateCalculator();
