@@ -1,5 +1,6 @@
 import { BUMP, DONT_BUMP, START_TIMER, STOP_TIMER } from "../../constants/gameCodes";
 import { GameCreatorInterface } from "../../types/GameCreatorInterface";
+import { JudgeInterface } from "../../types/JudgeInterface";
 import { BrickMap } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { GAME_OVER, MAZE } from "../constants";
@@ -35,7 +36,7 @@ const gameEvents = {
     TICK: 'Tick',
 }
 
-class Judge {
+class Judge implements JudgeInterface {
     inform(visitedObject: any, information: string, payload?: any){
         switch(information) {
             case gameEvents.WRONG_MOVE : visitedObject.score -= 20; break;

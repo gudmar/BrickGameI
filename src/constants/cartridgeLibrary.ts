@@ -10,7 +10,7 @@ import { TetrisDecorator } from "../cartridges/Tetris/Tetris";
 interface LogicDescriptor {
     logicHandler: any, // GameLogic, !!!!!!!!!!!!!!!!!!!!!!!!!
     description: string,
-    show: boolean
+    // show: boolean
 }
 
 export const cartridges = {
@@ -34,31 +34,31 @@ export const cartridgeLibrary: Library = {
     [cartridges.TEST]: {
         logicHandler: TestCartridge,
         description: cartridges.TEST,
-        show: true,
+        // show: true,
     },
     [cartridges.LAYERS]: {
         logicHandler: LayersApplayer,
         description: cartridges.LAYERS,
-        show: true,
+        // show: true,
     },
     [cartridges.ANIMATIONS]: {
         logicHandler: Animations,
         description: cartridges.ANIMATIONS,
-        show: true,
+        // show: true,
     },
     [cartridges.MAZE]: {
         logicHandler: MazeMoverDecorator,
         description: cartridges.MAZE,
-        show: true,
+        // show: true,
     },
     [cartridges.TETRIS]: {
         logicHandler: TetrisDecorator,
         description: cartridges.TETRIS,
-        show: true,
+        // show: true,
     },
     [cartridges.SNAKE]: {
         logicHandler: SnakeDecorator,
         description: cartridges.SNAKE,
-        show: true,
+        // show: true,
     },
 }

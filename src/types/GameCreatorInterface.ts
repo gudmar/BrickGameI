@@ -9,6 +9,6 @@ export interface GameCreatorInterface {
     rotate(visitedObject: GameCreator): void,
     setLevel(visitedObject: GameCreator): void,
     pauseGame(visitedObject: GameCreator):void,
-    setVisitorToNextStateOnTick(visitedObject: GameCreator):void,
+    setVisitorToNextStateOnTick(visitedObject: GameCreator, time?:number):void,
     setVisitorToNextStateOnKeyPress(visitedObject: GameCreator, keyPresses: KeyPress):void,
 }
