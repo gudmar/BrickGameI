@@ -2,7 +2,7 @@ import { GameCreatorInterface } from "../../types/GameCreatorInterface";
 import { JudgeInterface } from "../../types/JudgeInterface";
 import { KeyPress } from "../../types/KeyPress";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
-import { getEmptyBoard } from "../constants";
+import { getEmptyBoard, getEmptyNextFigure } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { GamesIntro } from "../GamesIntro/GamesIntro";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
@@ -69,6 +69,7 @@ class Judge implements JudgeInterface{
 class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     cheaterStopTimer: boolean = false;
     bumpLock: boolean = false;
+    lifes: number = 4;
 
     tail: PawnCords[] = this.getInitialTail();
 
@@ -90,6 +91,20 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         //     {col: 2, row: 5},
         //     {col: 1, row: 5},
         // ]
+    }
+
+    setLifesToNextFigure(visitedObject: GameCreator) {
+        const CLOUMN_TO_DISPLAY_LIFES = 0;
+        if (this.lifes > 4) this.lifes = 4;
+        if (this.lifes < 0) this.lifes = 0;
+        const nextFigure = getEmptyNextFigure();
+        console.log(nextFigure)
+        for(let rowIndex = 3; rowIndex >= (4 - this.lifes); rowIndex--) {
+            console.log(rowIndex, 4 - this.lifes)
+            nextFigure[rowIndex][CLOUMN_TO_DISPLAY_LIFES] = 1;
+        }
+        console.log(nextFigure, this.lifes)
+        visitedObject.nextFigure = nextFigure;
     }
 
     addTailToPawnLayer(visitedObject: GameCreator) {
@@ -121,6 +136,7 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         this.tail = this.getInitialTail();
         this.setPawnLayer(visitedObject);
         this.setLevel(visitedObject);
+        this.setLifesToNextFigure(visitedObject)
     }
 
     setPawnLayer(visitedObject: GameCreator) {
@@ -152,7 +168,20 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     informDeathWrongMove(visitedObject:GameCreator){
+        this.lifes--;
+        this.setLifesToNextFigure(visitedObject);
+        console.log('In death', this.lifes)
+        if (this.lifes === 0) {
+            visitedObject.isGameOver = true;
+            visitedObject.gameLost();
+        } else {
+            this.setGameToNotStarted(visitedObject)
+        }
+    }
 
+    setGameToNotStarted(visitedObject: GameCreator){
+        this.initiate(visitedObject);
+        visitedObject.isGameStarted = false;
     }
 
     passCode(visitedObject:GameCreator, code:string){

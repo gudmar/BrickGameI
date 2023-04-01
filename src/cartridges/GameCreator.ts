@@ -28,7 +28,7 @@ export class GameCreator extends GameLogic {
     private brickMap = this.mergeLayer();
     public level:OneToTen = 1;
     public speed:OneToTen = 1;
-    private nextFigure = EMPTY_NEXT_FIGURE;
+    public nextFigure = EMPTY_NEXT_FIGURE;
     public score:number = 0;
     public isPaused: boolean = false;
     public isAnimating: boolean = false;
@@ -40,7 +40,8 @@ export class GameCreator extends GameLogic {
     public judge:any;
     public isGameWon: boolean = false;
     public isCheater: boolean = false;
-    public isGameStarted: boolean = false; // false by default, 
+    public isGameStarted: boolean = false; // false by default,
+    public isGameSelectionAllowed: boolean = true;
     public pawnCords: PawnCords = { row: 0, col: 0 };
     private stateCalculators: any[] | null = null;
 
@@ -107,21 +108,21 @@ export class GameCreator extends GameLogic {
         this.pawnLayer = getEmptyBoard();
     }
 
-    private getGameState (): GameLogicArgs {
-        return {
-            brickMap: this.brickMap,
-            level: this.level,
-            speed: this.speed,
-            nextFigure: this.nextFigure,
-            score: this.score,
-            isPaused: this.isPaused,
-            isAnimating: this.isAnimating,
-            isGameOver: this.isGameOver,
-            isGameWon: this.isGameWon,
-            isGameStarted: this.isGameStarted,
-            isCheater: this.isCheater,
-        }
-    }
+    // private getGameState (): GameLogicArgs {
+    //     return {
+    //         brickMap: this.brickMap,
+    //         level: this.level,
+    //         speed: this.speed,
+    //         nextFigure: this.nextFigure,
+    //         score: this.score,
+    //         isPaused: this.isPaused,
+    //         isAnimating: this.isAnimating,
+    //         isGameOver: this.isGameOver,
+    //         isGameWon: this.isGameWon,
+    //         isGameStarted: this.isGameStarted,
+    //         isCheater: this.isCheater,
+    //     }
+    // }
 
     public getNextStateOnTick(time:number): GameLogicArgs {
             this.nextStateCalculator.setVisitorToNextStateOnTick(this, time)
@@ -136,12 +137,17 @@ export class GameCreator extends GameLogic {
         return this.state;
     }
 
+    public gameLost() {
+        this.gameEnded();
+    }
+
     public gameEnded() {
         this.switchStateCalculator(StateCalculatorIndex.afterAnimation);
     }
 
     public afterGameAnimationEnded() {
         this.switchStateCalculator(StateCalculatorIndex.beforeAnimation);
+        this.isGameSelectionAllowed = true;
     }
 
     public getNextStateOnKeyPress(keyPresses: KeyPress): GameLogicArgs {
@@ -170,6 +176,7 @@ export class GameCreator extends GameLogic {
         this.isGameStarted = true;
         this.isGameOver = false;
         this.isGameWon = false;
+        this.isGameSelectionAllowed = false;
         this.switchStateCalculator(StateCalculatorIndex.game)
     }
     public pauseGame() { 
@@ -189,6 +196,7 @@ export class GameCreator extends GameLogic {
             isGameWon: this.isGameWon,
             isGameStarted: this.isGameStarted,
             isCheater: this.isCheater,
+            isGameSelectionAllowed: this.isGameSelectionAllowed,
         }
     }
 

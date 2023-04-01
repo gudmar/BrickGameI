@@ -30,10 +30,11 @@ function BrickGame() {
   const [currentGame, setCurrentGame] = useState(CARTRIDGE_ORDER[1]);
   const [speed, setSpeed]: [OneToTen, any] = useState(1);
   const [level, setLevel]: [OneToTen, any] = useState(1);
-  const [isGameStarted, setIsGameStarted]: [boolean, (val:boolean)=>void] = useState(false);
+  const [isGameSelectionAllowed, setIsGameSelectionAllowed]: [boolean, (val:boolean)=>void] = useState(false);
 
   const cartridgeUp = () => {
-    if (isGameStarted) return{};
+    console.log(isGameSelectionAllowed)
+    if (!isGameSelectionAllowed) return{};
     const findCurrentCartridgeIndex = () => CARTRIDGE_ORDER.findIndex((storedCartridge) => storedCartridge === currentGame)
     const setNextCartridge = () => {
       const currentIndex = findCurrentCartridgeIndex();
@@ -41,12 +42,6 @@ function BrickGame() {
       setCurrentGame(CARTRIDGE_ORDER[nextIndex])
     }
     setNextCartridge()    
-    // if (currentGame === cartridges.MAZE) {
-    //   setCurrentGame(cartridges.TETRIS)
-    // } else {
-    //   setCurrentGame(cartridges.MAZE)
-    // }
-    // return {}
   }
 
   useEffect(()=>{console.log(currentGame)}, [currentGame])
@@ -57,14 +52,14 @@ function BrickGame() {
     return (
         <div className="root">
             <Navigation />
-            {isGameStarted ? 'Game is started' : 'Game is STOPPED'}
+            {isGameSelectionAllowed ? 'Game is started' : 'Game is STOPPED'}
             <Console 
                 currentGame={currentGame}
                 speed = {speed}
                 setSpeed = {setSpeed}
                 level = {level}
                 setLevel = {setLevel}
-                setIsGameStarted = {setIsGameStarted}
+                setIsGameSelectionAllowed = {setIsGameSelectionAllowed}
             />
             <div>
               <div><b>Up</b> <i>Go up</i></div>

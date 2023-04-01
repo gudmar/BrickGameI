@@ -12,7 +12,7 @@ function Console({
   setSpeed,
   level,
   setLevel,
-  setIsGameStarted,
+  setIsGameSelectionAllowed,
 }: ConsoleArgs) {
   
     return (
@@ -31,7 +31,7 @@ function Console({
                 speed={speed}
                 level={level}
                 currentGameDescription={currentGame}
-                setIsGameStarted = {setIsGameStarted}
+                setIsGameSelectionAllowed = {setIsGameSelectionAllowed}
               />
             </div>
             <div className={styles.rightSideBar}>

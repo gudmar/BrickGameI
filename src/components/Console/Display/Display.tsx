@@ -10,7 +10,7 @@ function Display(
     speed: initialSpeed,
     level: initialLevel,
     currentGameDescription,
-    setIsGameStarted,
+    setIsGameSelectionAllowed,
   }: DisplayProps
 ) {
 
@@ -25,12 +25,13 @@ function Display(
     isGameOver,
     isGameWon,
     isGameStarted,
+    isGameSelectionAllowed,
     isCheater,
    } = useCartridge(currentGameDescription);
 
    useEffect(() => {
-      setIsGameStarted(isGameStarted || false);
-   }, [setIsGameStarted, isGameStarted])
+      setIsGameSelectionAllowed(isGameSelectionAllowed || false);
+   }, [setIsGameSelectionAllowed, isGameSelectionAllowed])
 
    useEffect(() => { console.log('Display, currentGame', currentGameDescription)}, [currentGameDescription])
 

@@ -50,6 +50,7 @@ export interface GameState {
     isGameWon?: boolean,
     isGameStarted?: boolean,
     isCheater?:boolean,
+    isGameSelectionAllowed?:boolean,
 }
 
 console.warn('GameState and GameLogicArgs seem too similar. Combine them')
@@ -77,7 +78,7 @@ export interface ConsoleArgs {
     level: OneToTen,
     setSpeed: (val: OneToTen) => void,
     setLevel: (val: OneToTen) => void,
-    setIsGameStarted: (val: boolean) => void,
+    setIsGameSelectionAllowed: (val: boolean) => void,
 }
 
 export interface DoWithBar {

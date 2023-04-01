@@ -45,5 +45,5 @@ export interface DisplayProps {
     speed: Speed,
     level: Level,
     currentGameDescription: string,
-    setIsGameStarted: (val:boolean) => void,
+    setIsGameSelectionAllowed: (val:boolean) => void,
 }
