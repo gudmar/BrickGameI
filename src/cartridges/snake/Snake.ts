@@ -70,11 +70,55 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     cheaterStopTimer: boolean = false;
     bumpLock: boolean = false;
 
+    tail: PawnCords[] = this.getInitialTail();
+
+    clean(visitedObject:GameCreator) {
+        this.initiate(visitedObject)
+    }
+
+    getInitialTail() {
+        return [
+            {col: 1, row: 5},
+            {col: 2, row: 5},
+            {col: 3, row: 5},
+            {col: 4, row: 5},
+        ]
+
+        // return [
+        //     {col: 4, row: 5},
+        //     {col: 3, row: 5},
+        //     {col: 2, row: 5},
+        //     {col: 1, row: 5},
+        // ]
+    }
+
+    addTailToPawnLayer(visitedObject: GameCreator) {
+        const { pawnLayer } = visitedObject;
+        this.tail.forEach(({ col, row }) => {
+            pawnLayer[row][col] = 1;
+        })
+    }
+
+    recalculateTail(visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
+        const { col, row } = visitedObject.pawnCords;
+        this.tail.push({ col: col - deltaCol, row: row - deltaRow });
+        const { col: oldCol, row: oldRow } = this.tail.shift()!;
+        visitedObject.pawnLayer[oldRow][oldCol] = 0;
+        console.log(this.tail)
+    }
+
+    moveTail(visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
+        this.recalculateTail(visitedObject, deltaRow, deltaCol);
+        this.addTailToPawnLayer(visitedObject);
+    }
+
     initiate(visitedObject:GameCreator){
         visitedObject.background = getEmptyBoard();
+        visitedObject.pawnLayer = getEmptyBoard();
         visitedObject.pawnCords = {
             col: 5, row: 5,
         }
+        this.tail = this.getInitialTail();
         this.setPawnLayer(visitedObject);
         this.setLevel(visitedObject);
     }
@@ -82,6 +126,7 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     setPawnLayer(visitedObject: GameCreator) {
         const { col, row} = visitedObject.pawnCords;
         visitedObject.pawnLayer[row][col] = 1;
+        this.addTailToPawnLayer(visitedObject)
     }
 
     move(visitedObject: GameCreator, deltaRow:number, deltaCol:number) {
@@ -103,6 +148,7 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         visitedObject.pawnCords = newPawnCordsCP;
         visitedObject.pawnLayer[newPawnCordsCP.row][newPawnCordsCP.col] = 1;
         visitedObject.pawnLayer[oldPawnCords.row][oldPawnCords.col] = 0;
+        this.moveTail(visitedObject, deltaRow, deltaCol)
     }
 
     informDeathWrongMove(visitedObject:GameCreator){
