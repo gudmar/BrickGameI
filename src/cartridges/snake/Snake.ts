@@ -1,3 +1,4 @@
+import { UP_LOCK } from "../../constants/gameCodes";
 import { GameCreatorInterface } from "../../types/GameCreatorInterface";
 import { JudgeInterface } from "../../types/JudgeInterface";
 import { KeyPress } from "../../types/KeyPress";
@@ -29,6 +30,8 @@ const INTRO_BACKGROUND = [
     [0, 1, 1, 1, 0, 1, 1, 1, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ]
+
+enum directions {DOWN, LEFT, RIGHT, UP}
 
 class GameIntroCloasure{
     constructor() {
@@ -70,6 +73,7 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     cheaterStopTimer: boolean = false;
     bumpLock: boolean = false;
     lifes: number = 4;
+    direction: directions = directions.RIGHT;
 
     tail: PawnCords[] = this.getInitialTail();
 
@@ -98,12 +102,9 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         if (this.lifes > 4) this.lifes = 4;
         if (this.lifes < 0) this.lifes = 0;
         const nextFigure = getEmptyNextFigure();
-        console.log(nextFigure)
         for(let rowIndex = 3; rowIndex >= (4 - this.lifes); rowIndex--) {
-            console.log(rowIndex, 4 - this.lifes)
             nextFigure[rowIndex][CLOUMN_TO_DISPLAY_LIFES] = 1;
         }
-        console.log(nextFigure, this.lifes)
         visitedObject.nextFigure = nextFigure;
     }
 
@@ -119,7 +120,6 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         this.tail.push({ col: col - deltaCol, row: row - deltaRow });
         const { col: oldCol, row: oldRow } = this.tail.shift()!;
         visitedObject.pawnLayer[oldRow][oldCol] = 0;
-        console.log(this.tail)
     }
 
     moveTail(visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
@@ -133,6 +133,7 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         visitedObject.pawnCords = {
             col: 5, row: 5,
         }
+        this.direction = directions.UP;
         this.tail = this.getInitialTail();
         this.setPawnLayer(visitedObject);
         this.setLevel(visitedObject);
@@ -146,13 +147,17 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     move(visitedObject: GameCreator, deltaRow:number, deltaCol:number) {
-        console.log(deltaCol, deltaRow)
         if (this.isFieldOutsideBoard(visitedObject, deltaRow, deltaCol)) {
             this.informDeathWrongMove(visitedObject);
             return;
         }
         if (this.isFieldOccupied(visitedObject, deltaRow, deltaCol)) {
             this.informDeathWrongMove(visitedObject);
+            return;
+        }
+        this.setNewDirection(deltaRow, deltaCol);
+        if (this.moveInterferesWithTail(visitedObject, deltaRow, deltaCol)) {
+            this.invertDirection(visitedObject);
             return;
         }
         const oldPawnCords: PawnCords = {
@@ -167,10 +172,35 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         this.moveTail(visitedObject, deltaRow, deltaCol)
     }
 
+    invertDirection(visitedObject: GameCreator){
+        const newHeadCords = this.tail.shift();
+        const {row, col} = visitedObject.pawnCords;
+        this.tail.push({row, col});
+        visitedObject.pawnCords = newHeadCords!;
+        this.tail.reverse();
+        this.addTailToPawnLayer(visitedObject);
+    }
+
+    setNewDirection(deltaRow: number, deltaCol: number) {
+        if (deltaCol > 0) this.direction = directions.RIGHT;
+        if (deltaRow > 0) this.direction = directions.DOWN;
+        if (deltaCol < 0) this.direction = directions.LEFT;
+        if (deltaRow < 0) this.direction = directions.UP;
+    }
+
+    moveInterferesWithTail(visitedObject: GameCreator, deltaRow:number, deltaCol:number) {
+        const {row, col} = this.lastTailBrickCords;
+        const {row: pawnRow, col: pawnCol} = visitedObject.pawnCords;
+        const plannedRow = pawnRow + deltaRow;
+        const plannedCol = pawnCol + deltaCol;
+        return plannedCol === col && plannedRow === row;
+    }
+
+    get lastTailBrickCords() {return this.tail[this.tail.length - 1]}
+
     informDeathWrongMove(visitedObject:GameCreator){
         this.lifes--;
         this.setLifesToNextFigure(visitedObject);
-        console.log('In death', this.lifes)
         if (this.lifes === 0) {
             visitedObject.isGameOver = true;
             visitedObject.gameLost();
