@@ -86,6 +86,10 @@ export class GameCreator extends GameLogic {
         this.nextStateCalculator.initiate(this);
     }
 
+    private checkCurrentStateCalculator(indexToCheckAgainst: number) {
+        return this.nextStateCalculator === this.stateCalculators![indexToCheckAgainst]
+    }
+
     public getEmptyRow() {
         return getEmptyBoard()[0];
     }
@@ -172,13 +176,17 @@ export class GameCreator extends GameLogic {
         this.nextStateCalculator.setLevel(this);
     }
 
-    public startGame() { 
+    public startGame() {
+        const isGameBeingRestarted = this.checkCurrentStateCalculator(StateCalculatorIndex.game) && !this.isGameOver && !this.isGameWon;
+        if (!isGameBeingRestarted){
+            this.isGameOver = false;
+            this.isGameWon = false;
+            this.switchStateCalculator(StateCalculatorIndex.game)
+        }
         this.isGameStarted = true;
-        this.isGameOver = false;
-        this.isGameWon = false;
         this.isGameSelectionAllowed = false;
-        this.switchStateCalculator(StateCalculatorIndex.game)
     }
+
     public pauseGame() { 
         this.isPaused = !this.isPaused;
     }

@@ -6,9 +6,8 @@
 * Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
 
 * Snake
-  - maze is a starting point,
-  - attach tail to maze blinking head,
-
+  - food is randomly placed on tail
+  - food is sometimes left
   
 TO ADD NEW GAME:
 1) Create GameIntroCloasure, a class transforimng GameIntro that takes a background as constructor arg, to a class that returns GameIntro instnace but takes noting,

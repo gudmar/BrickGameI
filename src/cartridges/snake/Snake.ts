@@ -142,7 +142,12 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
 
     isFoodLocationAllowed({col: foodCol, row: foodRow}: {col:number|undefined, row:number|undefined}, visitedObject: GameCreator){
         if (foodCol === undefined || foodRow === undefined) return false;
-        const isOnTail = this.tail.find(({col, row}) => col === foodCol && row === foodRow);
+        const isOnTail = this.tail.find(
+            ({col, row}) => {
+                console.log('Seatching for in tail', col, row, foodCol, foodRow, col===foodCol, row===foodRow, col === foodCol && row === foodRow)
+                return col === foodCol && row === foodRow
+            }
+        );
         const {row: headRow, col: headCol} = visitedObject.pawnCords;
         const isOnHead = headRow === foodRow || headCol === foodCol
         console.table([
@@ -219,6 +224,10 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         visitedObject.pawnCords = newPawnCordsCP;
         visitedObject.pawnLayer[newPawnCordsCP.row][newPawnCordsCP.col] = 1;
         visitedObject.pawnLayer[oldPawnCords.row][oldPawnCords.col] = 0;
+        this.handleTail(visitedObject, deltaRow, deltaCol);
+    }
+
+    handleTail(visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
         if (this.isDevouring(visitedObject, deltaRow, deltaCol)) {
             visitedObject.judge.inform(visitedObject, gameEvents.COLLECT_BRICK);
             this.growTail(visitedObject, deltaRow, deltaCol);
@@ -232,7 +241,7 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         if (!this.foodCords) return;
         const {row, col} = visitedObject.pawnCords;
         const {row: foodRow, col: foodCol} = this.foodCords as PawnCords;
-        return row + deltaRow === foodRow && col + deltaCol === foodCol
+        return row === foodRow && col === foodCol
     }
 
     invertDirection(visitedObject: GameCreator){
