@@ -185,6 +185,7 @@ export class GameCreator extends GameLogic {
         }
         this.isGameStarted = true;
         this.isGameSelectionAllowed = false;
+        console.log('Game started ?', this.isGameStarted)
     }
 
     public pauseGame() { 

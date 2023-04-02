@@ -7,7 +7,7 @@ export class FoodLocalisator{
         let foodRow;
         let foodCol;
         const { maxWidthIndex, maxHeightIndex } = getBoardMaxIndexes(visitedObject)
-        while (!FoodLocalisator.isFoodLocationAllowed(this, {row:foodRow, col:foodCol}, visitedObject)){
+        while (!FoodLocalisator.isFoodLocationAllowed(snakeInstance, {row:foodRow, col:foodCol}, visitedObject)){
             foodRow = getRandom(0, maxHeightIndex);
             foodCol = getRandom(0, maxWidthIndex);
         }
@@ -17,7 +17,7 @@ export class FoodLocalisator{
 
     static isFoodLocationAllowed(snakeInstance: any,{col: foodCol, row: foodRow}: {col:number|undefined, row:number|undefined}, visitedObject: GameCreator){
         if (foodCol === undefined || foodRow === undefined) return false;
-        const isOnTail = snakeInstance.tail.find(
+        const isOnTail = snakeInstance.tailHandler.tailCords.find(
             ({col, row}: {col:number, row:number}) => {
                 console.log('Seatching for in tail', col, row, foodCol, foodRow, col===foodCol, row===foodRow, col === foodCol && row === foodRow)
                 return col === foodCol && row === foodRow

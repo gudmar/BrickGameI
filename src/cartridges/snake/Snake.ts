@@ -82,6 +82,10 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
             this.informDeathWrongMove(visitedObject);
             return;
         }
+        if (this.tailHandler.doesMoveCrashIntoTail(visitedObject, deltaRow, deltaCol)){
+            this.informDeathWrongMove(visitedObject);
+            return;
+        }
         this.setNewDirection(deltaRow, deltaCol);
         if (this.tailHandler.moveInterferesWithTail(visitedObject, deltaRow, deltaCol)) {
             this.tailHandler.invertDirection(visitedObject);
@@ -96,7 +100,7 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         visitedObject.pawnCords = newPawnCordsCP;
         visitedObject.pawnLayer[newPawnCordsCP.row][newPawnCordsCP.col] = 1;
         visitedObject.pawnLayer[oldPawnCords.row][oldPawnCords.col] = 0;
-        this.tailHandler.handleTail(visitedObject, deltaRow, deltaCol);
+        this.tailHandler.handleTail(this, visitedObject, deltaRow, deltaCol);
     }
 
     setNewDirection(deltaRow: number, deltaCol: number) {

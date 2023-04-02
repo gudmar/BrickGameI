@@ -14,6 +14,10 @@ export class TailHandler {
         ]
     }
 
+    get tailCords() {
+        return this.tail;
+    }
+
     resetTailToDefaultPosition(){
         this.tail = this.getInitialTail();
     }
@@ -47,11 +51,11 @@ export class TailHandler {
         this.addTailToPawnLayer(visitedObject);
     }
 
-    handleTail(visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
-        if (FoodLocalisator.isDevouring(this, visitedObject, deltaRow, deltaCol)) {
+    handleTail(snakeInstance: any, visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
+        if (FoodLocalisator.isDevouring(snakeInstance, visitedObject, deltaRow, deltaCol)) {
             visitedObject.judge.inform(visitedObject, gameEvents.COLLECT_BRICK);
             this.growTail(visitedObject, deltaRow, deltaCol);
-            FoodLocalisator.randomlyPlaceFood(this, visitedObject);
+            FoodLocalisator.randomlyPlaceFood(snakeInstance, visitedObject);
         } else {
             this.moveTail(visitedObject, deltaRow, deltaCol)
         }
@@ -72,6 +76,16 @@ export class TailHandler {
         const plannedRow = pawnRow + deltaRow;
         const plannedCol = pawnCol + deltaCol;
         return plannedCol === col && plannedRow === row;
+    }
+
+    doesMoveCrashIntoTail(visitedObject:GameCreator ,deltaRow:number, deltaCol:number){
+        const {row: pawnRow, col: pawnCol} = visitedObject.pawnCords;
+        const plannedRow = pawnRow + deltaRow;
+        const plannedCol = pawnCol + deltaCol;
+        const crashPoint = this.tail.find(({col, row}) => {
+            return col === plannedCol && row === plannedRow
+        })
+        return !!crashPoint
     }
 
     get lastTailBrickCords() {return this.tail[this.tail.length - 1]}
