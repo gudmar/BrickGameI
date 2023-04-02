@@ -76,6 +76,7 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     direction: directions = directions.RIGHT;
 
     tail: PawnCords[] = this.getInitialTail();
+    foodCords: PawnCords | null = null;
 
     clean(visitedObject:GameCreator) {
         this.initiate(visitedObject)
@@ -115,6 +116,44 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         })
     }
 
+    getBoardMaxIndexes(visitedObject:GameCreator) {
+        const maxWidthIndex = visitedObject.pawnLayer[0].length;
+        const maxHeightIndex = visitedObject.pawnLayer.length;
+        return {
+            maxWidthIndex, maxHeightIndex,
+        }
+    }
+
+    randomlyPlaceFood(visitedObject: GameCreator) {
+        let foodRow;
+        let foodCol;
+        const { maxWidthIndex, maxHeightIndex } = this.getBoardMaxIndexes(visitedObject)
+        while (!this.isFoodLocationAllowed({row:foodRow, col:foodCol}, visitedObject)){
+            foodRow = this.getRandom(0, maxHeightIndex);
+            foodCol = this.getRandom(0, maxWidthIndex);
+        }
+        this.foodCords = {col: foodCol as number, row: foodRow as number};
+        visitedObject.pawnLayer[foodRow as number][foodCol as number] = 1;
+    }
+
+    getRandom(min:number, max:number) {
+        return Math.floor(Math.random() * (max - min) + min);
+    }
+
+    isFoodLocationAllowed({col: foodCol, row: foodRow}: {col:number|undefined, row:number|undefined}, visitedObject: GameCreator){
+        if (foodCol === undefined || foodRow === undefined) return false;
+        const isOnTail = this.tail.find(({col, row}) => col === foodCol && row === foodRow);
+        const {row: headRow, col: headCol} = visitedObject.pawnCords;
+        const isOnHead = headRow === foodRow || headCol === foodCol
+        console.table([
+            ['onHead', isOnHead],
+            ['onTail', isOnTail],
+            ['returns', !(isOnTail || isOnHead)]
+        ]);
+        console.log(this.tail, foodCol, foodRow)
+        return !(isOnTail || isOnHead);
+    }
+
     recalculateTail(visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
         const { col, row } = visitedObject.pawnCords;
         this.tail.push({ col: col - deltaCol, row: row - deltaRow });
@@ -122,8 +161,18 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         visitedObject.pawnLayer[oldRow][oldCol] = 0;
     }
 
+    addToTail(visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
+        const { col, row } = visitedObject.pawnCords;
+        this.tail.push({ col: col - deltaCol, row: row - deltaRow });
+    }
+
     moveTail(visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
         this.recalculateTail(visitedObject, deltaRow, deltaCol);
+        this.addTailToPawnLayer(visitedObject);
+    }
+
+    growTail(visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
+        this.addToTail(visitedObject, deltaRow, deltaCol);
         this.addTailToPawnLayer(visitedObject);
     }
 
@@ -137,7 +186,8 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         this.tail = this.getInitialTail();
         this.setPawnLayer(visitedObject);
         this.setLevel(visitedObject);
-        this.setLifesToNextFigure(visitedObject)
+        this.setLifesToNextFigure(visitedObject);
+        this.randomlyPlaceFood(visitedObject);
     }
 
     setPawnLayer(visitedObject: GameCreator) {
@@ -169,7 +219,20 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         visitedObject.pawnCords = newPawnCordsCP;
         visitedObject.pawnLayer[newPawnCordsCP.row][newPawnCordsCP.col] = 1;
         visitedObject.pawnLayer[oldPawnCords.row][oldPawnCords.col] = 0;
-        this.moveTail(visitedObject, deltaRow, deltaCol)
+        if (this.isDevouring(visitedObject, deltaRow, deltaCol)) {
+            visitedObject.judge.inform(visitedObject, gameEvents.COLLECT_BRICK);
+            this.growTail(visitedObject, deltaRow, deltaCol);
+            this.randomlyPlaceFood(visitedObject);
+        } else {
+            this.moveTail(visitedObject, deltaRow, deltaCol)
+        }
+    }
+
+    isDevouring(visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
+        if (!this.foodCords) return;
+        const {row, col} = visitedObject.pawnCords;
+        const {row: foodRow, col: foodCol} = this.foodCords as PawnCords;
+        return row + deltaRow === foodRow && col + deltaCol === foodCol
     }
 
     invertDirection(visitedObject: GameCreator){
@@ -233,14 +296,25 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         
     }
     setVisitorToNextStateOnTick(visitedObject: GameCreator, time: number){
+        const blinkingPoints = [visitedObject.pawnCords, this.foodCords]
         if (time % 10 === 0) {
-            const {col, row} = visitedObject.pawnCords;
-            if (visitedObject.pawnLayer[row][col] === 1) {
-                visitedObject.pawnLayer[row][col] = 0
-            } else {
-                visitedObject.pawnLayer[row][col] = 1;
-            }    
+            blinkingPoints.forEach(point => this.togglePointOnLayer(visitedObject, point as PawnCords))
+            // const {col, row} = visitedObject.pawnCords;
+            // if (visitedObject.pawnLayer[row][col] === 1) {
+            //     visitedObject.pawnLayer[row][col] = 0
+            // } else {
+            //     visitedObject.pawnLayer[row][col] = 1;
+            // }    
         }
+    }
+    togglePointOnLayer(visitedObject: GameCreator, point: PawnCords) {
+        if (!point) return;
+        const {col, row} = point;
+        if (visitedObject.pawnLayer[row][col] === 1) {
+            visitedObject.pawnLayer[row][col] = 0
+        } else {
+            visitedObject.pawnLayer[row][col] = 1;
+        }    
     }
     // setVisitorToNextStateOnKeyPress(visitedObject: GameCreator, keyPresses: KeyPress){
         
