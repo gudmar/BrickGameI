@@ -1,4 +1,5 @@
 
+import { copyBackground } from "../../functions/copyBackground";
 import { Logger } from "../../functions/Logger";
 import { KeyPress } from "../../types/KeyPress";
 import { getEmptyBoard } from "../constants";
@@ -35,15 +36,25 @@ export class AnimationAfterGame {
         if (this.direction !== Direction.up) { return; }
         
         this.lastAnimatedRowIndex -= 1;
-        visitedObject.pawnLayer[this.lastAnimatedRowIndex] = this.getRowOf(visitedObject.pawnLayer[0].length, 1)
+        const rowOfOnes = this.getRowOf(visitedObject.pawnLayer[0].length, 1);
+        const layerCopy = copyBackground(visitedObject.pawnLayer);
+        layerCopy.splice(this.lastAnimatedRowIndex, 1, rowOfOnes)
+        visitedObject.pawnLayer = layerCopy;
+        // visitedObject.pawnLayer.splice(this.lastAnimatedRowIndex, 1, rowOfOnes)
+        // visitedObject.pawnLayer[this.lastAnimatedRowIndex] = this.getRowOf(visitedObject.pawnLayer[0].length, 1)
+        console.log(visitedObject.pawnLayer, this.getRowOf(visitedObject.pawnLayer[0].length, 2), this.lastAnimatedRowIndex)
         if (this.lastAnimatedRowIndex < 1) this.direction = Direction.down;
     }
 
     tryMoveDown(visitedObject:any) {
         if (this.direction !== Direction.down) { return; }
-        
-        visitedObject.pawnLayer[this.lastAnimatedRowIndex] = this.getRowOf(visitedObject.pawnLayer[0].length, 0)
+        const rowOfZeros = this.getRowOf(visitedObject.pawnLayer[0].length, 0);
+        const layerCopy = copyBackground(visitedObject.pawnLayer);
+        layerCopy.splice(this.lastAnimatedRowIndex, 1, rowOfZeros)
+        visitedObject.pawnLayer = layerCopy;
+        // visitedObject.pawnLayer[this.lastAnimatedRowIndex] = this.getRowOf(visitedObject.pawnLayer[0].length, 0)
         this.lastAnimatedRowIndex += 1;
+        // console.log(visitedObject.pawnLayer)
         if (this.lastAnimatedRowIndex >= visitedObject.background.length) this.animationEnded(visitedObject);
     }
 

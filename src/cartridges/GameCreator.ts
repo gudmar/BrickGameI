@@ -17,7 +17,7 @@ export interface GameCreatorDecoratorInterface {
     beforeGameAnimation: any,
 }
 
-enum StateCalculatorIndex { beforeAnimation, game, afterAnimation };
+enum StateCalculatorIndex { beforeAnimation = 0, game, afterAnimation };
 
 export class GameCreator extends GameLogic {
 
