@@ -39,7 +39,7 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     foodCords: PawnCords | null = null;
 
     clean(visitedObject:GameCreator) {
-        this.initiate(visitedObject)
+        this.initiateWithoutScore(visitedObject);
     }
 
     setLifesToNextFigure(visitedObject: GameCreator) {
@@ -54,6 +54,14 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     initiate(visitedObject:GameCreator){
+        if (this.lifes === 0) {
+            this.lifes = 4;
+            visitedObject.score = 0;
+        }
+        this.initiateWithoutScore(visitedObject);
+    }
+
+    initiateWithoutScore(visitedObject:GameCreator) {
         visitedObject.background = getEmptyBoard();
         visitedObject.pawnLayer = getEmptyBoard();
         visitedObject.pawnCords = {

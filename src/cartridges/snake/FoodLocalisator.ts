@@ -1,5 +1,6 @@
 import { getBoardMaxIndexes } from "../../functions/getBoardMaxIndexes";
 import { getRandom } from "../../functions/getRandom";
+import { BrickMap } from "../../types/types";
 import { GameCreator, PawnCords } from "../GameCreator";
 
 export class FoodLocalisator{
@@ -24,14 +25,9 @@ export class FoodLocalisator{
             }
         );
         const {row: headRow, col: headCol} = visitedObject.pawnCords;
-        const isOnHead = headRow === foodRow || headCol === foodCol
-        console.table([
-            ['onHead', isOnHead],
-            ['onTail', isOnTail],
-            ['returns', !(isOnTail || isOnHead)]
-        ]);
-        console.log(snakeInstance.tail, foodCol, foodRow)
-        return !(isOnTail || isOnHead);
+        const isOnHead = headRow === foodRow || headCol === foodCol;
+        const isColisionWithBackground = this.isRandomFoodCollisionWithBackground(visitedObject,{col: foodCol, row: foodRow});
+        return !(isOnTail || isOnHead || isColisionWithBackground);
     }
 
     static isDevouring(snakeInstance:any, visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
@@ -39,6 +35,32 @@ export class FoodLocalisator{
         const {row, col} = visitedObject.pawnCords;
         const {row: foodRow, col: foodCol} = snakeInstance.foodCords as PawnCords;
         return row === foodRow && col === foodCol
+    }
+    static isRandomFoodCollisionWithBackground(visitedObject:GameCreator, cords:PawnCords){
+        const {col, row} = cords;
+        const {background} = visitedObject;
+        const cordsFromBackground = this.getCordsFromBackground(background);
+        const isColision = !!cordsFromBackground.find(({col: bgCol, row: bgRow}) => col === bgCol && row === bgRow);
+        return isColision;
+    }
+    static getCordsFromRow(row: number[], rowIndex: number) {
+        const result = row.reduce(
+            (acc: PawnCords[], brick:number, index:number) => {
+                if (brick > 0) acc.push({col: index, row: rowIndex});
+                return acc;
+            }, [])
+        return result;
+    }
+
+    static getCordsFromBackground(background: BrickMap){
+        const result = background.reduce(
+            (cords: PawnCords[], row: number[], rowIndex:number) => {
+                const cordsFromRow = FoodLocalisator.getCordsFromRow(row, rowIndex)
+                cords = [ ...cords, ...cordsFromRow]
+                return cords;
+            }, []
+        )
+        return result;
     }
 }
 

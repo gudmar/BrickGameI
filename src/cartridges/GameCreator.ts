@@ -83,7 +83,6 @@ export class GameCreator extends GameLogic {
     private switchStateCalculator(newCalculatorIndex: number) {
         if (this.nextStateCalculator) this.nextStateCalculator.clean(this);
         this.nextStateCalculator = this.stateCalculators![newCalculatorIndex];
-        this.nextStateCalculator.initiate(this);
     }
 
     private checkCurrentStateCalculator(indexToCheckAgainst: number) {
@@ -181,7 +180,9 @@ export class GameCreator extends GameLogic {
         if (!isGameBeingRestarted){
             this.isGameOver = false;
             this.isGameWon = false;
-            this.switchStateCalculator(StateCalculatorIndex.game)
+            this.switchStateCalculator(StateCalculatorIndex.game);
+            this.nextStateCalculator.initiate(this);
+            
         }
         this.isGameStarted = true;
         this.isGameSelectionAllowed = false;

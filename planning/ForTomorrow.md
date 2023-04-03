@@ -6,8 +6,14 @@
 * Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
 
 * Snake
-  - food is randomly placed on tail
-  - food is sometimes left
+  - Bricks are placed on background of level,
+  - Too long tail: level up, restart snake
+  - No after animation
+  - After snake game lost and restat, points do not reset to 0 - the same in TETRIS
+  - Change direstion works in snake like colision
+
+* Maze:
+  - When game won, and enter pressed on pawn on, old pawn does not diappear
   
 TO ADD NEW GAME:
 1) Create GameIntroCloasure, a class transforimng GameIntro that takes a background as constructor arg, to a class that returns GameIntro instnace but takes noting,

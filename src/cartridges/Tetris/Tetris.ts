@@ -76,6 +76,7 @@ export class TetrisVisitor extends NextStateCalculator {
         
         visitedObject.isCheater = false;
         this.setLevel(visitedObject);
+        visitedObject.score = 0;
     }
 
     clean(visitedObject: any): void {

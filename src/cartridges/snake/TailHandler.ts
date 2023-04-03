@@ -3,7 +3,7 @@ import { FoodLocalisator } from "./FoodLocalisator";
 import { gameEvents } from "./Judge";
 
 export class TailHandler {
-    private tail: PawnCords[] = this.getInitialTail();
+    public tail: PawnCords[] = this.getInitialTail();
 
     getInitialTail() {
         return [
@@ -82,7 +82,8 @@ export class TailHandler {
         const {row: pawnRow, col: pawnCol} = visitedObject.pawnCords;
         const plannedRow = pawnRow + deltaRow;
         const plannedCol = pawnCol + deltaCol;
-        const crashPoint = this.tail.find(({col, row}) => {
+        const crashPoint = this.tail.find(({col, row}, index) => {
+            if (index === this.tail.length - 1) return false;
             return col === plannedCol && row === plannedRow
         })
         return !!crashPoint
