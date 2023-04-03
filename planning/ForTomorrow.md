@@ -6,8 +6,9 @@
 * Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
 
 * Snake
-  - Too long tail: level up, restart snake
-  - No after animation
+  - On long tail restart, sometimes game starts its self, sometimes not,
+  - Sometimes a fake block after food block is left after tail reset
+  - End animation in snake: bricks toggled instead of set to 1
 
 * Maze:
   - When game won, and enter pressed on pawn on, old pawn does not diappear

@@ -37,9 +37,16 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
 
     tailHandler = new TailHandler();
     foodCords: PawnCords | null = null;
+    MAX_TAIL_LENGTH = 5;
 
     clean(visitedObject:GameCreator) {
         this.initiateWithoutScore(visitedObject);
+    }
+
+    levelFinished(visitedObject: GameCreator) {
+        if (visitedObject.level === 10) { visitedObject.level = 1 }
+        else { visitedObject.level++ };
+        this.initiateWithoutScore(visitedObject)
     }
 
     setLifesToNextFigure(visitedObject: GameCreator) {
@@ -67,7 +74,7 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         visitedObject.pawnCords = {
             col: 5, row: 5,
         }
-        this.direction = directions.UP;
+        this.direction = directions.RIGHT;
         this.tailHandler.resetTailToDefaultPosition();
         this.setPawnLayer(visitedObject);
         this.setLevel(visitedObject);
@@ -94,11 +101,13 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
             this.informDeathWrongMove(visitedObject);
             return;
         }
-        this.setNewDirection(deltaRow, deltaCol);
+        
         if (this.tailHandler.moveInterferesWithTail(visitedObject, deltaRow, deltaCol)) {
+            this.setDirectionAfterDirectionInvert();
             this.tailHandler.invertDirection(visitedObject);
             return;
         }
+        this.setNewDirection(deltaRow, deltaCol);
         const oldPawnCords: PawnCords = {
             col: visitedObject.pawnCords.col,
             row: visitedObject.pawnCords.row,
@@ -109,6 +118,22 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         visitedObject.pawnLayer[newPawnCordsCP.row][newPawnCordsCP.col] = 1;
         visitedObject.pawnLayer[oldPawnCords.row][oldPawnCords.col] = 0;
         this.tailHandler.handleTail(this, visitedObject, deltaRow, deltaCol);
+    }
+
+    setDirectionAfterDirectionInvert(){
+        const {row: rowA, col: colA} = this.tailHandler.tail[0];
+        const {row: rowB, col: colB} = this.tailHandler.tail[1];
+        if (rowA === rowB) {
+            if (colA > colB) this.direction = directions.RIGHT
+            if (colB > colA) this.direction = directions.LEFT
+            return;
+        }
+        if (colB === colA) {
+            if (rowA > rowB) this.direction = directions.UP
+            if (rowB > rowA) this.direction = directions.DOWN
+            return;
+        }
+        throw new Error('Snake, change direction after direcion invert: rowA !== rowB and colA !== colB, not possible')
     }
 
     setNewDirection(deltaRow: number, deltaCol: number) {
@@ -136,7 +161,18 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
 
     passCode(visitedObject:GameCreator, code:string){}
 
-    setVisitorToNextStateOnSpeedTick(visitedObject:GameCreator, time:number){}
+    setVisitorToNextStateOnSpeedTick(visitedObject:GameCreator, time:number){
+        const getDeltaCords = () => {
+            switch(this.direction) {
+                case directions.DOWN: return {deltaRow: 1, deltaCol: 0};
+                case directions.UP: return {deltaRow: -1, deltaCol: 0};
+                case directions.RIGHT: return {deltaRow: 0, deltaCol: 1};
+                case directions.LEFT: return {deltaRow: 0, deltaCol: -1};
+            }
+        }
+        const {deltaCol, deltaRow} = getDeltaCords();
+        this.move(visitedObject, deltaRow, deltaCol);
+    }
 
     restartSpecificAttributes(visitedObject: GameCreator) {}
 

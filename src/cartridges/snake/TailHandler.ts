@@ -55,6 +55,9 @@ export class TailHandler {
         if (FoodLocalisator.isDevouring(snakeInstance, visitedObject, deltaRow, deltaCol)) {
             visitedObject.judge.inform(visitedObject, gameEvents.COLLECT_BRICK);
             this.growTail(visitedObject, deltaRow, deltaCol);
+            if (this.tail.length > snakeInstance.MAX_TAIL_LENGTH) {
+                snakeInstance.levelFinished(visitedObject);
+            }
             FoodLocalisator.randomlyPlaceFood(snakeInstance, visitedObject);
         } else {
             this.moveTail(visitedObject, deltaRow, deltaCol)
