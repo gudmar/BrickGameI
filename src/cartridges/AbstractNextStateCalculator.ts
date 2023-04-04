@@ -14,6 +14,10 @@ export abstract class NextStateCalculator {
     }
 
     setVisitorToNextStateOnKeyPress(visitedObject:any, keyPresses: KeyPress){
+        if (keyPresses === KeyPress.Log) { 
+            console.dir(visitedObject);
+            visitedObject.isPaused = true;
+        }
         if (keyPresses === KeyPress.Start) {
             if (visitedObject.isGameOver) { this.restart(visitedObject) }
             else { visitedObject.startGame(); }
@@ -25,6 +29,7 @@ export abstract class NextStateCalculator {
         if (visitedObject.isGameOver) return;
         if (keyPresses === KeyPress.Rotate) { visitedObject.rotate() }
         if (keyPresses === KeyPress.Pause) {visitedObject.pauseGame()}
+        
         if (!visitedObject.checkIfGameLocked()) {
             this.tryMoving(visitedObject, keyPresses);
         }

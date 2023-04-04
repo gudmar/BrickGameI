@@ -6,6 +6,7 @@ import { getEmptyBoard, getEmptyNextFigure } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { FoodLocalisator } from "./FoodLocalisator";
+import { GameAnimator } from "./GameAnimator";
 import { GameIntroCloasure } from "./GameIntroCloasure";
 import { Judge } from "./Judge";
 import { getSnakeLevelBoard } from "./levels";
@@ -38,12 +39,14 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     tailHandler = new TailHandler();
     foodCords: PawnCords | null = null;
     MAX_TAIL_LENGTH = 5;
+    gameAnimator = new GameAnimator();
 
     clean(visitedObject:GameCreator) {
         this.initiateWithoutScore(visitedObject);
     }
 
     levelFinished(visitedObject: GameCreator) {
+        this.gameAnimator.curtainAnimation(visitedObject);
         if (visitedObject.level === 10) { visitedObject.level = 1 }
         else { visitedObject.level++ };
         this.initiateWithoutScore(visitedObject)
@@ -66,24 +69,24 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
             visitedObject.score = 0;
         }
         this.initiateWithoutScore(visitedObject);
+        FoodLocalisator.randomlyPlaceFood(this, visitedObject);
     }
 
     initiateWithoutScore(visitedObject:GameCreator) {
         visitedObject.background = getEmptyBoard();
-        visitedObject.pawnLayer = getEmptyBoard();
+        this.setLevel(visitedObject);
         visitedObject.pawnCords = {
             col: 5, row: 5,
         }
         this.direction = directions.RIGHT;
         this.tailHandler.resetTailToDefaultPosition();
         this.setPawnLayer(visitedObject);
-        this.setLevel(visitedObject);
         this.setLifesToNextFigure(visitedObject);
-        FoodLocalisator.randomlyPlaceFood(this, visitedObject);
     }
 
     setPawnLayer(visitedObject: GameCreator) {
         const { col, row} = visitedObject.pawnCords;
+        visitedObject.pawnLayer = getEmptyBoard();
         visitedObject.pawnLayer[row][col] = 1;
         this.tailHandler.addTailToPawnLayer(visitedObject);
     }
@@ -162,6 +165,7 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     passCode(visitedObject:GameCreator, code:string){}
 
     setVisitorToNextStateOnSpeedTick(visitedObject:GameCreator, time:number){
+        if (this.gameAnimator.isCurtainAnimationOngoing) return;
         const getDeltaCords = () => {
             switch(this.direction) {
                 case directions.DOWN: return {deltaRow: 1, deltaCol: 0};
@@ -172,6 +176,7 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
         }
         const {deltaCol, deltaRow} = getDeltaCords();
         this.move(visitedObject, deltaRow, deltaCol);
+        
     }
 
     restartSpecificAttributes(visitedObject: GameCreator) {}
@@ -181,15 +186,19 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     setLevel(visitedObject: GameCreator){
         const { level } = visitedObject;
         const board = getSnakeLevelBoard(level);
-        visitedObject.background = board;
+        const isAnimating = this.gameAnimator.setMemoizedBackground(board);
+        if (!isAnimating) visitedObject.background = board;
     }
     pauseGame(visitedObject: GameCreator){}
 
     setVisitorToNextStateOnTick(visitedObject: GameCreator, time: number){
-        const blinkingPoints = [visitedObject.pawnCords, this.foodCords]
-        if (time % 10 === 0) {
-            blinkingPoints.forEach(point => this.togglePointOnLayer(visitedObject, point as PawnCords)) 
+        if (!this.gameAnimator.isCurtainAnimationOngoing){
+            const blinkingPoints = [visitedObject.pawnCords, this.foodCords]
+            if (time % 10 === 0) {
+                blinkingPoints.forEach(point => this.togglePointOnLayer(visitedObject, point as PawnCords)) 
+            }    
         }
+        this.gameAnimator.tick(visitedObject)
     }
     togglePointOnLayer(visitedObject: GameCreator, point: PawnCords) {
         if (!point) return;

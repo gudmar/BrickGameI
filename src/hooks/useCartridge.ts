@@ -110,6 +110,11 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
         setGameState(nextState);
     }
 
+    const logGameState = () => {
+        cartridgeInstance.getNextStateOnKeyPress(KeyPress.Log);
+    }
+
+
 
     useKeyboard({ key: keys.UP, callback: handleMoveUp })
     useKeyboard({ key: keys.DOWN, callback: handleMoveDown })
@@ -121,6 +126,7 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
     useKeyboard({ key: keys.SPACE, callback: handleRotate })
     useKeyboard({ key: keys.ENTER, callback: handleGameStart })
     useKeyboard({ key: keys.X, callback: resetConsole })
+    useKeyboard({ key: keys.F1, callback: logGameState })
 
 
 
