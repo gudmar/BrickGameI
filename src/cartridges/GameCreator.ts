@@ -228,7 +228,6 @@ export class GameCreator extends GameLogic {
 
     public mergeBrick(currentBrick: number, layerBrick: number) {
         return or(currentBrick, layerBrick);
-        return xor(currentBrick, layerBrick);
     }
 
     private embedLayer():BrickMap {

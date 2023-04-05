@@ -20,13 +20,19 @@ export class FoodLocalisator{
         if (foodCol === undefined || foodRow === undefined) return false;
         const isOnTail = snakeInstance.tailHandler.tailCords.find(
             ({col, row}: {col:number, row:number}) => {
-                console.log('Seatching for in tail', col, row, foodCol, foodRow, col===foodCol, row===foodRow, col === foodCol && row === foodRow)
                 return col === foodCol && row === foodRow
             }
         );
         const {row: headRow, col: headCol} = visitedObject.pawnCords;
-        const isOnHead = headRow === foodRow || headCol === foodCol;
+        const isOnHead = headRow === foodRow && headCol === foodCol;
         const isColisionWithBackground = this.isRandomFoodCollisionWithBackground(visitedObject,{col: foodCol, row: foodRow});
+        console.table([
+            ['row col', `${foodRow}  ${foodCol}`],
+            ['isOnTail', isOnTail],
+            ['isOnHead', isOnHead],
+            ['isColisionWithBackground', isColisionWithBackground],
+            ['result', !(isOnTail || isOnHead || isColisionWithBackground)]
+        ])
         return !(isOnTail || isOnHead || isColisionWithBackground);
     }
 
