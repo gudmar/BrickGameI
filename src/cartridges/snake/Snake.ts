@@ -1,4 +1,4 @@
-import { UP_LOCK } from "../../constants/gameCodes";
+import { ADD_POINTS, BUMP, DONT_BUMP, SHORT_SNAKE, START_TIMER, STOP_TIMER, UP_LOCK } from "../../constants/gameCodes";
 import { GameCreatorInterface } from "../../types/GameCreatorInterface";
 import { KeyPress } from "../../types/KeyPress";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
@@ -8,7 +8,7 @@ import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { FoodLocalisator } from "./FoodLocalisator";
 import { GameAnimator } from "./GameAnimator";
 import { GameIntroCloasure } from "./GameIntroCloasure";
-import { Judge } from "./Judge";
+import { gameEvents, Judge } from "./Judge";
 import { getSnakeLevelBoard } from "./levels";
 import { TailHandler } from "./TailHandler";
 
@@ -40,6 +40,8 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     _foodCords: PawnCords | null = null;
     MAX_TAIL_LENGTH = 13;
     gameAnimator = new GameAnimator();
+    cheatStopTimer = false;
+    noBoundries = true;
 
 get foodCords():PawnCords { return this._foodCords as PawnCords; }
 set foodCords(val: PawnCords) {
@@ -97,10 +99,32 @@ set foodCords(val: PawnCords) {
         this.tailHandler.addTailToPawnLayer(visitedObject);
     }
 
-    move(visitedObject: GameCreator, deltaRow:number, deltaCol:number) {
-        if (this.isFieldOutsideBoard(visitedObject, deltaRow, deltaCol)) {
+    getNewCordsOnBump(visitedObject: GameCreator, deltaRow: number, deltaCol: number){
+        const {row, col} = visitedObject.pawnCords;
+        const maxCol = visitedObject.background[0].length - 1;
+        const maxRow = visitedObject.background.length - 1;
+        if (deltaRow > 0) return {row: 0, col};
+        if (deltaRow < 0) return {row: maxRow, col};
+        if (deltaCol > 0) return {row, col: 0};
+        if (deltaCol < 0) return {row, col: maxCol};
+        return {col, row}
+    }
+
+    handleBump(visitedObject: GameCreator, deltaRow:number, deltaCol: number){
+        if (!this.noBoundries) {
             this.informDeathWrongMove(visitedObject);
             return;
+        }
+        const newPawnCords:PawnCords = this.getNewCordsOnBump(visitedObject, deltaRow, deltaCol);
+        console.log(newPawnCords)
+        const oldPawnCords = visitedObject.pawnCords;
+        this.replacePawn(visitedObject, newPawnCords, oldPawnCords);
+        this.tailHandler.handleTail(this, visitedObject, deltaRow, deltaCol);
+    }
+
+    move(visitedObject: GameCreator, deltaRow:number, deltaCol:number) {
+        if (this.isFieldOutsideBoard(visitedObject, deltaRow, deltaCol)) {
+            return this.handleBump(visitedObject, deltaRow, deltaCol);
         }
         if (this.isFieldOccupied(visitedObject, deltaRow, deltaCol)) {
             this.informDeathWrongMove(visitedObject);
@@ -122,11 +146,20 @@ set foodCords(val: PawnCords) {
             row: visitedObject.pawnCords.row,
         }
         const newPawnCordsCP: PawnCords = this.getNewPawnCords(visitedObject, deltaRow, deltaCol);
-        visitedObject.pawnLayer[oldPawnCords.row][oldPawnCords.col] = 0;
-        visitedObject.pawnCords = newPawnCordsCP;
-        visitedObject.pawnLayer[newPawnCordsCP.row][newPawnCordsCP.col] = 1;
-        visitedObject.pawnLayer[oldPawnCords.row][oldPawnCords.col] = 0;
+        this.replacePawn(visitedObject, newPawnCordsCP, oldPawnCords);
+        // visitedObject.pawnLayer[oldPawnCords.row][oldPawnCords.col] = 0;
+        // visitedObject.pawnCords = newPawnCordsCP;
+        // visitedObject.pawnLayer[newPawnCordsCP.row][newPawnCordsCP.col] = 1;
+        // visitedObject.pawnLayer[oldPawnCords.row][oldPawnCords.col] = 0;
+        // this.tailHandler.handleTail(this, visitedObject, deltaRow, deltaCol);
         this.tailHandler.handleTail(this, visitedObject, deltaRow, deltaCol);
+    }
+
+    replacePawn(visitedObject:GameCreator, newPawnCords:PawnCords, oldPawnCords:PawnCords){
+        visitedObject.pawnLayer[oldPawnCords.row][oldPawnCords.col] = 0;
+        visitedObject.pawnCords = newPawnCords;
+        visitedObject.pawnLayer[newPawnCords.row][newPawnCords.col] = 1;
+        visitedObject.pawnLayer[oldPawnCords.row][oldPawnCords.col] = 0;
     }
 
     setDirectionAfterDirectionInvert(){
@@ -168,10 +201,41 @@ set foodCords(val: PawnCords) {
         visitedObject.isGameStarted = false;
     }
 
-    passCode(visitedObject:GameCreator, code:string){}
+    passCode(visitedObject:GameCreator, code:string){
+        console.log(code);
+        switch(code) {
+            case START_TIMER:
+                this.cheatStopTimer = false;
+                visitedObject.isCheater = true;
+                break;
+        case STOP_TIMER:
+            this.cheatStopTimer = true;
+            visitedObject.isCheater = true;
+            break;
+        case ADD_POINTS:
+            visitedObject.informJudge(gameEvents.CHEATER_MONEY);
+            visitedObject.isCheater = true;
+            break;
+        case SHORT_SNAKE:
+            this.tailHandler.cheatCutTail(this, visitedObject);
+            visitedObject.isCheater = true;
+            break;
+        case DONT_BUMP:
+            this.noBoundries = true;
+            console.log('%cNo boundries game mode activated. This is not a cheat.', 'background-color: balck; color: white; padding: 2px; border-radius: 3px;')
+            break;
+        case BUMP:
+            this.noBoundries = false;
+            console.log('%cNo boundries game mode disactivated. This is not a cheat.', 'background-color: balck; color: white; padding: 2px; border-radius: 3px;')
+            break;
+    
+        }
+    }
 
     setVisitorToNextStateOnSpeedTick(visitedObject:GameCreator, time:number){
-        if (this.gameAnimator.isCurtainAnimationOngoing) return;
+        if (
+            this.gameAnimator.isCurtainAnimationOngoing || this.cheatStopTimer
+        ) return;
         const getDeltaCords = () => {
             switch(this.direction) {
                 case directions.DOWN: return {deltaRow: 1, deltaCol: 0};

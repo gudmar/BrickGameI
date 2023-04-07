@@ -7,14 +7,14 @@ import { cartridges } from "./cartridgeLibrary"
 export const STOP_TIMER = 'freeze'
 export const START_TIMER = 'heat'
 export const UP_LOCK = 'burden'
-export const ADD_POINTS = 'extortion'
+export const ADD_POINTS = 'money'
 export const UP_UNLOCK = 'feather'
 export const DONT_BUMP = 'lagiewka'
 export const BUMP = 'hit'
 export const SHORT_SNAKE = 'cut'
 
 export const gameCodes = [
-    STOP_TIMER, START_TIMER, UP_LOCK, ADD_POINTS, UP_UNLOCK, DONT_BUMP, BUMP
+    STOP_TIMER, START_TIMER, UP_LOCK, ADD_POINTS, UP_UNLOCK, DONT_BUMP, BUMP, SHORT_SNAKE
 ]
 
 export const codesDescription = {
@@ -35,6 +35,14 @@ export const codesDescription = {
             code: ADD_POINTS,
             description: 'Get 5000',
         },
+        {
+            code: DONT_BUMP,
+            description: 'Not a cheat. Allow snake to teleport when hit a wall',
+        },
+        {
+            code: BUMP,
+            description: 'Not a cheat. Crash snake when hit a wall',
+        }
     ],
     [cartridges.TETRIS]: [
         {

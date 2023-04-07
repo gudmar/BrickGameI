@@ -7,7 +7,6 @@ export class TailHandler {
 
     getInitialTail() {
         return [
-            // {col: 1, row: 5},
             {col: 2, row: 5},
             {col: 3, row: 5},
             {col: 4, row: 5},
@@ -18,20 +17,67 @@ export class TailHandler {
         return this.tail;
     }
 
+    cheatCutTail(snakeInstance: any, visitedObject: GameCreator) {
+        this.tail.splice(0, this.tail.length - 3);
+        snakeInstance.setPawnLayer(visitedObject)
+    }
+
     resetTailToDefaultPosition(){
         this.tail = this.getInitialTail();
     }
 
     addTailToPawnLayer(visitedObject: GameCreator) {
         const { pawnLayer } = visitedObject;
-        this.tail.forEach(({ col, row }) => {
-            pawnLayer[row][col] = 1;
-        })
+        let rowMem, colMem;
+        try {
+            this.tail.forEach(({ col, row }) => {
+                rowMem = row;
+                colMem = col;
+                pawnLayer[row][col] = 1;
+            })    
+        } catch(e) {
+            throw new Error (`Cannot access row: ${rowMem}, col: ${colMem}`)
+        }
+    }
+
+    // recalculateTailOnBump(visitedObject:GameCreator, deltaRow: number, deltaCol: number) {
+    //     const { col, row } = visitedObject.pawnCords;
+    //     this.tail.push({ col: col - deltaCol, row: row - deltaRow });
+    //     const { col: oldCol, row: oldRow } = this.tail.shift()!;
+    //     visitedObject.pawnLayer[oldRow][oldCol] = 0;
+    // }
+
+    // recalculateTail(visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
+    //     const isBump = this.isBump(visitedObject);
+    //     if (isBump)  this.recalculateTailOnBump(visitedObject, deltaRow, deltaCol)
+    //     if (!isBump) this.recalculateTailNoBump(visitedObject, deltaRow, deltaCol)
+    // }
+
+    getNewLastTailBitCords(visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
+        const { row: headRow, col: headCol } = visitedObject.pawnCords;
+        const { row: lastTailRow, col: lastTailCol} = this.tail[this.tail.length - 1];
+        const maxCol = visitedObject.background[0].length - 1;
+        const maxRow = visitedObject.background.length - 1;
+        
+        if (headRow <= 1 && lastTailRow >= maxRow - 1) return {col:lastTailCol, row: maxRow};
+        console.log('A')
+        if (headRow === maxRow && lastTailRow === 1) return {col:lastTailCol, row: 0};
+        console.log('B')
+        if (headCol <= 1 && lastTailCol >= maxCol - 1) return {col: maxCol, row: lastTailRow};
+        console.log('C')
+        if (headCol === maxCol && lastTailCol === 1) return {col: 0, row: lastTailRow}
+        console.log('D')
+        console.log(headRow, headCol, lastTailRow, lastTailCol)
+        return { col: headCol - deltaCol, row: headRow - deltaRow }
     }
 
     recalculateTail(visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
         const { col, row } = visitedObject.pawnCords;
-        this.tail.push({ col: col - deltaCol, row: row - deltaRow });
+        const {col: newCol, row: newRow} = this.getNewLastTailBitCords(visitedObject, deltaRow, deltaCol)
+        console.log('COL',newCol)
+        console.log('ROW',newRow)
+        // this.tail.push({ col: col - deltaCol, row: row - deltaRow });
+        this.tail.push({col:newCol, row: newRow});
         const { col: oldCol, row: oldRow } = this.tail.shift()!;
         visitedObject.pawnLayer[oldRow][oldCol] = 0;
     }
