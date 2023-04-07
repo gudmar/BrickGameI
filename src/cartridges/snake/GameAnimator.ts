@@ -13,13 +13,11 @@ export class GameAnimator{
     )
 
     curtainAnimation(visitedObject:GameCreator) {
-        console.log('STARTING CURTAIN')
         this.ticks = 0;
         this.isCurtainAnimationOngoing = true;
         this.memorizedBackground = visitedObject.background;
         visitedObject.isAnimating = true;
         visitedObject.background = this.curtain;
-        console.log(visitedObject.background)
     }
 
     getEmptyBoard(){

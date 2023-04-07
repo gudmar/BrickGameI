@@ -4,7 +4,6 @@ export class LevelSetter {
     static setLevel(visitedObject:any) {
         const LEVEL_OFFSET = 1;
         const level = visitedObject.level - LEVEL_OFFSET;
-        console.log('in LevelSetter', level)
         if (level <= 0) {
             visitedObject.background = getEmptyBoard();
             return;

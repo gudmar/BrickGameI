@@ -71,7 +71,7 @@ export class GameCreator extends GameLogic {
     }
     set pawnLayer(val:BrickMap) {
         if (val.length > 20) {
-            throw new Error(`Attempt to set pawnLayer to ${val}`)
+            console.error(`Attempt to set pawnLayer to ${val}`)
         }
         this._pawnLayer = val;
     }
@@ -168,7 +168,7 @@ export class GameCreator extends GameLogic {
             this.nextStateCalculator.rotate(this)
         }
     }
-    public increaseSpeed() { this.speed > 9 ? this.speed = 1 : this.speed++; console.log('speed', this.speed) }
+    public increaseSpeed() { this.speed > 9 ? this.speed = 1 : this.speed++; }
 
     public increaseLevel() { 
         this.level > 9 ? this.level = 1 : this.level++;
@@ -186,7 +186,6 @@ export class GameCreator extends GameLogic {
         }
         this.isGameStarted = true;
         this.isGameSelectionAllowed = false;
-        console.log('Game started ?', this.isGameStarted)
     }
 
     public pauseGame() { 

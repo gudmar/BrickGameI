@@ -33,7 +33,6 @@ function BrickGame() {
   const [isGameSelectionAllowed, setIsGameSelectionAllowed]: [boolean, (val:boolean)=>void] = useState(false);
 
   const cartridgeUp = () => {
-    console.log(isGameSelectionAllowed)
     if (!isGameSelectionAllowed) return{};
     const findCurrentCartridgeIndex = () => CARTRIDGE_ORDER.findIndex((storedCartridge) => storedCartridge === currentGame)
     const setNextCartridge = () => {

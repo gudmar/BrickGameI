@@ -45,7 +45,6 @@ class Judge implements JudgeInterface {
             case gameEvents.MOVE: {
                 visitedObject.score -= 10;
                 const {col, row} = payload;
-                console.log(col, row)
                 if (col === 8 && row === 19) {
                     visitedObject.isGameWon = true;
                 }
@@ -128,7 +127,6 @@ class PawnMover extends NextStateCalculator {
     rotate() {}
 
     passCode(visitedObject:any, code:string) {
-        console.log(code);
         switch(code) {
             case START_TIMER:
                 this.cheaterStopTimer = false;

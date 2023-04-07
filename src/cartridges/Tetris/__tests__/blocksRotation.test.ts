@@ -63,7 +63,6 @@ describe('Tetris blocks testing', () => {
             const variantNr = 3;
             const testedBlock = new LeftLBlock();
             const result = testedBlock.prepareVariant(variantNr);
-            console.log(result)
             expect(result).toEqual(expected);
         });
         it('Should return a 2 times rotated L-left figure', () => {
@@ -74,7 +73,6 @@ describe('Tetris blocks testing', () => {
             const variantNr = 2;
             const testedBlock = new LeftLBlock();
             const result = testedBlock.prepareVariant(variantNr);
-            console.log(result)
             expect(result).toEqual(expected);    
         });
         it('Should not mutate original figure if rotated 3 times', () => {
@@ -118,7 +116,6 @@ describe('Tetris blocks testing', () => {
             const variantNr = 3;
             const testedBlock = new LongBlock();
             const result = testedBlock.prepareVariant(variantNr);
-            console.log(result)
             expect(result).toEqual(expected);    
         });
     })

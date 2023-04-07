@@ -7,6 +7,12 @@
 
 * Snake
   - SOMETIMES no food left !!!! Rare but important
+    food HAS to be placed BEFORE board is refreshed
+    but TailHandler: early return in handleTail and places food
+    where is this food placed?
+  - Increased probability of problem reproduction with 
+  MOCKING getRandom!!!
+  - When randomlyPlaceFood is launched, (and due to this isFoodLocationAllowed is launched) old snake cords are still taken into account
 
 * Maze:
   - When game won, and enter pressed on pawn on, old pawn does not diappear

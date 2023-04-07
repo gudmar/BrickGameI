@@ -37,9 +37,16 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     direction: directions = directions.RIGHT;
 
     tailHandler = new TailHandler();
-    foodCords: PawnCords | null = null;
+    _foodCords: PawnCords | null = null;
     MAX_TAIL_LENGTH = 5;
     gameAnimator = new GameAnimator();
+
+get foodCords():PawnCords { return this._foodCords as PawnCords; }
+set foodCords(val: PawnCords) {
+    console.trace(this._foodCords)
+    this._foodCords = val
+
+}
 
     clean(visitedObject:GameCreator) {
         this.initiateWithoutScore(visitedObject);
@@ -47,9 +54,11 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
 
     levelFinished(visitedObject: GameCreator) {
         this.gameAnimator.curtainAnimation(visitedObject);
+        console.trace('levelFinished')
         if (visitedObject.level === 10) { visitedObject.level = 1 }
         else { visitedObject.level++ };
         this.initiateWithoutScore(visitedObject)
+        // FoodLocalisator.randomlyPlaceFood(this, visitedObject);
     }
 
     setLifesToNextFigure(visitedObject: GameCreator) {
@@ -64,6 +73,7 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     initiate(visitedObject:GameCreator){
+        console.log('INITIATE')
         if (this.lifes === 0) {
             this.lifes = 4;
             visitedObject.score = 0;
@@ -73,6 +83,7 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     initiateWithoutScore(visitedObject:GameCreator) {
+        console.log('INTIT - NO SCORE')
         visitedObject.background = getEmptyBoard();
         this.setLevel(visitedObject);
         visitedObject.pawnCords = {

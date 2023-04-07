@@ -86,7 +86,6 @@ describe('Testing randomlyPlaceFood', () => {
     it('Should place food outside head when given random cords firstly inside tail, then inside some background then inside head and lastly in not occupied area', () => {
         FoodLocalisator.randomlyPlaceFood(snake, visitedObject as any);
         const finalCords = mockGetRandomFaker.getFinalCords();
-        console.log('Final', finalCords)
         expect(finalCords).toEqual({col: 6, row: 5})
     })
 })

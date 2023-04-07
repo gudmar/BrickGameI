@@ -20,6 +20,9 @@ export class TailHandler {
 
     resetTailToDefaultPosition(){
         this.tail = this.getInitialTail();
+        console.log(this.getInitialTail())
+        console.log('%cReatarting tail', 'color: blue')
+        console.log(this.tail)
     }
 
     addTailToPawnLayer(visitedObject: GameCreator) {
@@ -54,10 +57,16 @@ export class TailHandler {
     handleTail(snakeInstance: any, visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
         if (FoodLocalisator.isDevouring(snakeInstance, visitedObject, deltaRow, deltaCol)) {
             visitedObject.judge.inform(visitedObject, gameEvents.COLLECT_BRICK);
+            console.log(this.tail.length)
             this.growTail(visitedObject, deltaRow, deltaCol);
+            console.log(this.tail.length)
             if (this.tail.length > snakeInstance.MAX_TAIL_LENGTH) {
                 snakeInstance.levelFinished(visitedObject);
+                return;
             }
+            console.table([
+                ['tailLength', this.tail.length],
+            ])
             FoodLocalisator.randomlyPlaceFood(snakeInstance, visitedObject);
         } else {
             this.moveTail(visitedObject, deltaRow, deltaCol)

@@ -13,7 +13,6 @@ export class AnimationAfterGame {
     private direction = Direction.up;
     initiate(visitedObject: any) {
         Logger.inform('AnimationAfterGame instance initilted')
-        console.log('Animation after game initialized')
     }
 
     clean(visitedObject:any){

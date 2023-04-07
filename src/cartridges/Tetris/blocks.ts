@@ -70,7 +70,6 @@ export class Block {
     public getNewRandomVariant() {
         const index: Variant = Math.floor(Math.random() * this.variants.length) as Variant;
         this._currentVariant = index;
-        console.log(this.variants.length, index)
         this.currentHandlePoint = this.figureHandlePoints[index];
         this.currentFigure = this.variants[index];
         return {

@@ -15,7 +15,6 @@ export abstract class NextStateCalculator {
 
     setVisitorToNextStateOnKeyPress(visitedObject:any, keyPresses: KeyPress){
         if (keyPresses === KeyPress.Log) { 
-            console.dir(visitedObject);
             visitedObject.isPaused = true;
         }
         if (keyPresses === KeyPress.Start) {
