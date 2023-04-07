@@ -1,6 +1,7 @@
 import { BrickMap } from "../../types/types";
 import { getEmptyBoard } from "../constants";
 import { GameCreator } from "../GameCreator";
+import { FoodLocalisator } from "./FoodLocalisator";
 
 const ANIMATION_LAST = 30;
 
@@ -32,19 +33,20 @@ export class GameAnimator{
         return this.isCurtainAnimationOngoing
     }
 
-    tick(visitedObject:GameCreator) {
+    tick(visitedObject:GameCreator, snakeInstance:any) {
         if (this.isCurtainAnimationOngoing ){
             visitedObject.background = this.curtain;
             this.ticks++;
-            this.stopAnimation(visitedObject);
+            this.stopAnimation(visitedObject, snakeInstance);
         }
     }
 
-    private stopAnimation(visitedObject:GameCreator){
+    private stopAnimation(visitedObject:GameCreator, snakeInstance:any){
         if (this.ticks > ANIMATION_LAST){
             visitedObject.background = this.memorizedBackground;
             visitedObject.isAnimating = false;
             this.isCurtainAnimationOngoing = false; 
+            FoodLocalisator.randomlyPlaceFood(snakeInstance, visitedObject);
         }
     }
 }

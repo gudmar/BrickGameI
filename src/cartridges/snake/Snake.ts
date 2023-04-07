@@ -38,12 +38,11 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
 
     tailHandler = new TailHandler();
     _foodCords: PawnCords | null = null;
-    MAX_TAIL_LENGTH = 5;
+    MAX_TAIL_LENGTH = 13;
     gameAnimator = new GameAnimator();
 
 get foodCords():PawnCords { return this._foodCords as PawnCords; }
 set foodCords(val: PawnCords) {
-    console.trace(this._foodCords)
     this._foodCords = val
 
 }
@@ -54,11 +53,9 @@ set foodCords(val: PawnCords) {
 
     levelFinished(visitedObject: GameCreator) {
         this.gameAnimator.curtainAnimation(visitedObject);
-        console.trace('levelFinished')
         if (visitedObject.level === 10) { visitedObject.level = 1 }
         else { visitedObject.level++ };
         this.initiateWithoutScore(visitedObject)
-        // FoodLocalisator.randomlyPlaceFood(this, visitedObject);
     }
 
     setLifesToNextFigure(visitedObject: GameCreator) {
@@ -73,7 +70,6 @@ set foodCords(val: PawnCords) {
     }
 
     initiate(visitedObject:GameCreator){
-        console.log('INITIATE')
         if (this.lifes === 0) {
             this.lifes = 4;
             visitedObject.score = 0;
@@ -83,7 +79,6 @@ set foodCords(val: PawnCords) {
     }
 
     initiateWithoutScore(visitedObject:GameCreator) {
-        console.log('INTIT - NO SCORE')
         visitedObject.background = getEmptyBoard();
         this.setLevel(visitedObject);
         visitedObject.pawnCords = {
@@ -209,7 +204,7 @@ set foodCords(val: PawnCords) {
                 blinkingPoints.forEach(point => this.togglePointOnLayer(visitedObject, point as PawnCords)) 
             }    
         }
-        this.gameAnimator.tick(visitedObject)
+        this.gameAnimator.tick(visitedObject, this)
     }
     togglePointOnLayer(visitedObject: GameCreator, point: PawnCords) {
         if (!point) return;

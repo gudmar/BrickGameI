@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTimer } from './useClock'
 import { GameState } from '../types/types';
 import { getNextFigureOfSymbols, getDojoOfSymbols } from '../cartridges/AbstractGameLogic';
@@ -62,10 +62,8 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
     const timeSpeed = useTimer(gameState.speed);
     const matchedCode = useGameCodes(gameCodes)
 
-    useEffect(() => {console.log('useCartridge gameDescritpin',cartridgeToUseDescription)}, [cartridgeToUseDescription])
     useEffect(() => {
         cartridgeInstance.passCode(matchedCode);
-        console.log('Instance', cartridgeInstance)
     }, [matchedCode, cartridgeInstance])
 
 
@@ -101,7 +99,6 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
     }
     const handlePause = () => {
         const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Pause);
-        console.log(nextState)
         setGameState(nextState);
     }
 

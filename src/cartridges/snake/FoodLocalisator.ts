@@ -12,10 +12,6 @@ export class FoodLocalisator{
             foodRow = getRandom(0, maxHeightIndex);
             foodCol = getRandom(0, maxWidthIndex);
         }
-        console.table([
-            ['food', `${foodRow} ${foodCol}`],
-            ['tail', JSON.stringify(snakeInstance.tailHandler.tail)]
-        ])
         snakeInstance.foodCords = {col: foodCol as number, row: foodRow as number};
         visitedObject.pawnLayer[foodRow as number][foodCol as number] = 1;
     }
@@ -30,19 +26,10 @@ export class FoodLocalisator{
         const {row: headRow, col: headCol} = visitedObject.pawnCords;
         const isOnHead = headRow === foodRow && headCol === foodCol;
         const isColisionWithBackground = this.isRandomFoodCollisionWithBackground(visitedObject,{col: foodCol, row: foodRow});
-        console.table([
-            ['row col', `${foodRow}  ${foodCol}`],
-            ['isOnTail', isOnTail],
-            ['isOnHead', isOnHead],
-            ['HeadCords', visitedObject.pawnCords],
-            ['tailCords', snakeInstance.tailHandler.tailCords],
-            ['isColisionWithBackground', isColisionWithBackground],
-            ['result', !(isOnTail || isOnHead || isColisionWithBackground)]
-        ])
         return !(isOnTail || isOnHead || isColisionWithBackground);
     }
 
-    static isDevouring(snakeInstance:any, visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
+    static isDevouring(snakeInstance:any, visitedObject: GameCreator) {
         if (!snakeInstance.foodCords) return;
         const {row, col} = visitedObject.pawnCords;
         const {row: foodRow, col: foodCol} = snakeInstance.foodCords as PawnCords;
