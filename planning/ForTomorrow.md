@@ -6,13 +6,9 @@
 * Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
 
 * Snake
-  - SOMETIMES no food left !!!! Rare but important
-    food HAS to be placed BEFORE board is refreshed
-    but TailHandler: early return in handleTail and places food
-    where is this food placed?
-  - Increased probability of problem reproduction with 
-  MOCKING getRandom!!!
-  - When randomlyPlaceFood is launched, (and due to this isFoodLocationAllowed is launched) old snake cords are still taken into account
+  - Problem with no bump mode: tail recalculation is not proper. Next col is added in some rows, 
+  - and crash when attempt to access not existing row (-1 or too high).
+  TDD getNewLastTailBitCords to solve this
 
 * Maze:
   - When game won, and enter pressed on pawn on, old pawn does not diappear
