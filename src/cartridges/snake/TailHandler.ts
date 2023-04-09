@@ -59,19 +59,30 @@ export class TailHandler {
         const maxCol = visitedObject.background[0].length - 1;
         const maxRow = visitedObject.background.length - 1;
         
-        if (headRow <= 1 && lastTailRow >= maxRow - 1) return {col:lastTailCol, row: maxRow};
-        console.log('A')
-        if (headRow === maxRow && lastTailRow === 1) return {col:lastTailCol, row: 0};
-        console.log('B')
-        if (headCol <= 1 && lastTailCol >= maxCol - 1) return {col: maxCol, row: lastTailRow};
-        console.log('C')
-        if (headCol === maxCol && lastTailCol === 1) return {col: 0, row: lastTailRow}
-        console.log('D')
-        console.log(headRow, headCol, lastTailRow, lastTailCol)
+        if (headRow < 1 && lastTailRow >= maxRow - 1) return {col:lastTailCol, row: maxRow};
+        // console.log('A')
+        // if (headRow === maxRow && lastTailRow === 1) return {col:lastTailCol, row: 0};
+        if (headRow === maxRow && lastTailRow === 1) return {col:headCol, row: 0};
+        // console.log('B')
+        // if (headCol < 1 && lastTailCol >= maxCol - 1) return {col: maxCol, row: lastTailRow};
+        if (headCol < 1 && lastTailCol >= maxCol - 1) return {col: maxCol, row: headRow};
+        // console.log('C')
+        if (headCol === maxCol && lastTailCol <= 1) return {col: 0, row: headRow}
+        // console.log('D')
+        // console.log(headRow, headCol, lastTailRow, lastTailCol)
         return { col: headCol - deltaCol, row: headRow - deltaRow }
+    
     }
 
     recalculateTail(visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
+        if (this.tail.length === 0) return;
+        const {col: newCol, row: newRow} = this.getNewLastTailBitCords(visitedObject, deltaRow, deltaCol)
+        this.tail.push({col:newCol, row: newRow});
+        const { col: oldCol, row: oldRow } = this.tail.shift()!;
+        visitedObject.pawnLayer[oldRow][oldCol] = 0;
+    }
+
+    recalculateTail1(visitedObject: GameCreator, deltaRow: number, deltaCol: number) {
         const { col, row } = visitedObject.pawnCords;
         const {col: newCol, row: newRow} = this.getNewLastTailBitCords(visitedObject, deltaRow, deltaCol)
         console.log('COL',newCol)
