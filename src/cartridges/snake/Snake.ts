@@ -31,7 +31,6 @@ export class SnakeDecorator {
 }
 
 class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
-    cheaterStopTimer: boolean = false;
     bumpLock: boolean = false;
     lifes: number = 4;
     direction: directions = directions.RIGHT;
@@ -116,10 +115,9 @@ set foodCords(val: PawnCords) {
             return;
         }
         const newPawnCords:PawnCords = this.getNewCordsOnBump(visitedObject, deltaRow, deltaCol);
-        console.log(newPawnCords)
         const oldPawnCords = visitedObject.pawnCords;
         this.replacePawn(visitedObject, newPawnCords, oldPawnCords);
-        this.tailHandler.handleTail(this, visitedObject, deltaRow, deltaCol);
+        this.tailHandler.handleTail(this, visitedObject, oldPawnCords);
     }
 
     move(visitedObject: GameCreator, deltaRow:number, deltaCol:number) {
@@ -134,7 +132,6 @@ set foodCords(val: PawnCords) {
             this.informDeathWrongMove(visitedObject);
             return;
         }
-        
         if (this.tailHandler.moveInterferesWithTail(visitedObject, deltaRow, deltaCol)) {
             this.setDirectionAfterDirectionInvert();
             this.tailHandler.invertDirection(visitedObject);
@@ -147,12 +144,9 @@ set foodCords(val: PawnCords) {
         }
         const newPawnCordsCP: PawnCords = this.getNewPawnCords(visitedObject, deltaRow, deltaCol);
         this.replacePawn(visitedObject, newPawnCordsCP, oldPawnCords);
-        // visitedObject.pawnLayer[oldPawnCords.row][oldPawnCords.col] = 0;
-        // visitedObject.pawnCords = newPawnCordsCP;
-        // visitedObject.pawnLayer[newPawnCordsCP.row][newPawnCordsCP.col] = 1;
-        // visitedObject.pawnLayer[oldPawnCords.row][oldPawnCords.col] = 0;
-        // this.tailHandler.handleTail(this, visitedObject, deltaRow, deltaCol);
-        this.tailHandler.handleTail(this, visitedObject, deltaRow, deltaCol);
+        this.tailHandler.handleTail(this, visitedObject, oldPawnCords);
+
+
     }
 
     replacePawn(visitedObject:GameCreator, newPawnCords:PawnCords, oldPawnCords:PawnCords){
