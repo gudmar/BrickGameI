@@ -40,7 +40,7 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     MAX_TAIL_LENGTH = 13;
     gameAnimator = new GameAnimator();
     cheatStopTimer = false;
-    noBoundries = true;
+    noBoundries = false;
 
 get foodCords():PawnCords { return this._foodCords as PawnCords; }
 set foodCords(val: PawnCords) {
@@ -165,8 +165,8 @@ set foodCords(val: PawnCords) {
             return;
         }
         if (colB === colA) {
-            if (rowA > rowB) this.direction = directions.UP
-            if (rowB > rowA) this.direction = directions.DOWN
+            if (rowA > rowB) this.direction = directions.DOWN
+            if (rowB > rowA) this.direction = directions.UP
             return;
         }
         throw new Error('Snake, change direction after direcion invert: rowA !== rowB and colA !== colB, not possible')
