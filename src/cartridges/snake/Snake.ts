@@ -1,6 +1,7 @@
 import { ADD_POINTS, BUMP, DONT_BUMP, SHORT_SNAKE, START_TIMER, STOP_TIMER, UP_LOCK } from "../../constants/gameCodes";
 import { GameCreatorInterface } from "../../types/GameCreatorInterface";
 import { KeyPress } from "../../types/KeyPress";
+import { directions } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { getEmptyBoard, getEmptyNextFigure } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
@@ -11,9 +12,6 @@ import { GameIntroCloasure } from "./GameIntroCloasure";
 import { gameEvents, Judge } from "./Judge";
 import { getSnakeLevelBoard } from "./levels";
 import { TailHandler } from "./TailHandler";
-
-
-enum directions {DOWN, LEFT, RIGHT, UP}
 
 export class SnakeDecorator {
     constructor() {
