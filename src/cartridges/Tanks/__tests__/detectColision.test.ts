@@ -1,5 +1,5 @@
 import { GameCreator } from "../../GameCreator";
-import { TANKS_COLISION_EMPTY, TANKS_COLISION_OBSTACLE, TANKS_NO_COLISION_EMPTY, TANKS_NO_COLISION_OBSTACLES, TANKS_OUTSIDE_BOARD_EMPTY, VISITED_EMPTY, VISITED_OBSTACLES } from "../mocks/detectColisionMock";
+import { TANKS_COLISION_EMPTY, TANKS_COLISION_OBSTACLE, TANKS_NO_COLISION_EMPTY, TANKS_NO_COLISION_OBSTACLES, TANKS_NO_COLISION_WITH_NOT_PLACED, TANKS_OUTSIDE_BOARD_EMPTY, VISITED_EMPTY, VISITED_OBSTACLES } from "../mocks/detectColisionMock";
 import { checkIsColision, Tank } from "../tank";
 
 describe('Testing detectColision', () => {
@@ -7,6 +7,7 @@ describe('Testing detectColision', () => {
         let instance;
         data.forEach((tankData) => {
             instance = new Tank(tankData.variant, tankData.cords);
+            instance.isPlacedOnBoard = tankData.isPlaced;
         })
         return instance;
     }
@@ -39,6 +40,12 @@ describe('Testing detectColision', () => {
     it('Should detect no colision with obstacles, when given background does not interfere with tanks', () => {
         const tank = createTanksReturnOne(TANKS_NO_COLISION_OBSTACLES);
         const visitedObject = VISITED_OBSTACLES as GameCreator;
+        const result = checkIsColision(tank!, visitedObject, move);
+        expect(result).toBeFalsy();
+    })
+    it('Should not colide with a not placed tank', () => {
+        const tank = createTanksReturnOne(TANKS_NO_COLISION_WITH_NOT_PLACED);
+        const visitedObject = VISITED_EMPTY as GameCreator;
         const result = checkIsColision(tank!, visitedObject, move);
         expect(result).toBeFalsy();
     })

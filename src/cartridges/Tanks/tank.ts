@@ -28,6 +28,7 @@ export class Tank{
     currentTank = this.getInitialTank();
     cords:PawnCords;
     isDestroyed = false;
+    isPlacedOnBoard = false; 
     static instances: Tank[];
 
     constructor(variant: variants, cords: PawnCords){
@@ -38,16 +39,7 @@ export class Tank{
             Tank.instances = []
         }
         Tank.instances.push(this);
-    }
-
-    static removeDestroyed() {
-        const newInstances = Tank.instances.filter(instance => !instance.isDestroyed);
-        Tank.instances = newInstances;
-    }
-
-    destroy(){
-        this.isDestroyed = true;
-        Tank.removeDestroyed()
+        this.tryPlacing();
     }
 
     getInitialTank(){
@@ -84,41 +76,45 @@ export class Tank{
         }
     }
     tryMoveUp(visitedObject:GameCreator){
-        const delta = { deltaRow: -1, deltaCol: 0 };
+        const delta = { row: -1, col: 0 };
         this.tryMove(visitedObject, delta)
     }
     tryMoveDown(visitedObject:GameCreator){
-        const delta = { deltaRow: 1, deltaCol: 0 };
+        const delta = { row: 1, col: 0 };
         this.tryMove(visitedObject, delta)
     }
     tryMoveRight(visitedObject:GameCreator){
-        const delta = { deltaRow: 0, deltaCol: 1 };
+        const delta = { row: 0, col: 1 };
         this.tryMove(visitedObject, delta)
     }
     tryMoveLeft(visitedObject:GameCreator){
-        const delta = { deltaRow: 0, deltaCol: -1 };
+        const delta = { row: 0, col: -1 };
         this.tryMove(visitedObject, delta)
     }
 
-    tryMove(visitedObject:GameCreator, delta: Delta){
-        const {deltaRow, deltaCol} = delta;
+    tryPlacing() {
+        
+    }
+
+    destroy(){
+        this.isPlacedOnBoard = false; // tanks are not destroyed, they are just temporary removed from board
+    }
+
+    tryMove(visitedObject:GameCreator, delta: PawnCords){
+        const {row: deltaRow, col: deltaCol} = delta;
         const {row, col} = this.cords;
         const plannedCords = {row: deltaRow + row, col: deltaCol + col }
-        const isMovePossible = this.checkIfMoveIsPossible(visitedObject, plannedCords);
+        const isMovePossible = !checkIsColision(this, visitedObject, delta)
         if (isMovePossible) { this.cords = plannedCords; }
     }
 
-    getLayerWithTank(tankObject) {
-        const blankLayer = getEmptyBoard();
-        const {row, col} = visitedObject.pawnCords;
-    }
+    // getLayerWithTank(tankObject) {
+    //     const blankLayer = getEmptyBoard();
+    //     const {row, col} = visitedObject.pawnCords;
+    // }
 
     static summAllTankLayers = () => {
         const blankLayer = getEmptyBoard();
-
-    }
-
-    checkIfMoveIsPossible(visitedObject:GameCreator, plannedCords: PawnCords) {
 
     }
 }
@@ -139,10 +135,12 @@ export const checkIsColision = (tank: Tank, visitedObject: GameCreator, delta: P
         return brickA || brickB ? 1 : 0
     }
     Tank.instances.forEach((tankInstance: Tank) => {
-        const {col, row} = getPlannedCords(tankInstance, tank, delta);
-        const isOutsieBoundreis = checkIfOutsideBoundries(bgCopy, {col, row});
-        if (isOutsieBoundreis) isColision = true;
-        bgCopy = getLayerWithTank(bgCopy, {col, row}, tankInstance.currentTank, mergeWithCheck)
+        if (tankInstance.isPlacedOnBoard) {
+            const {col, row} = getPlannedCords(tankInstance, tank, delta);
+            const isOutsieBoundreis = checkIfOutsideBoundries(bgCopy, {col, row});
+            if (isOutsieBoundreis) isColision = true;
+            bgCopy = getLayerWithTank(bgCopy, {col, row}, tankInstance.currentTank, mergeWithCheck)    
+        }
     })
     return isColision;
 }
@@ -182,3 +180,13 @@ export const getLayerWithTank = (layer: number[][], tankCords: PawnCords, tankMa
     })
     return layer;
 };
+
+export const getLayerWithAllTanks = (notIncludeTankInstance?:Tank) => {
+    let initialLayer = getEmptyBoard();
+    const tanks = Tank.instances || [];
+    tanks.forEach(tank => {
+        if (tank !== notIncludeTankInstance)
+            initialLayer = getLayerWithTank(initialLayer, tank.cords, tank.currentTank)
+    })
+    return initialLayer;
+}
