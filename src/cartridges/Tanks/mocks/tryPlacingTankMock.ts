@@ -39,7 +39,7 @@ export const TANKS_COLISION_EMPTY = [
     { variant: Variants.ENEMY, cords: {row: 18, col: 7 }},
 ]
 
-export const TANKS_NO_COLISION_BULLET = [
+export const TANKS_COLISION_WITH_BULLET = [
     { variant: Variants.ENEMY, cords: {row: 1, col: 1 }},
     { variant: Variants.ENEMY, cords: {row: 1, col: 8 }},
     { variant: Variants.ENEMY, cords: {row: 18, col: 1 }},
@@ -48,6 +48,7 @@ export const TANKS_NO_COLISION_BULLET = [
 
 export const createBullet = () => {
     const bullet = new Bullet(Variants.ENEMY, {col: 1, row: 1}, directions.UP)
+
 }
 
 

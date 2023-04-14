@@ -3,7 +3,7 @@ import { PawnCords } from "../GameCreator";
 
 export class Bullet {
     static nrOfBulletsSoFar:number;
-    static allBullets:Bullet[];
+    static instances:Bullet[] = [];
     static buletsSoFar:number;
     variant: Variants;
     direction: directions;
@@ -21,6 +21,6 @@ export class Bullet {
         this.variant = variant;
         this.id = Bullet.nrOfBulletsSoFar;
         this.cords = startCords;
-        Bullet.allBullets.push(this)
+        Bullet.instances.push(this)
     }
 }

@@ -1,10 +1,11 @@
 import { Variants } from "../../../types/types"
 import { PawnCords } from "../../GameCreator";
 import { TANKS_COLISION_EMPTY, TANKS_NO_COLISION_EMPTY } from "../mocks/detectColisionMock";
+import { createBullet, TANKS_COLISION_WITH_BULLET } from "../mocks/tryPlacingTankMock";
 import { Tank } from "../tank"
 
 interface TankDescriptor {
-    variant: Variants, cords: PawnCords, isPlaced: boolean
+    variant: Variants, cords: PawnCords
 }
 
 const createNewTanks = (tankDescriptors: TankDescriptor[]) => {
@@ -28,6 +29,11 @@ describe('Testing Tank tryPlacing', () => {
         expect(placedTank.isPlacedOnBoard).toBeFalsy();
     })
     it('Shoud not place tank that colides with a bullet', () => {
+        createBullet();
+        createNewTanks(TANKS_COLISION_WITH_BULLET)
+        const placedTank = Tank.instances[0];
+        placedTank.tryPlacing();
+        expect(placedTank.isPlacedOnBoard).toBeFalsy();
 
     })
 })

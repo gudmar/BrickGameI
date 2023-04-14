@@ -1,8 +1,10 @@
+import { copyBackground } from "../../functions/copyBackground";
 import { rotateArray } from "../../functions/rotateArray";
 import { directions, Variants } from "../../types/types";
 import { getEmptyBoard } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { or } from "../layers/toggle/toggleFunction";
+import { Bullet } from "./bullet";
 
 const PLAYER_TANK = [
     [0, 1, 0],
@@ -96,7 +98,10 @@ export class Tank{
             return 0
         }
         if (this.isPlacedOnBoard) return;
-        const layerWithPlacedTanks = getLayerWithAllPlacedTanks(undefined, setColisionOr);
+        // const layerWithPlacedTanks = getLayerWithAllPlacedTanks(undefined, setColisionOr);
+        const layerWithPlacedTanks = getLayerWithAllPlacedObstacles({
+            mergeFunction: setColisionOr
+        });
         getLayerWithTank(layerWithPlacedTanks, this.cords, this.currentTank, setColisionOr);
         if (!isColision) this.isPlacedOnBoard = true;
     }
@@ -185,6 +190,29 @@ export const getLayerWithTank = (layer: number[][], tankCords: PawnCords, tankMa
     })
     return layer;
 };
+
+interface GetLayerWithObstaclesInterface {
+    notIncludeTankInstance?: Tank,
+    initialLayer?: number[][],
+    mergeFunction?: (a:number, b:number)=>(1|0)
+}
+
+export const getLayerWithAllPlacedObstacles = ({ notIncludeTankInstance, initialLayer, mergeFunction}:GetLayerWithObstaclesInterface) => {
+    if (!initialLayer) initialLayer = getEmptyBoard();
+    if (!mergeFunction) mergeFunction = or;
+    let layerCopy = copyBackground(initialLayer);
+    const tanks = Tank.instances || [];
+    const bullets = Bullet.instances || [];
+    bullets.forEach(bullet => {
+        const {row, col} = bullet.cords;
+        layerCopy[row][col] = 1
+    })
+    tanks.forEach(tank => {
+        if (tank !== notIncludeTankInstance && tank.isPlacedOnBoard)
+            layerCopy = getLayerWithTank(layerCopy, tank.cords, tank.currentTank, mergeFunction)
+    })
+    return layerCopy;
+}
 
 export const getLayerWithAllPlacedTanks = (notIncludeTankInstance?:Tank, mergeFunction:(a:number, b:number)=>(1|0) = or) => {
     let initialLayer = getEmptyBoard();
