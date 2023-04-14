@@ -26,24 +26,24 @@ export const getEmptyLayerForPlacingTank = () => [
 ];
 
 export const TANKS_NO_COLISION_EMPTY = [
-    { variant: Variants.ENEMY, cords: {row: 1, col: 1 }, isPlaced: false},
-    { variant: Variants.ENEMY, cords: {row: 1, col: 8 }, isPlaced: true},
-    { variant: Variants.ENEMY, cords: {row: 18, col: 1 }, isPlaced: true},
-    { variant: Variants.ENEMY, cords: {row: 18, col: 7 }, isPlaced: true},
+    { variant: Variants.ENEMY, cords: {row: 1, col: 1 }},
+    { variant: Variants.ENEMY, cords: {row: 1, col: 8 }},
+    { variant: Variants.ENEMY, cords: {row: 18, col: 1 }},
+    { variant: Variants.ENEMY, cords: {row: 18, col: 7 }},
 ]
 
 export const TANKS_COLISION_EMPTY = [
-    { variant: Variants.ENEMY, cords: {row: 1, col: 1 }, isPlaced: false},
-    { variant: Variants.ENEMY, cords: {row: 1, col: 3 }, isPlaced: true},
-    { variant: Variants.ENEMY, cords: {row: 18, col: 1 }, isPlaced: true},
-    { variant: Variants.ENEMY, cords: {row: 18, col: 7 }, isPlaced: true},
+    { variant: Variants.ENEMY, cords: {row: 1, col: 1 }},
+    { variant: Variants.ENEMY, cords: {row: 1, col: 2 }},
+    { variant: Variants.ENEMY, cords: {row: 18, col: 1 }},
+    { variant: Variants.ENEMY, cords: {row: 18, col: 7 }},
 ]
 
 export const TANKS_NO_COLISION_BULLET = [
-    { variant: Variants.ENEMY, cords: {row: 1, col: 1 }, isPlaced: false},
-    { variant: Variants.ENEMY, cords: {row: 1, col: 8 }, isPlaced: true},
-    { variant: Variants.ENEMY, cords: {row: 18, col: 1 }, isPlaced: true},
-    { variant: Variants.ENEMY, cords: {row: 18, col: 7 }, isPlaced: true},
+    { variant: Variants.ENEMY, cords: {row: 1, col: 1 }},
+    { variant: Variants.ENEMY, cords: {row: 1, col: 8 }},
+    { variant: Variants.ENEMY, cords: {row: 18, col: 1 }},
+    { variant: Variants.ENEMY, cords: {row: 18, col: 7 }},
 ]
 
 export const createBullet = () => {

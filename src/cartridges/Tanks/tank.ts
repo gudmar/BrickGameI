@@ -88,15 +88,15 @@ export class Tank{
     tryPlacing() {
         let isColision = false;
         const setColisionOr = (a: number, b:number) => {
-            if (a > 1 && b > 1) {
+            if (a > 0 && b > 0) {
                 isColision = true;
                 return 1;
             }
-            if ((a > 1 && b === 0) || (b > 0 && a === 0)) return 1;
+            if ((a > 0 && b === 0) || (b > 0 && a === 0)) return 1;
             return 0
         }
         if (this.isPlacedOnBoard) return;
-        const layerWithPlacedTanks = getLayerWithAllPlacedTanks();
+        const layerWithPlacedTanks = getLayerWithAllPlacedTanks(undefined, setColisionOr);
         getLayerWithTank(layerWithPlacedTanks, this.cords, this.currentTank, setColisionOr);
         if (!isColision) this.isPlacedOnBoard = true;
     }
@@ -186,12 +186,12 @@ export const getLayerWithTank = (layer: number[][], tankCords: PawnCords, tankMa
     return layer;
 };
 
-export const getLayerWithAllPlacedTanks = (notIncludeTankInstance?:Tank) => {
+export const getLayerWithAllPlacedTanks = (notIncludeTankInstance?:Tank, mergeFunction:(a:number, b:number)=>(1|0) = or) => {
     let initialLayer = getEmptyBoard();
     const tanks = Tank.instances || [];
     tanks.forEach(tank => {
         if (tank !== notIncludeTankInstance && tank.isPlacedOnBoard)
-            initialLayer = getLayerWithTank(initialLayer, tank.cords, tank.currentTank)
+            initialLayer = getLayerWithTank(initialLayer, tank.cords, tank.currentTank, mergeFunction)
     })
     return initialLayer;
 }
