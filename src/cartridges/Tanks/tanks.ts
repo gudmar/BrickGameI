@@ -1,10 +1,11 @@
 import { GameCreatorInterface } from "../../types/GameCreatorInterface";
+import { Variants } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { GameCreator } from "../GameCreator";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { GameIntroCloasure } from "../snake/GameIntroCloasure";
-import { Judge, gameEvents } from "./judge";
-import { getLayerWithAllTanks, Tank, variants } from "./tank";
+import { Judge } from "./judge";
+import { getLayerWithAllPlacedTanks, Tank } from "./tank";
 
 
 
@@ -26,9 +27,9 @@ const INITIAL_PLAYER_TANK_CORDS = {col: 8, row: 18};
 
 class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     MAX_ENEMY_TANKS_NUMBER = 3;
-    playerTank: Tank = new Tank(variants.PLAYER, INITIAL_PLAYER_TANK_CORDS);
+    playerTank: Tank = new Tank(Variants.PLAYER, INITIAL_PLAYER_TANK_CORDS);
     // enemyTanksList = getLayerWithAllTanks();
-    enymyTanksLayer = getLayerWithAllTanks(this.playerTank);
+    enymyTanksLayer = getLayerWithAllPlacedTanks(this.playerTank);
     playerBullets = [];
     enemyBullets = [];
 
@@ -39,6 +40,12 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     //     }
     //     return tankList;
     // }
+
+    setVisitorToNextStateOnTick(visitedObject:GameCreator, time: number) {
+
+    }
+
+    moveEachEnemyTank(){}
 
     passCode(visitedObject: GameCreator, code: string): void {
         

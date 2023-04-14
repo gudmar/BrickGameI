@@ -1,9 +1,8 @@
-import { AmdDependency } from "typescript";
 import { rotateArray } from "../../functions/rotateArray";
-import { directions } from "../../types/types";
+import { directions, Variants } from "../../types/types";
 import { getEmptyBoard } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
-import { and, or } from "../layers/toggle/toggleFunction";
+import { or } from "../layers/toggle/toggleFunction";
 
 const PLAYER_TANK = [
     [0, 1, 0],
@@ -17,21 +16,15 @@ const ENEMY_TANK = [
     [1, 0, 1],
 ]
 
-interface Delta {
-    deltaCol:number, deltaRow: number
-}
-
-export enum variants {PLAYER, ENEMY}
-
 export class Tank{
-    variant = variants.ENEMY;
+    variant = Variants.ENEMY;
     currentTank = this.getInitialTank();
     cords:PawnCords;
     isDestroyed = false;
     isPlacedOnBoard = false; 
     static instances: Tank[];
 
-    constructor(variant: variants, cords: PawnCords){
+    constructor(variant: Variants, cords: PawnCords){
         this.currentTank = this.getInitialTank();
         this.variant = variant;
         this.cords = cords;
@@ -43,7 +36,7 @@ export class Tank{
     }
 
     getInitialTank(){
-        if (this.variant === variants.ENEMY) {
+        if (this.variant === Variants.ENEMY) {
             return ENEMY_TANK;
         }
         return PLAYER_TANK;
@@ -93,7 +86,19 @@ export class Tank{
     }
 
     tryPlacing() {
-        
+        let isColision = false;
+        const setColisionOr = (a: number, b:number) => {
+            if (a > 1 && b > 1) {
+                isColision = true;
+                return 1;
+            }
+            if ((a > 1 && b === 0) || (b > 0 && a === 0)) return 1;
+            return 0
+        }
+        if (this.isPlacedOnBoard) return;
+        const layerWithPlacedTanks = getLayerWithAllPlacedTanks();
+        getLayerWithTank(layerWithPlacedTanks, this.cords, this.currentTank, setColisionOr);
+        if (!isColision) this.isPlacedOnBoard = true;
     }
 
     destroy(){
@@ -181,11 +186,11 @@ export const getLayerWithTank = (layer: number[][], tankCords: PawnCords, tankMa
     return layer;
 };
 
-export const getLayerWithAllTanks = (notIncludeTankInstance?:Tank) => {
+export const getLayerWithAllPlacedTanks = (notIncludeTankInstance?:Tank) => {
     let initialLayer = getEmptyBoard();
     const tanks = Tank.instances || [];
     tanks.forEach(tank => {
-        if (tank !== notIncludeTankInstance)
+        if (tank !== notIncludeTankInstance && tank.isPlacedOnBoard)
             initialLayer = getLayerWithTank(initialLayer, tank.cords, tank.currentTank)
     })
     return initialLayer;

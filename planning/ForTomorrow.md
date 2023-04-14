@@ -5,10 +5,16 @@
 
 * Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
 
-* Snake
-  - Problem with no bump mode: tail recalculation is not proper. Next col is added in some rows, 
-  - and crash when attempt to access not existing row (-1 or too high).
-  TDD getNewLastTailBitCords to solve this
+* Tank:
+  - Implementing manual move
+    - Implementing placing tank on a board (first PLAYER)
+      - Implementing colision detection while plaing (no obstacles, as their position is known, just tanks and bullets)
+        - Implementing Bullet class (just bits) for tests of tryPlace tank
+  -> Try place should place without calculation when PLAYER tank is placed, as this is always after board reset
+  -> Should not place tanks on ANY bullets, either player or enemy
+  -> Should not place tanks on ANY other tank
+  -> No need to check if placing a tank on background, as background position is well known,
+  -> Tank placing will be in one of a few places (6 places). Every time start from a random place, and place in first possible position. If some posision not available, check another... If all positions not possible. wait untill next clock tick
 
 * Maze:
   - When game won, and enter pressed on pawn on, old pawn does not diappear

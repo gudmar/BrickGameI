@@ -21,6 +21,8 @@ export interface ScheaduleProps {
     scheaduler?: any,
 }
 
+export enum Variants {PLAYER, ENEMY}
+
 export type DigitDisplayType = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '0' | '' | '-';
 export const digitDisplaySymbols = [...'1234567890-'.split(''), ''];
 

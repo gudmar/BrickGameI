@@ -1,4 +1,5 @@
-import { Tank, variants } from "./tank";
+import { Variants } from "../../types/types";
+import { Tank } from "./tank";
 
 export class TankCommander {
     static nrOfInstances: number;
@@ -18,7 +19,7 @@ export class TankCommander {
         }
         TankCommander.nrOfInstances++;
         this.instanceNumber = TankCommander.nrOfInstances;
-        this.tankInstance = new Tank(variants.ENEMY, this.getInitialTankCords());
+        this.tankInstance = new Tank(Variants.ENEMY, this.getInitialTankCords());
         return this;
     }
 
