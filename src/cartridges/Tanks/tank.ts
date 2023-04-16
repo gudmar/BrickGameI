@@ -1,6 +1,6 @@
 import { copyBackground } from "../../functions/copyBackground";
 import { rotateArray } from "../../functions/rotateArray";
-import { directions, Variants } from "../../types/types";
+import { BrickMap, directions, Variants } from "../../types/types";
 import { getEmptyBoard } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { or } from "../layers/toggle/toggleFunction";
@@ -35,6 +35,12 @@ export class Tank{
         }
         Tank.instances.push(this);
         this.tryPlacing();
+    }
+
+    delete() {
+        const myIndex = Tank.instances.findIndex((tank:Tank) => tank === this)
+        if (myIndex < 0) throw new Error('Tank instance not found!!! Will not be deleted');
+        Tank.instances.splice(myIndex, 1);
     }
 
     getInitialTank(){
@@ -135,6 +141,16 @@ const getPlannedCords = (iteratedTank: Tank, checkedTank: Tank, delta: PawnCords
         return {row: row + delta.row, col: col + delta.col}
     }
     return iteratedTank.cords;
+}
+
+export const mergeAllPlacedTanks = (layer: BrickMap) => {
+    let layerCp: BrickMap = getMergedLayers( getEmptyBoard(), layer);
+    Tank.instances.forEach((tankInstance: Tank) => {
+        if (tankInstance.isPlacedOnBoard) {
+            layerCp = getLayerWithTank(layerCp, tankInstance.cords, tankInstance.currentTank);
+        }
+    })
+    return layerCp;
 }
 
 export const checkIsColision = (tank: Tank, visitedObject: GameCreator, delta: PawnCords) => {

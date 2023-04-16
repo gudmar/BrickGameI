@@ -5,7 +5,8 @@ import { GameCreator } from "../GameCreator";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { GameIntroCloasure } from "../snake/GameIntroCloasure";
 import { Judge } from "./judge";
-import { getLayerWithAllPlacedTanks, Tank } from "./tank";
+import { getLayerWithAllPlacedTanks, mergeAllPlacedTanks, Tank } from "./tank";
+import { TankCommander } from "./tankCommander";
 
 
 
@@ -32,6 +33,8 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     enymyTanksLayer = getLayerWithAllPlacedTanks(this.playerTank);
     playerBullets = [];
     enemyBullets = [];
+    PLAYER_TANK_PLACE_CORDS = {col: 8, row: 18}
+    enemyTankCommanders = TankCommander.createCommanders(3);
 
     // getInitialListOfEnemyTanks(){
     //     const tankList = [];
@@ -42,7 +45,7 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     // }
 
     setVisitorToNextStateOnTick(visitedObject:GameCreator, time: number) {
-
+        visitedObject.pawnLayer = mergeAllPlacedTanks(visitedObject.background);
     }
 
     moveEachEnemyTank(){}

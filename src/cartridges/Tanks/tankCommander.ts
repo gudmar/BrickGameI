@@ -1,53 +1,109 @@
 import { Variants } from "../../types/types";
+import { GameCreator } from "../GameCreator";
 import { Tank } from "./tank";
+import { getRandom } from "../../functions/getRandom";
+
+function* TankPlaceCords() {
+    yield {col: 1, row: 1};
+    yield {col: 8, row: 1};
+    yield {col: 1, row: 18};
+    yield {col: 9, row: 8};
+    return {col: 1, row: 8};
+}
+
+const ROTATE_LEFT: 'ROTATE_LEFT';
+const ROTATE_RIGHT: 'ROTATE_RIGHT';
+const SHOT: 'SHOT';
+const FORWARD: 'FORWARD';
+
+interface TankCommands {
+    ROTATE_LEFT: number,
+    ROTATE_RIGHT: number,
+    SHOT: number,
+    FORWARD: number,
+}
+
+interface MoveProbabilities {
+    LOW: number,
+    MEDIUM: number,
+    HIGH: number,
+}
+
+const probabilities:MoveProbabilities = {
+    LOW: 1,
+    MEDIUM: 2,
+    HIGH: 4,
+}
+
+const TANK_COMMANDS: TankCommands = {
+    ROTATE_LEFT: probabilities.MEDIUM,
+    ROTATE_RIGHT: probabilities.MEDIUM,
+    SHOT: probabilities.HIGH,
+    FORWARD: probabilities.LOW,
+}
+
+const getRandomCommand = () => {
+    const entries: [key: string, val: number][] = Object.entries(TANK_COMMANDS);
+    const possibilities:string[] = [];
+    entries.forEach(([key, val]) => {
+        for(let i = 0; i < val; i++) {
+            possibilities.push(key);
+        }
+    })
+    const randomIndex = getRandom(0, possibilities.length);
+    return possibilities[randomIndex];
+}
 
 export class TankCommander {
-    static nrOfInstances: number;
-    MAX_NR_INSTANCES = 3;
-    tankInstance?: Tank;
-    instanceNumber:number;
-    placed = false;
-
-    constructor() {
-        if (!TankCommander.nrOfInstances) {
-            TankCommander.nrOfInstances = 1;
-            this.instanceNumber = 1;
-            return this;
-        }
-        if (TankCommander.nrOfInstances > this.MAX_NR_INSTANCES) {
-            throw new Error(`Only ${this.MAX_NR_INSTANCES} instances may be created`)
-        }
-        TankCommander.nrOfInstances++;
-        this.instanceNumber = TankCommander.nrOfInstances;
-        this.tankInstance = new Tank(Variants.ENEMY, this.getInitialTankCords());
-        return this;
-    }
-
-    getInitialTankCords() {
-        switch(this.instanceNumber){
-            case 1: return {col: 1, row: 1};
-            case 2: return {col: 8, row: 1};
-            case 3: return {col: 1, row: 18};
-            default: return {col: 8, row: 18};
+    controlledTank = new Tank(Variants.ENEMY, {col: 1, row: 1})
+    static instances: TankCommander[] = [];
+    static createCommanders(maxNrOfControllers:number) {
+        if (TankCommander.instances.length === 0) {
+            for(let i = 0; i < maxNrOfControllers; i++) {
+                const tankCommander = new TankCommander();
+                TankCommander.instances.push(tankCommander);
+            }
+        } else {
+            console.error('Attempt to create TankControllers, when they are already created')
         }
     }
 
-    move() {
-        // Select one of:
-        // place
-        // go left
-        // go right
-        // go up
-        // go down
-        // Shoot (only one existing bulet)
-        // If move not possible try from start, max iter is 50
+    static deleteCommanders() {
+        TankCommander.instances.forEach(TankCommander => TankCommander.delete())
+        TankCommander.instances = [];
     }
 
-    tryPlace() {
-        // If no colision with other obatacles: set placed to true
+    delete() {
+        this.controlledTank.delete();
+    }
+    
+    tryPlacing(){
+        if (this.controlledTank.isPlacedOnBoard) return;
+        const possibleCords = TankPlaceCords();
+        for (let cord of possibleCords) {
+            this.controlledTank.cords = cord;
+            this.controlledTank.tryPlacing();
+            if (this.controlledTank.isPlacedOnBoard) return;
+        }
+    }
+    makeMove() {
+        if (!this.controlledTank.isPlacedOnBoard) {
+            this.tryPlacing();
+        } else {
+            const command = getRandomCommand();
+            switch(command) {
+                case ROTATE_LEFT: this.rotateLeft();break;
+                case ROTATE_RIGHT: this.rotateRight(); break;
+                case FORWARD: this.forward(); break;
+                default: this.shot(); //SHOT
+            }
+        }
+    };
+    rotateLeft() {
+
     }
 
-    destroy() {
-        // set placed to false
-    }
+    shot() {}
+    rotateRight(){}
+    forward(){}
 }
