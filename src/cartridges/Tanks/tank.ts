@@ -1,4 +1,5 @@
 import { copyBackground } from "../../functions/copyBackground";
+import { getRandom } from "../../functions/getRandom";
 import { rotateArray } from "../../functions/rotateArray";
 import { BrickMap, directions, Variants } from "../../types/types";
 import { getEmptyBoard } from "../constants";
@@ -35,6 +36,20 @@ export class Tank{
         }
         Tank.instances.push(this);
         this.tryPlacing();
+    }
+
+    setInitialTank() {
+        this.currentTank = this.getInitialTank();
+        this.setInitialOrientationIfEnemy();
+    }
+
+    setInitialOrientationIfEnemy() {
+        if (this.variant === Variants.ENEMY) {
+            const nrOfRotations = getRandom(0, 3);
+            for (let i = 0; i < nrOfRotations; i++) {
+                this.rotateLeft();
+            }
+        }
     }
 
     delete() {

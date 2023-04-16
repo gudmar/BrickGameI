@@ -1,9 +1,10 @@
 import { GameCreatorInterface } from "../../types/GameCreatorInterface";
 import { Variants } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
+import { getEmptyBoard } from "../constants";
 import { GameCreator } from "../GameCreator";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
-import { GameIntroCloasure } from "../snake/GameIntroCloasure";
+import { GameIntroCloasure } from "./IntroGameCloasure";
 import { Judge } from "./judge";
 import { getLayerWithAllPlacedTanks, mergeAllPlacedTanks, Tank } from "./tank";
 import { TankCommander } from "./tankCommander";
@@ -30,7 +31,7 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     MAX_ENEMY_TANKS_NUMBER = 3;
     playerTank: Tank = new Tank(Variants.PLAYER, INITIAL_PLAYER_TANK_CORDS);
     // enemyTanksList = getLayerWithAllTanks();
-    enymyTanksLayer = getLayerWithAllPlacedTanks(this.playerTank);
+    enemyTanksLayer = getLayerWithAllPlacedTanks(this.playerTank);
     playerBullets = [];
     enemyBullets = [];
     PLAYER_TANK_PLACE_CORDS = {col: 8, row: 18}
@@ -43,9 +44,38 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     //     }
     //     return tankList;
     // }
+    initiate(visitedObject: GameCreator) {
+        visitedObject.name = 'Tanks';
+        visitedObject.isCheater = false;
+        visitedObject.score = 0;
+        this.reInitiateGame(visitedObject);
+    }
+
+    reInitiateGame(visitedObject:GameCreator) {
+        visitedObject.background = getEmptyBoard();
+        this.setLevel(visitedObject);
+        this.placePlayerTank(visitedObject);
+        this.enemyTankCommanders!.forEach((commander) => {
+            commander.tryPlacing();
+        })
+    }
+
+    placePlayerTank(visitedObject: GameCreator) {
+        this.playerTank.cords = INITIAL_PLAYER_TANK_CORDS;
+        this.playerTank.setInitialTank();
+    }
+
+    clean(visitedObject: GameCreator) {
+        visitedObject.background = getEmptyBoard();
+        visitedObject.pawnLayer = getEmptyBoard();
+    }
 
     setVisitorToNextStateOnTick(visitedObject:GameCreator, time: number) {
         visitedObject.pawnLayer = mergeAllPlacedTanks(visitedObject.background);
+    }
+
+    setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number): void {
+        
     }
 
     moveEachEnemyTank(){}

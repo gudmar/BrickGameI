@@ -83,5 +83,16 @@ export const codesDescription = {
             code: BUMP,
             description: 'Decrement score on wall hit',
         }
+    ],
+    [cartridges.TANKS]: [
+        {
+            code: STOP_TIMER,
+            description: 'Stops timer, and other tanks cannot perform any action. Beware. In this game it works only a while. You become a cheater. Is it worth it?'
+        },
+        {
+            code: ADD_POINTS,
+            description: 'Get 5000',
+        },
+
     ]
 }

@@ -11,10 +11,10 @@ function* TankPlaceCords() {
     return {col: 1, row: 8};
 }
 
-const ROTATE_LEFT: 'ROTATE_LEFT';
-const ROTATE_RIGHT: 'ROTATE_RIGHT';
-const SHOT: 'SHOT';
-const FORWARD: 'FORWARD';
+const ROTATE_LEFT = 'ROTATE_LEFT';
+const ROTATE_RIGHT = 'ROTATE_RIGHT';
+const SHOT = 'SHOT';
+const FORWARD = 'FORWARD';
 
 interface TankCommands {
     ROTATE_LEFT: number,
@@ -63,9 +63,12 @@ export class TankCommander {
                 const tankCommander = new TankCommander();
                 TankCommander.instances.push(tankCommander);
             }
+            console.log(TankCommander.instances)
+            // return TankCommander.instances;
         } else {
-            console.error('Attempt to create TankControllers, when they are already created')
+            // console.error('Attempt to create TankControllers, when they are already created')
         }
+        return TankCommander.instances;
     }
 
     static deleteCommanders() {
