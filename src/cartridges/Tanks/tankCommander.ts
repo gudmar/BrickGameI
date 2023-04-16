@@ -66,7 +66,7 @@ export class TankCommander {
             console.log(TankCommander.instances)
             // return TankCommander.instances;
         } else {
-            // console.error('Attempt to create TankControllers, when they are already created')
+            console.error('Attempt to create TankControllers, when they are already created')
         }
         return TankCommander.instances;
     }

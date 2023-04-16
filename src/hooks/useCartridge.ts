@@ -50,7 +50,6 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
 
         const constructor = findCartridge(cartridgeToUseDescription)!.logicHandler
         const instance = (new (constructor)()) 
-
         setCartridgeInstance(instance)
     }, [cartridgeToUseDescription, setCartridgeInstance])
 

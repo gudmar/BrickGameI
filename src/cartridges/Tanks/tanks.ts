@@ -35,6 +35,7 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     playerBullets = [];
     enemyBullets = [];
     PLAYER_TANK_PLACE_CORDS = {col: 8, row: 18}
+
     enemyTankCommanders = TankCommander.createCommanders(3);
 
     // getInitialListOfEnemyTanks(){

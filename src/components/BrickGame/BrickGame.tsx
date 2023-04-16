@@ -42,8 +42,6 @@ function BrickGame() {
     }
     setNextCartridge()    
   }
-
-  useEffect(()=>{console.log(currentGame)}, [currentGame])
   
   useKeyboard({ key: keys.UP, callback: cartridgeUp })
   useKeyboard({ key: keys.DOWN, callback: cartridgeUp })

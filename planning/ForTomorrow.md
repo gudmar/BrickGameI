@@ -6,15 +6,8 @@
 * Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
 
 * Tank:
-  - Implementing manual move
-    - Implementing placing tank on a board (first PLAYER)
-      - Implementing colision detection while plaing (no obstacles, as their position is known, just tanks and bullets)
-        - Implementing Bullet class (just bits) for tests of tryPlace tank
-  -> Try place should place without calculation when PLAYER tank is placed, as this is always after board reset
-  -> Should not place tanks on ANY bullets, either player or enemy
-  -> Should not place tanks on ANY other tank
-  -> No need to check if placing a tank on background, as background position is well known,
-  -> Tank placing will be in one of a few places (6 places). Every time start from a random place, and place in first possible position. If some posision not available, check another... If all positions not possible. wait untill next clock tick
+  - Too many attempts to start TankCommanders,
+  sometimes maximum callstaack ecceeds, perhaps related?
 
 * Maze:
   - When game won, and enter pressed on pawn on, old pawn does not diappear

@@ -28,8 +28,8 @@ export class Tank{
     static instances: Tank[];
 
     constructor(variant: Variants, cords: PawnCords){
-        this.currentTank = this.getInitialTank();
         this.variant = variant;
+        this.currentTank = this.getInitialTank();
         this.cords = cords;
         if (!Tank.instances) {
             Tank.instances = []

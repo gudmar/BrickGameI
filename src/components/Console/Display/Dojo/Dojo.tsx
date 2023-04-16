@@ -8,7 +8,6 @@ interface DojoParams {
 }
 
 function Dojo ({ brickMap }: DojoParams) {
-  // useEffect(()=>{console.log(brickMap)}, [])
     return (
       <>
         {brickMap.map((line, index) => (<BrickLine key={'line-'+index} lineMap={line} />))}
