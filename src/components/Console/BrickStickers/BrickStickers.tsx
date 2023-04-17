@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './styles.module.css';
 import { BrickStickersProps, StickersVariant, BrickMode, Row, WallProps} from '../brickInterfaces';
 import Wall from '../Wall/Wall';

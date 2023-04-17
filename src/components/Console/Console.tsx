@@ -14,7 +14,7 @@ function Console({
   setLevel,
   setIsGameSelectionAllowed,
 }: ConsoleArgs) {
-  
+  console.log('In console DDDDE')
     return (
         <div className={styles.table}>
           <div className={`${styles.housing} ${styles.grayTheme}`}>

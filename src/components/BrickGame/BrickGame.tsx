@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './styles.css';
 import Navigation from '../Navigation/Navigation';
 import Console from '../Console/Console';
 import { OneToTen } from '../../types/types'
 import { codesDescription } from '../../constants/gameCodes';
 import { keys, useKeyboard } from '../../hooks/useKeyboard';
-import { findLastIndex } from '../../functions/findLastIndex';
 import { CARTRIDGE_ORDER } from '../../constants/cartridgeLibrary';
 
 
@@ -19,7 +18,7 @@ function CodeDescriptions({currentGame}: {currentGame: string}) {
       <ul>
         {
           codesDescription[currentGame].map(({code, description}) => 
-            <li><b>{code}</b>: <i>{description}</i></li>)
+            <li key={`${currentGame}${code}${description}`}><b>{code}</b>: <i>{description}</i></li>)
         }
       </ul>
     </>

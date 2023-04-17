@@ -6,7 +6,7 @@ import { WidgetItemProps } from '../WidgetPropsInterface';
 function NavSelect({ label, onClick, items }: WidgetItemProps) {
   const isExpandable = !items ? false : items.length > 0;
   const [value, setValue] = useState<String>('')
-  useEffect(() => {if(items && items.length > 0) setValue(items[0])}, [items])
+  useEffect(() => {if(items && items.length > 0) setValue(items[0])}, [items, setValue])
     return (
         <div className={styles.container} onClick={onClick}>
           <>{isExpandable && <div className = {styles.icon}><ExpandIcon variant='white'/></div>}</>

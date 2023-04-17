@@ -34,7 +34,7 @@ export const getDigits = (nrOfDigits: number) => ({nrToDisplay}: {nrToDisplay: n
     return (
         <div className={styles.digitDisplay}>
             {
-                listOfDigits.map((digit: DigitDisplayType) => (<Digit digit={digit}/>))
+                listOfDigits.map((digit: DigitDisplayType, index: number) => (<Digit key={index} digit={digit}/>))
             }
         </div>
     )

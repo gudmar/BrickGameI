@@ -34,7 +34,8 @@ export const useKeyboard = ({key, modifier, callback}:useKeyboardProps) => {
     },
 
     // eslint-disable-next-line
-    [key, modifier, callback, id, locked])
+
+    [key, modifier, callback, id, locked, keyReader])
 
 
     return { lock, unlock, unsubscribe }

@@ -47,11 +47,13 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
         Object.values(cartridgeLibrary).find(
             ({ description }) => description === cartridgeDescription
         );
-
+console.log('DESCRIption changed')
         const constructor = findCartridge(cartridgeToUseDescription)!.logicHandler
         const instance = (new (constructor)()) 
         setCartridgeInstance(instance)
-    }, [cartridgeToUseDescription, setCartridgeInstance])
+    }, [cartridgeToUseDescription])
+
+    useEffect(()=> console.log('useCartridge installation', []))
 
     const resetConsole = () => {setCartridgeInstance(getInitialCartridgeInstance(initialCartridgeName))}
 
@@ -132,12 +134,12 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
     useEffect(() => {
         const nextState = cartridgeInstance.getNextStateOnTick(timeEveryTick);
         setGameState(nextState);
-    }, [timeEveryTick, cartridgeInstance])
+    }, [timeEveryTick, cartridgeInstance, setGameState])
 
     useEffect(() => {
         const nextState = cartridgeInstance.getNextStateOnSpeedTick(timeSpeed);
         setGameState(nextState);
-    }, [timeSpeed, cartridgeInstance])
+    }, [timeSpeed, cartridgeInstance, setGameState])
 
 
     return gameState;

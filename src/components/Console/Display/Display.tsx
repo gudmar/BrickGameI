@@ -28,11 +28,12 @@ function Display(
     isGameSelectionAllowed,
     isCheater,
    } = useCartridge(currentGameDescription);
-
    useEffect(() => {
       setIsGameSelectionAllowed(isGameSelectionAllowed || false);
    }, [setIsGameSelectionAllowed, isGameSelectionAllowed])
-  
+  //  useEffect(()=> console.log('Initiate display', []))
+  // useEffect(()=> console.log('BRICK map chaned', [brickMap]))
+  // useEffect(()=> console.log('LEVEL map chaned', [level]))
     return (
         <div className={styles.display}>
           <div className={styles.dojoSection}>

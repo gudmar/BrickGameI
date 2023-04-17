@@ -35,8 +35,17 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     playerBullets = [];
     enemyBullets = [];
     PLAYER_TANK_PLACE_CORDS = {col: 8, row: 18}
+    enemyTankCommanders:any[]|undefined;
 
-    enemyTankCommanders = TankCommander.createCommanders(3);
+    notNeededCounter = 0;
+    notNeededInvocation = this.iAmCalledTooManyTimes();
+
+    iAmCalledTooManyTimes() {
+        this.notNeededCounter++;
+        console.log('I am called ' + this.notNeededCounter + ' times')
+        return this.notNeededCounter;
+    }
+    // enemyTankCommanders = TankCommander.createCommanders(3);
 
     // getInitialListOfEnemyTanks(){
     //     const tankList = [];
@@ -46,6 +55,7 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     //     return tankList;
     // }
     initiate(visitedObject: GameCreator) {
+        this.enemyTankCommanders = TankCommander.createCommanders(3);
         visitedObject.name = 'Tanks';
         visitedObject.isCheater = false;
         visitedObject.score = 0;

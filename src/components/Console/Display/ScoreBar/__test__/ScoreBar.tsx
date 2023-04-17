@@ -1,6 +1,4 @@
-import React, { memo, useEffect } from 'react';
 import { NextFigure, NextFigurePreview, OneToTen } from '../../../../../types/types';
-import { Digit } from '../../../../Digit/Digit';
 import { getDigits } from '../../../../Digit/Digits';
 import { NextFigureDisplay } from '../../NextFigure/NextFigureDisplay';
 import styles from './styles.module.css';
@@ -27,7 +25,6 @@ function ScoreBar(
     // if (!isGameStarted) return true;
     return false;
   }
-  useEffect(() => {console.log(nextFigure)}, [ nextFigure]);
   
     return (
         <div className={styles.container}>
