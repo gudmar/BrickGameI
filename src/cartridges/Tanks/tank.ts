@@ -76,6 +76,7 @@ export class Tank{
     }
 
     move(visitedObject: GameCreator, direction: directions){
+        console.log('Player tank', direction)
         switch (direction) {
             case directions.UP:
                 this.tryMoveUp(visitedObject);
@@ -137,6 +138,8 @@ export class Tank{
         const plannedCords = {row: deltaRow + row, col: deltaCol + col }
         const isMovePossible = !checkIsColision(this, visitedObject, delta)
         if (isMovePossible) { this.cords = plannedCords; }
+        visitedObject.pawnLayer = getLayerWithAllPlacedTanks();
+        // getLayerWithAllPlacedObstacles({initialLayer: visitedObject.background})
     }
 
     // getLayerWithTank(tankObject) {
@@ -179,7 +182,10 @@ export const checkIsColision = (tank: Tank, visitedObject: GameCreator, delta: P
         if (tankInstance.isPlacedOnBoard) {
             const {col, row} = getPlannedCords(tankInstance, tank, delta);
             const isOutsieBoundreis = checkIfOutsideBoundries(bgCopy, {col, row});
-            if (isOutsieBoundreis) isColision = true;
+            if (isOutsieBoundreis) {
+                isColision = true;
+                return true;
+            }
             bgCopy = getLayerWithTank(bgCopy, {col, row}, tankInstance.currentTank, mergeWithCheck)    
         }
     })

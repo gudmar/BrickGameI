@@ -1,5 +1,5 @@
 import { GameCreatorInterface } from "../../types/GameCreatorInterface";
-import { Variants } from "../../types/types";
+import { directions, Variants } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { getEmptyBoard } from "../constants";
 import { GameCreator } from "../GameCreator";
@@ -53,6 +53,24 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
         visitedObject.score = 0;
         this.reInitiateGame(visitedObject);
         console.log('Tank initiation')
+    }
+
+    getMoveDirection(deltaRow:number, deltaCol: number) {
+        if (deltaRow > 0) return directions.DOWN;
+        if (deltaRow < 0) return directions.UP;
+        if (deltaCol > 0) return directions.RIGHT;
+        if (deltaCol < 0) return directions.LEFT;
+        return directions.STALE;
+    }
+
+    move(visitedObject:GameCreator, deltaRow: number, deltaCol: number) {
+        const direction = this.getMoveDirection(deltaRow, deltaCol);
+        console.log('Tanks, move', direction)
+        this.playerTank.move(visitedObject, direction);
+    }
+
+    rotate(visitedObject: GameCreator) {
+
     }
 
     reInitiateGame(visitedObject:GameCreator) {

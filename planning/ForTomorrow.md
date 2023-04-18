@@ -6,11 +6,15 @@
 * Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
 
 * Tank:
-  - Too many attempts to start TankCommanders,
-  sometimes maximum callstaack ecceeds, perhaps related?
-  - Creation of too many TankCommanders was due to the fact, that creator was called in class declaration part (before construcor). When moved to 'initiate'
-  problem is HIDDEN, not gone
-  So problem must be solved
+  - Move player tank with keyboard,
+  - Move oponent tanks with auto
+  - Shot player tank
+  - Make bullet destroy oponent tank
+  - Make oponent shot
+  - Make oponent bullet destroy player (not other oponent) tank
+  - Make points count
+  - Make level increase
+  - Make codes work
 
 * Maze:
   - When game won, and enter pressed on pawn on, old pawn does not diappear
@@ -28,18 +32,3 @@ TO ADD NEW GAME:
 9) Add codesDescription in gameCodes, 
 10) add to gameCodes in gameCodes
 
-
-
-
-Too many renders:
-1) Console component is not rerendered
-2) Display is rerendered many times,
-3) In Display component content returned by useCartridge changes
-4) Nr of Display rerenders is corelated with useEffects in useCartridge (tick, speedTick), but even after commenting it Tank initialize is called
-multiple times
-5) Display component is initialy rendered many times,
-useCartridge is rendered multiple times,
-Console component, parent of Display initialy rendered 1 time, 
-the same with BrickSticker component, that is child of Component, as Display
-6) All returns from useEffects seem functions
-7) Clock is removed all the time

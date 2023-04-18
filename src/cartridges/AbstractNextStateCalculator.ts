@@ -1,5 +1,6 @@
 import { KeyPress } from "../types/KeyPress";
 import { PawnCords } from "./GameCreator";
+import { gameEvents } from "./snake/Judge";
 
 export abstract class NextStateCalculator {
     initiate(visitedObject:any){

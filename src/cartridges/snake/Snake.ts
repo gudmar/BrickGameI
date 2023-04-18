@@ -234,6 +234,7 @@ set foodCords(val: PawnCords) {
                 case directions.UP: return {deltaRow: -1, deltaCol: 0};
                 case directions.RIGHT: return {deltaRow: 0, deltaCol: 1};
                 case directions.LEFT: return {deltaRow: 0, deltaCol: -1};
+                default: return {deltaRow:0, deltaCol:0}
             }
         }
         const {deltaCol, deltaRow} = getDeltaCords();

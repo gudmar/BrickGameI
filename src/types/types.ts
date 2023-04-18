@@ -11,7 +11,7 @@ export type NextFigurePreview = number[][]
 
 export type BrickMap = number[][];
 
-export enum directions {DOWN, LEFT, RIGHT, UP}
+export enum directions {DOWN, LEFT, RIGHT, UP, STALE}
 
 export interface ScheaduleProps {
     background: BrickMap,
