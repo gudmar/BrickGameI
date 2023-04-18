@@ -40,6 +40,8 @@ export class Clock {
     }
 
     getRemoveEventListener(uuid:string) {
-        return (() => {delete this.callbacks[uuid]}).bind(this)
+        return (() => {
+            delete this.callbacks[uuid]
+        }).bind(this)
     }
 }

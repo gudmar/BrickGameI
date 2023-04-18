@@ -41,3 +41,5 @@ multiple times
 useCartridge is rendered multiple times,
 Console component, parent of Display initialy rendered 1 time, 
 the same with BrickSticker component, that is child of Component, as Display
+6) All returns from useEffects seem functions
+7) Clock is removed all the time

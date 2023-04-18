@@ -31,7 +31,7 @@ function Display(
    useEffect(() => {
       setIsGameSelectionAllowed(isGameSelectionAllowed || false);
    }, [setIsGameSelectionAllowed, isGameSelectionAllowed])
-  //  useEffect(()=> console.log('Initiate display', []))
+   useEffect(()=> console.log('Initiate display', []),[])
   // useEffect(()=> console.log('BRICK map chaned', [brickMap]))
   // useEffect(()=> console.log('LEVEL map chaned', [level]))
     return (

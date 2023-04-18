@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTimer } from './useClock'
 import { GameState } from '../types/types';
 import { getNextFigureOfSymbols, getDojoOfSymbols } from '../cartridges/AbstractGameLogic';
@@ -7,16 +7,14 @@ import { gameCodes } from '../constants/gameCodes';
 import { useGameCodes } from './useGameCodes';
 import { KeyPress } from '../types/KeyPress';
 import { cartridgeLibrary } from '../constants/cartridgeLibrary';
+import { flush } from '../functions/flush';
 
 
 
-const findInitialCartridge = (cartridgeDescription: string) => 
-    Object.values(cartridgeLibrary).find(
-        ({ description }) => description === cartridgeDescription
-    );
 
 const getInitialCartridgeInstance = (cartridgeToUseDescription: string) => {
-    const constructor = findInitialCartridge(cartridgeToUseDescription)!.logicHandler
+    // const constructor = findInitialCartridge(cartridgeToUseDescription)!.logicHandler
+    const constructor = NullishGameCreator;
     return (new (constructor)()) 
 }
 
@@ -31,31 +29,50 @@ const initialGameState: GameState = {
     isGameOver: false,
 }
 
+// const findInitialCartridge = (cartridgeDescription: string) => 
+//     Object.values(cartridgeLibrary).find(
+//         ({ description }) => description === cartridgeDescription
+//     );
+
+class NullishGameCreator{
+    passCode(matchedCode:string){
+        flush(matchedCode);
+    }
+    getNextStateOnKeyPress(key: KeyPress){
+        flush(key);
+        return initialGameState;
+    }
+    getNextStateOnTick(timeEveryTick:number){
+        flush(timeEveryTick);
+        return initialGameState;
+    }
+    getNextStateOnSpeedTick(timeSpeed:number){
+        flush(timeSpeed);
+        return initialGameState;
+    }
+}
+
+const setCartridgeInstanceAccordingToDescription = (cartridgeDescription: string, cartridgeSetter: (val: any) => void) => {
+    const findCartridge = (cartridgeDescription: string) => 
+    Object.values(cartridgeLibrary).find(
+        ({ description }) => description === cartridgeDescription
+    );
+    const constructor = findCartridge(cartridgeDescription)!.logicHandler
+    const instance = (new (constructor)()) 
+    cartridgeSetter(instance)
+}
+
+
 export const useCartridge = (cartridgeToUseDescription: string) => {
-    // const cartridgeInstance = useMemo( 
-    //         () => { 
-    //             const constructor = findCartridge(cartridgeToUseDescription)!.logicHandler
-    //             console.log('Construction ' + cartridgeToUseDescription)
-    //             return (new (constructor)()) 
-    //         }, [cartridgeToUseDescription]
-    //     );
     const [initialCartridgeName] = useState(cartridgeToUseDescription);
     const [cartridgeInstance, setCartridgeInstance] = useState(getInitialCartridgeInstance(cartridgeToUseDescription));
 
     useEffect(() => {
-        const findCartridge = (cartridgeDescription: string) => 
-        Object.values(cartridgeLibrary).find(
-            ({ description }) => description === cartridgeDescription
-        );
-console.log('DESCRIption changed')
-        const constructor = findCartridge(cartridgeToUseDescription)!.logicHandler
-        const instance = (new (constructor)()) 
-        setCartridgeInstance(instance)
+        setCartridgeInstanceAccordingToDescription(cartridgeToUseDescription, setCartridgeInstance)
     }, [cartridgeToUseDescription])
 
-    useEffect(()=> console.log('useCartridge installation', []))
 
-    const resetConsole = () => {setCartridgeInstance(getInitialCartridgeInstance(initialCartridgeName))}
+    const resetConsole = () => setCartridgeInstanceAccordingToDescription(initialCartridgeName, setCartridgeInstance)
 
 
     const [gameState, setGameState] = useState(initialGameState);
