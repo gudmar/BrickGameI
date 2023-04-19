@@ -3,7 +3,7 @@ import { rotateArray } from "../../functions/rotateArray";
 import { BrickMap, directions } from "../../types/types";
 import { GameCreator } from "../GameCreator";
 import { Tank } from "./tank";
-import { getLayerWithAllPlacedObstacles, getLayerWithAllPlacedTanks, getLayerWithTank } from "./tankUtils";
+import { didRotate, getLayerWithAllPlacedObstacles, getLayerWithAllPlacedTanks, getLayerWithTank } from "./tankUtils";
 
 export class TankRotator{
     tank:Tank;
@@ -58,16 +58,16 @@ export class TankRotator{
         }
     }
 
-    tryRotate(visitedObject:GameCreator, moveDirection: directions) {
-        if (this.tank.direction === moveDirection) return false;
+    tryRotate(visitedObject:GameCreator, moveDirection: directions):didRotate {
+        if (this.tank.direction === moveDirection) return didRotate.NOT_ROTATED;
         const rotatedTankCopy = this.getRotatedCopy(moveDirection);
         const isColision = this.canTankBeRotated(visitedObject, rotatedTankCopy as BrickMap);
-        if (isColision) return true;
+        if (isColision) return didRotate.COLISION;
         this.tank.direction = moveDirection;
         this.tank.currentTank = rotatedTankCopy as number[][];
         const pawnLayer = getLayerWithAllPlacedTanks();
         visitedObject.pawnLayer = pawnLayer;
-        return true;
+        return didRotate.ROTATED;
     }
 
     canTankBeRotated(visitedObject:GameCreator, rotatedTankCopy: BrickMap){

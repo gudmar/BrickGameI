@@ -6,6 +6,8 @@ import { or } from "../layers/toggle/toggleFunction";
 import { Bullet } from "./bullet";
 import { Tank } from "./tank";
 
+export enum didRotate {ROTATED, COLISION, NOT_ROTATED}
+
 const getPlannedCords = (iteratedTank: Tank, checkedTank: Tank, delta: PawnCords) => {
     if (iteratedTank === checkedTank) {
         const {row, col} = checkedTank.cords;

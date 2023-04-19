@@ -1,7 +1,7 @@
 import { directions, Variants } from "../../types/types";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { TankRotator } from "./tankRotator";
-import { checkIsColision, getLayerWithAllPlacedObstacles, getLayerWithAllPlacedTanks, getLayerWithTank } from "./tankUtils";
+import { checkIsColision, didRotate, getLayerWithAllPlacedObstacles, getLayerWithAllPlacedTanks, getLayerWithTank } from "./tankUtils";
 
 const PLAYER_TANK = [
     [0, 1, 0],
@@ -65,21 +65,35 @@ export class Tank{
     }
 
     move(visitedObject: GameCreator, direction: directions){
-        const didRotate = this.tankRotator.tryRotate(visitedObject, direction);
-        if (didRotate) return;
-        switch (direction) {
-            case directions.UP:
-                this.tryMoveUp(visitedObject);
-                break;
-            case directions.DOWN:
-                this.tryMoveDown(visitedObject);
-                break;
-            case directions.LEFT:
-                this.tryMoveLeft(visitedObject);
-                break;
-            case directions.RIGHT:
-                this.tryMoveRight(visitedObject);
-                break;
+        const rotationOutcome = this.tankRotator.tryRotate(visitedObject, direction);
+        if (rotationOutcome === didRotate.ROTATED) return;
+        if (rotationOutcome === didRotate.NOT_ROTATED) {
+            switch (direction) {
+                case directions.UP: this.tryMoveUp(visitedObject); break;
+                case directions.DOWN: this.tryMoveDown(visitedObject); break;
+                case directions.LEFT: this.tryMoveLeft(visitedObject); break;
+                case directions.RIGHT: this.tryMoveRight(visitedObject); break;
+            }    
+        }
+        if (rotationOutcome === didRotate.COLISION) {
+            switch (direction) {
+                case directions.UP:
+                    if (this.direction === directions.DOWN)
+                        this.tryMoveUp(visitedObject);
+                    break;
+                case directions.DOWN:
+                    if (this.direction === directions.UP)
+                        this.tryMoveDown(visitedObject);
+                    break;
+                case directions.LEFT:
+                    if (this.direction === directions.RIGHT)
+                        this.tryMoveLeft(visitedObject);
+                    break;
+                case directions.RIGHT:
+                    if (this.direction === directions.LEFT)
+                        this.tryMoveRight(visitedObject);
+                    break;
+            }    
         }
     }
     tryMoveUp(visitedObject:GameCreator){
