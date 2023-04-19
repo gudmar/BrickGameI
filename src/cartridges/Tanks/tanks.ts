@@ -48,7 +48,7 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     //     return tankList;
     // }
     initiate(visitedObject: GameCreator) {
-        this.enemyTankCommanders = TankCommander.createCommanders(3);
+        this.enemyTankCommanders = TankCommander.createCommanders(visitedObject, 3);
         visitedObject.name = 'Tanks';
         visitedObject.isCheater = false;
         visitedObject.score = 0;
@@ -98,7 +98,9 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number): void {
-        
+        this.enemyTankCommanders?.forEach((commander) => {
+            commander.makeMove();
+        })
     }
 
     moveEachEnemyTank(){}

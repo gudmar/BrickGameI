@@ -6,7 +6,7 @@
 * Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
 
 * Tank:
-  - Move player tank with keyboard,
+  + Move player tank with keyboard,
   - Move oponent tanks with auto
   - Shot player tank
   - Make bullet destroy oponent tank

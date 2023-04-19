@@ -1,4 +1,4 @@
-import { Variants } from "../../types/types";
+import { directions, Variants } from "../../types/types";
 import { GameCreator } from "../GameCreator";
 import { Tank } from "./tank";
 import { getRandom } from "../../functions/getRandom";
@@ -55,12 +55,13 @@ const getRandomCommand = () => {
 }
 
 export class TankCommander {
-    controlledTank = new Tank(Variants.ENEMY, {col: 1, row: 1})
+    controlledTank = new Tank(Variants.ENEMY, {col: 1, row: 1});
+    visitedObject: GameCreator;
     static instances: TankCommander[] = [];
-    static createCommanders(maxNrOfControllers:number) {
+    static createCommanders(visitedObject:GameCreator, maxNrOfControllers:number) {
         if (TankCommander.instances.length === 0) {
             for(let i = 0; i < maxNrOfControllers; i++) {
-                const tankCommander = new TankCommander();
+                const tankCommander = new TankCommander(visitedObject);
                 TankCommander.instances.push(tankCommander);
             }
             console.log(TankCommander.instances)
@@ -69,6 +70,10 @@ export class TankCommander {
             console.error('Attempt to create TankControllers, when they are already created')
         }
         return TankCommander.instances;
+    }
+
+    constructor(visitedObject: GameCreator) {
+        this.visitedObject = visitedObject;
     }
 
     static deleteCommanders() {
@@ -103,10 +108,34 @@ export class TankCommander {
         }
     };
     rotateLeft() {
-
+        const {direction} = this.controlledTank;
+        switch(direction) {
+            case directions.LEFT: this.controlledTank.move(this.visitedObject, directions.DOWN); break;
+            case directions.RIGHT: this.controlledTank.move(this.visitedObject, directions.UP); break;
+            case directions.UP: this.controlledTank.move(this.visitedObject, directions.LEFT); break;
+            case directions.DOWN: this.controlledTank.move(this.visitedObject, directions.RIGHT); break;
+        }
+    };
+    rotateRight() {
+        const {direction} = this.controlledTank;
+        switch(direction) {
+            case directions.LEFT: this.controlledTank.move(this.visitedObject, directions.UP); break;
+            case directions.RIGHT: this.controlledTank.move(this.visitedObject, directions.DOWN); break;
+            case directions.UP: this.controlledTank.move(this.visitedObject, directions.RIGHT); break;
+            case directions.DOWN: this.controlledTank.move(this.visitedObject, directions.LEFT); break;
+        }
     }
 
+
+
     shot() {}
-    rotateRight(){}
-    forward(){}
+    forward(){
+        const {direction} = this.controlledTank;
+        switch(direction){
+            case directions.DOWN: this.controlledTank.move(this.visitedObject, directions.DOWN);break;
+            case directions.UP: this.controlledTank.move(this.visitedObject, directions.UP);break;
+            case directions.LEFT: this.controlledTank.move(this.visitedObject, directions.LEFT);break;
+            case directions.RIGHT: this.controlledTank.move(this.visitedObject, directions.RIGHT);break;
+        }
+    }
 }
