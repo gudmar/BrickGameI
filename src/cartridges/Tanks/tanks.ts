@@ -6,8 +6,9 @@ import { GameCreator } from "../GameCreator";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { GameIntroCloasure } from "./IntroGameCloasure";
 import { Judge } from "./judge";
-import { getLayerWithAllPlacedTanks, mergeAllPlacedTanks, Tank } from "./tank";
+import { Tank } from "./tank";
 import { TankCommander } from "./tankCommander";
+import { getLayerWithAllPlacedTanks, mergeAllPlacedTanks } from "./tankUtils";
 
 
 
@@ -70,7 +71,7 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     rotate(visitedObject: GameCreator) {
-
+        // NOT needed
     }
 
     reInitiateGame(visitedObject:GameCreator) {
