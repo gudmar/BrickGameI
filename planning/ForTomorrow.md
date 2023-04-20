@@ -7,7 +7,7 @@
 
 * Tank:
   + Move player tank with keyboard,
-  - Move oponent tanks with auto
+  + Move oponent tanks with auto
   - Shot player tank
   - Make bullet destroy oponent tank
   - Make oponent shot

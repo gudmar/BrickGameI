@@ -30,9 +30,9 @@ const INITIAL_PLAYER_TANK_CORDS = {col: 8, row: 18};
 
 class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     MAX_ENEMY_TANKS_NUMBER = 3;
-    playerTank: Tank = new Tank(Variants.PLAYER, INITIAL_PLAYER_TANK_CORDS);
+    playerTank: Tank | undefined;// = new Tank(Variants.PLAYER, INITIAL_PLAYER_TANK_CORDS);
     // enemyTanksList = getLayerWithAllTanks();
-    enemyTanksLayer = getLayerWithAllPlacedTanks(this.playerTank);
+    enemyTanksLayer = getEmptyBoard(); // = getLayerWithAllPlacedTanks(this.playerTank);
     playerBullets = [];
     enemyBullets = [];
     PLAYER_TANK_PLACE_CORDS = {col: 8, row: 18}
@@ -48,12 +48,15 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     //     return tankList;
     // }
     initiate(visitedObject: GameCreator) {
+        this.clean(visitedObject);
+        this.playerTank = new Tank(Variants.PLAYER, INITIAL_PLAYER_TANK_CORDS);
+        this.enemyTanksLayer = getLayerWithAllPlacedTanks(this.playerTank);
         this.enemyTankCommanders = TankCommander.createCommanders(visitedObject, 3);
         visitedObject.name = 'Tanks';
         visitedObject.isCheater = false;
         visitedObject.score = 0;
         this.reInitiateGame(visitedObject);
-        console.log('Tank initiation')
+        console.log('Tank initiation', Tank.instances)
     }
 
     getMoveDirection(deltaRow:number, deltaCol: number) {
@@ -64,10 +67,16 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
         return directions.STALE;
     }
 
+    restartSpecificAttributes(visitedObject:any){
+        Tank.instances = [];
+        TankCommander.instances = [];
+        this.setLevel(visitedObject.level)
+    }
+
     move(visitedObject:GameCreator, deltaRow: number, deltaCol: number) {
         const direction = this.getMoveDirection(deltaRow, deltaCol);
         console.log('Tanks, move', direction)
-        this.playerTank.move(visitedObject, direction);
+        this.playerTank!.move(visitedObject, direction);
     }
 
     rotate(visitedObject: GameCreator) {
@@ -84,11 +93,13 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     placePlayerTank(visitedObject: GameCreator) {
-        this.playerTank.cords = INITIAL_PLAYER_TANK_CORDS;
-        this.playerTank.setInitialTank();
+        this.playerTank!.cords = INITIAL_PLAYER_TANK_CORDS;
+        this.playerTank!.setInitialTank();
     }
 
     clean(visitedObject: GameCreator) {
+        Tank.instances = [];
+        TankCommander.instances = [];
         visitedObject.background = getEmptyBoard();
         visitedObject.pawnLayer = getEmptyBoard();
     }
@@ -109,7 +120,7 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
         
     };
     setLevel(visitedObject: GameCreator): void {
-        
+        visitedObject.pawnLayer = getEmptyBoard();
     };
     pauseGame(visitedObject: GameCreator): void {
         
