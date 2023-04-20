@@ -106,6 +106,10 @@ export const getLayerWithAllPlacedObstacles = ({ notIncludeTankInstance, initial
     return layerCopy;
 }
 
+export const mergeEverythingToLayer = (visitedObject: GameCreator) => {
+
+}
+
 export const getLayerWithAllPlacedTanks = (notIncludeTankInstance?:Tank, mergeFunction:(a:number, b:number)=>(1|0) = or) => {
     let initialLayer = getEmptyBoard();
     const tanks = Tank.instances || [];

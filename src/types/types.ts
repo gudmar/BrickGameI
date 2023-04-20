@@ -1,4 +1,5 @@
 import { GameLogic } from "../cartridges/AbstractGameLogic";
+import { PawnCords } from "../cartridges/GameCreator";
 
 export type OneToTen = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
@@ -19,6 +20,13 @@ export interface ScheaduleProps {
     repetitions: number,
     tickDivider?: number,
     scheaduler?: any,
+}
+
+export interface Bulletable {
+    variant: Variants,
+    startCords: PawnCords,
+    direction: directions,
+    hitCallback: (...args:any) => any,
 }
 
 export enum Variants {PLAYER, ENEMY}
