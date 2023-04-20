@@ -1,0 +1,1 @@
+export const deleteClassInstance = (instance: any) => instance = null;

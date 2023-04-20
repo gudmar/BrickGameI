@@ -1,3 +1,5 @@
+import { checkIfInBoardBoundreis } from "../../functions/__tests__/checkIfInBoardBoundries";
+import { deleteClassInstance } from "../../functions/__tests__/deleteClassInstance";
 import { Bulletable, directions, Variants } from "../../types/types";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { mergeEverythingToLayer } from "./tankUtils";
@@ -10,6 +12,12 @@ export class Bullet {
     direction: directions;
     id: number;
     cords: PawnCords;
+    hitCallback = (arg: any) => {};
+
+    static removeInstance(instance:Bullet) {
+        const instancesToLeave = Bullet.instances.filter((i: Bullet) => i !== instance)
+        Bullet.instances = instancesToLeave
+    }
     
 
     constructor({
@@ -24,16 +32,37 @@ export class Bullet {
         this.variant = variant;
         this.id = Bullet.nrOfBulletsSoFar;
         this.cords = startCords;
+        this.hitCallback = hitCallback;
         Bullet.instances.push(this)
     }
     move(visitedObject: GameCreator){
-        switch(this.direction){
-            case directions.DOWN: this.cords.row += 1; break;
-            case directions.UP: this.cords.row -= 1; break;
-            case directions.RIGHT: this.cords.col += 1; break;
-            case directions.LEFT: this.cords.col -= 1; break;
-        }
+        this.handleColision(visitedObject);
+        this.cords = this.getNextCords();
         mergeEverythingToLayer(visitedObject);
     }
 
+    getNextCords(){
+        switch(this.direction){
+            case directions.DOWN: return { row: this.cords.row + 1, col: this.cords.col };
+            case directions.UP: return { row: this.cords.row - 1, col: this.cords.col };
+            case directions.RIGHT:  return { row: this.cords.row, col: this.cords.col + 1 };
+            case directions.LEFT: return { row: this.cords.row, col: this.cords.col - 1 };
+            default: return { row: this.cords.row, col: this.cords.col }
+        }
+    }
+
+    handleColision(visitedObject: GameCreator) {
+        this.handleOutsideBoundries();
+    }
+    handleOutsideBoundries(){
+        const nextCords = this.getNextCords();
+        const isInBoardBoundreis = checkIfInBoardBoundreis(nextCords)
+        if (!isInBoardBoundreis) this.destroyThisBullet();
+    }
+
+    destroyThisBullet() {
+        Bullet.removeInstance(this);
+        this.hitCallback(this)
+        deleteClassInstance(this);
+    }
 }

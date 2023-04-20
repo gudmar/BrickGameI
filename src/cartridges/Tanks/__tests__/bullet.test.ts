@@ -76,7 +76,19 @@ describe('Bullet tests', () => {
             expect(b1Row).toBe(14);
         })
         it('Should destroy bullet when it hits end of board', () => {
-
+            var shouldBeDestroyed = false;
+            const playerBullet = new Bullet({
+                variant: Variants.PLAYER,
+                startCords: {col: 0, row: 0},
+                direction: directions.RIGHT,
+                hitCallback: () => {shouldBeDestroyed = true}
+            })
+            runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 10)
+            // const {col: endCol, row: endRow} = playerBullet.cords;
+            console.log('CORDS ', playerBullet.cords)
+            expect(Bullet.instances.length).toBe(0);
+            expect(shouldBeDestroyed).toBeTruthy();
+            // expect(playerBullet).toBeUndefined();
         })  
         it('Should destroy board brick when hits it', () => {
 
