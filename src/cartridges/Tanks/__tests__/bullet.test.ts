@@ -39,7 +39,41 @@ describe('Bullet tests', () => {
             expect(endRow).toBe(16);
         });
         it('Should create multiple bullets and keep track of them', () => {
-
+            const bullet1 = new Bullet({
+                variant: Variants.PLAYER,
+                startCords: {col: 9, row: 19},
+                direction: directions.UP,
+                hitCallback: () => {}
+            })
+            bullet1.move(visitedObject);
+            const bullet2 = new Bullet({
+                variant: Variants.PLAYER,
+                startCords: {col: 9, row: 19},
+                direction: directions.UP,
+                hitCallback: () => {}
+            })
+            runFunctionTimes(() => {
+                bullet1.move(visitedObject);
+                bullet2.move(visitedObject);    
+            }, 2);
+            const bullet3 = new Bullet({
+                variant: Variants.PLAYER,
+                startCords: {col: 9, row: 19},
+                direction: directions.UP,
+                hitCallback: () => {}
+            })
+            runFunctionTimes(() => {
+                bullet1.move(visitedObject);
+                bullet2.move(visitedObject);
+                bullet3.move(visitedObject);
+            }, 2);
+            const {col: b1Col, row: b1Row} = Bullet.instances[0].cords;
+            const {col: b2Col, row: b2Row} = Bullet.instances[1].cords;
+            const {col: b3Col, row: b3Row} = Bullet.instances[2].cords;
+            expect(b1Col === b2Col && b1Col === b3Col).toBeTruthy();
+            expect(b3Row).toBe(17);
+            expect(b2Row).toBe(15);
+            expect(b1Row).toBe(14);
         })
         it('Should destroy bullet when it hits end of board', () => {
 
