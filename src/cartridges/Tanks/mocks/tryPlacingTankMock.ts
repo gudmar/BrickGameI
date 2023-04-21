@@ -47,7 +47,12 @@ export const TANKS_COLISION_WITH_BULLET = [
 ]
 
 export const createBullet = () => {
-    const bullet = new Bullet(Variants.ENEMY, {col: 1, row: 1}, directions.UP)
+    const bullet = new Bullet({
+        variant: Variants.ENEMY,
+        startCords: {col: 1, row: 1},
+        direction: directions.UP,
+        hitCallback: ()=>{},
+    })
 
 }
 

@@ -2,6 +2,7 @@ import { checkIfInBoardBoundreis } from "../../functions/__tests__/checkIfInBoar
 import { deleteClassInstance } from "../../functions/__tests__/deleteClassInstance";
 import { Bulletable, directions, Variants } from "../../types/types";
 import { GameCreator, PawnCords } from "../GameCreator";
+import { Tank } from "./tank";
 import { mergeEverythingToLayer } from "./tankUtils";
 
 export class Bullet {
@@ -21,7 +22,7 @@ export class Bullet {
     
 
     constructor({
-        variant, startCords, direction, hitCallback
+        variant, startCords, direction, hitCallback = () => {}
     }: Bulletable ) {
         if (!Bullet.nrOfBulletsSoFar) {
             Bullet.nrOfBulletsSoFar = 0;
@@ -53,11 +54,27 @@ export class Bullet {
 
     handleColision(visitedObject: GameCreator) {
         this.handleOutsideBoundries();
+        this.handleObstacleColision(visitedObject);
+        this.handleColisionWithTank();
     }
     handleOutsideBoundries(){
         const nextCords = this.getNextCords();
         const isInBoardBoundreis = checkIfInBoardBoundreis(nextCords)
         if (!isInBoardBoundreis) this.destroyThisBullet();
+    }
+    handleObstacleColision(visitedObject: GameCreator){
+        const {row, col} = this.cords;
+        const isObstacle = visitedObject.background[row][col];
+        
+        if (isObstacle) {
+            visitedObject.background[row][col] = 0;
+            this.destroyThisBullet();
+        }
+    }
+
+    handleColisionWithTank(){
+        const isTankHit = Tank.destroyTankIfHit(this.cords);
+        if (isTankHit) this.destroyThisBullet();
     }
 
     destroyThisBullet() {

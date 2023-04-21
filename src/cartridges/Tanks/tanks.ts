@@ -56,7 +56,7 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
         visitedObject.isCheater = false;
         visitedObject.score = 0;
         this.reInitiateGame(visitedObject);
-        console.log('Tank initiation', Tank.instances)
+        // console.log('Tank initiation', Tank.instances)
     }
 
     getMoveDirection(deltaRow:number, deltaCol: number) {

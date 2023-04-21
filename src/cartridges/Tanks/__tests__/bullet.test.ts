@@ -3,6 +3,7 @@ import { getEmptyBoard } from "../../constants";
 import { GameCreator } from "../../GameCreator";
 import { Bullet } from "../bullet";
 import { Tank } from "../tank";
+import { TankDecorator } from "../tanks";
 
 const runFunctionTimes = (func: () => any, times:number) => {
     const runner = (func: () => any, iteration:number) => {
@@ -17,11 +18,17 @@ const runFunctionTimes = (func: () => any, times:number) => {
 describe('Bullet tests', () => {
     let board = getEmptyBoard();
     const visitedObject: GameCreator = {} as GameCreator;
-    afterEach(() => {
-        board = getEmptyBoard();
-        Tank.instances = [];
+    beforeEach(() => {
+        visitedObject.background = board;
         Bullet.instances = [];
+        Tank.instances = [];
+        board = getEmptyBoard();
     })
+    // afterEach(() => {
+    //     board = getEmptyBoard();
+    //     Tank.instances = [];
+    //     Bullet.instances = [];
+    // })
     describe('Player bullet', () => {
         it('Should create player bullet that moves in its direction', () => {
             const playerBullet = new Bullet({
@@ -30,6 +37,7 @@ describe('Bullet tests', () => {
                 direction: directions.UP,
                 hitCallback: () => {}
             })
+            console.log(visitedObject)
             const {col: startCol, row: startRow} = playerBullet.cords;
             runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 3)
             const {col: endCol, row: endRow} = playerBullet.cords;
@@ -84,17 +92,42 @@ describe('Bullet tests', () => {
                 hitCallback: () => {shouldBeDestroyed = true}
             })
             runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 10)
-            // const {col: endCol, row: endRow} = playerBullet.cords;
-            console.log('CORDS ', playerBullet.cords)
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyed).toBeTruthy();
             // expect(playerBullet).toBeUndefined();
         })  
         it('Should destroy board brick when hits it', () => {
-
+            var shouldBeDestroyed = false;
+            visitedObject.background[5] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+            const playerBullet = new Bullet({
+                variant: Variants.PLAYER,
+                startCords: {col: 0, row: 0},
+                direction: directions.DOWN,
+                hitCallback: () => {shouldBeDestroyed = true}
+            })
+            runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 6)
+            expect(Bullet.instances.length).toBe(0);
+            expect(shouldBeDestroyed).toBeTruthy();
+            expect(visitedObject.background[5][0]).toBe(0)
         })  
         it('Should destroy (unplace) enemy tank', () => {
-
+            var shouldBeDestroyed = false;
+            const tanks = new TankDecorator() as GameCreator;
+            tanks.startGame();
+            const playerBullet = new Bullet({
+                variant: Variants.PLAYER,
+                startCords: {col: 9, row: 5},
+                direction: directions.UP,
+                hitCallback: () => {shouldBeDestroyed = true}
+            })
+            expect(Tank.instances.length).toBe(4);
+            const notPlacedTanksBefore = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
+            runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 5)
+            const notPlacedTanksAfter = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
+            expect(Bullet.instances.length).toBe(0);
+            expect(shouldBeDestroyed).toBeTruthy();
+            expect(notPlacedTanksBefore).toBe(0);
+            expect(notPlacedTanksAfter).toBe(1);
         })
         it('Should not destroy bullet of the same type when hits one', () => {
 

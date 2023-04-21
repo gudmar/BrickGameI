@@ -25,6 +25,11 @@ export class Tank{
     tankRotator: TankRotator;
     static instances: Tank[];
 
+    static destroyTankIfHit(cords:PawnCords) {
+        const isTankDestroyed = Tank.instances.find((instance) => instance.destroyIfHit(cords));
+        return !!isTankDestroyed;
+    }
+
     constructor(variant: Variants, cords: PawnCords){
         this.variant = variant;
         this.currentTank = this.getInitialTank();
@@ -129,6 +134,35 @@ export class Tank{
         });
         getLayerWithTank(layerWithPlacedTanks, this.cords, this.currentTank, setColisionOr);
         if (!isColision) this.isPlacedOnBoard = true;
+    }
+
+    destroyIfHit(cordsToCheck: PawnCords) {
+        const {row, col} = cordsToCheck;
+        const tankCords = this.getCordsTakenByTank();
+        const isThisTankHit = tankCords.find(({row: brickRow, col: brickCol}) => {
+            return row === brickRow && col === brickCol
+        })
+        if (isThisTankHit) {
+            this.destroy();
+            return true;
+        }
+        return false;
+    }
+
+    getCordsTakenByTank() {
+        const cords: PawnCords[] = [];
+        const tankCordsOffset = -1;
+        this.currentTank.forEach((row, rowIndex) => {
+            row.forEach((brick, colIndex) => {
+                const isThisTankBody = brick;
+                if (isThisTankBody) {
+                    const rowToAdd = this.cords.row + rowIndex + tankCordsOffset;
+                    const colToAdd = this.cords.col + colIndex + tankCordsOffset;
+                    cords.push({col: colToAdd, row: rowToAdd})    
+                }
+            })
+        })
+        return cords;
     }
 
     destroy(){

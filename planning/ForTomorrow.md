@@ -16,6 +16,8 @@
   - Make level increase
   - Make codes work
 
+  
+
 * Maze:
   - When game won, and enter pressed on pawn on, old pawn does not diappear
   
