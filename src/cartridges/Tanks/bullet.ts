@@ -73,7 +73,7 @@ export class Bullet {
     }
 
     handleColisionWithTank(){
-        const isTankHit = Tank.destroyTankIfHit(this.cords);
+        const isTankHit = Tank.destroyTankIfHit(this.cords, this.variant);
         if (isTankHit) this.destroyThisBullet();
     }
 

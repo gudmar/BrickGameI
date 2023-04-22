@@ -129,8 +129,7 @@ describe('Bullet tests', () => {
             expect(notPlacedTanksBefore).toBe(0);
             expect(notPlacedTanksAfter).toBe(1);
         })
-        it('Should not destroy bullet of the same type when hits one', () => {
-
+        it('Should not destroy tank but destroy bullet of the same type when hits one', () => {
         })
     })
     describe('Enemy bullet tests', () => {
@@ -141,7 +140,23 @@ describe('Bullet tests', () => {
 
         })
         it('Should destroy enemy bullet when it hits enemy tank, but leave tank not harmed', () => {
-
+            var shouldBeDestroyed = false;
+            const tanks = new TankDecorator() as GameCreator;
+            tanks.startGame();
+            const playerBullet = new Bullet({
+                variant: Variants.ENEMY,
+                startCords: {col: 9, row: 5},
+                direction: directions.UP,
+                hitCallback: () => {shouldBeDestroyed = true}
+            })
+            expect(Tank.instances.length).toBe(4);
+            const notPlacedTanksBefore = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
+            runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 5)
+            const notPlacedTanksAfter = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
+            expect(Bullet.instances.length).toBe(0);
+            expect(shouldBeDestroyed).toBeTruthy();
+            expect(notPlacedTanksBefore).toBe(0);
+            expect(notPlacedTanksAfter).toBe(0);
         })
         it('Should destroy enemy bullet when reaches wall, but leave wall untached', () => {
 

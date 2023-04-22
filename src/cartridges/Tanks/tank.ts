@@ -25,8 +25,10 @@ export class Tank{
     tankRotator: TankRotator;
     static instances: Tank[];
 
-    static destroyTankIfHit(cords:PawnCords) {
-        const isTankDestroyed = Tank.instances.find((instance) => instance.destroyIfHit(cords));
+    static destroyTankIfHit(cords:PawnCords, bulletVariant: Variants) {
+        const isTankDestroyed = Tank.instances.find((instance) =>
+            instance.destroyIfHit(cords, bulletVariant)
+        );
         return !!isTankDestroyed;
     }
 
@@ -136,14 +138,14 @@ export class Tank{
         if (!isColision) this.isPlacedOnBoard = true;
     }
 
-    destroyIfHit(cordsToCheck: PawnCords) {
+    destroyIfHit(cordsToCheck: PawnCords, bulletVariant: Variants) {
         const {row, col} = cordsToCheck;
         const tankCords = this.getCordsTakenByTank();
         const isThisTankHit = tankCords.find(({row: brickRow, col: brickCol}) => {
             return row === brickRow && col === brickCol
         })
         if (isThisTankHit) {
-            this.destroy();
+            if (this.variant !== bulletVariant) this.destroy();
             return true;
         }
         return false;
