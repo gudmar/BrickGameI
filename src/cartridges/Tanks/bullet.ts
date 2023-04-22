@@ -20,6 +20,24 @@ export class Bullet {
         Bullet.instances = instancesToLeave
     }
     
+    static destroyBulletIfHit(bulletInstance: Bullet) {
+        const wasBulletDestroyed = Bullet.instances.some((bullet) => bullet.destroyThisBulletIfHit(bulletInstance))
+        return wasBulletDestroyed
+    }
+
+    destroyThisBulletIfHit(bulletInstance: Bullet) {
+        const { cords, variant } = bulletInstance
+        if (bulletInstance === this) return false;
+        if (variant === this.variant) return false;
+        const {row: givenRow, col: givenCol} = cords;
+        const {row, col} = this.cords;
+        const isThisBulletHit = (row === givenRow && col === givenCol)
+        if (isThisBulletHit) {
+            this.destroyThisBullet();
+            return true;
+        }
+        return false;
+    }
 
     constructor({
         variant, startCords, direction, hitCallback = () => {}
@@ -56,6 +74,7 @@ export class Bullet {
         this.handleOutsideBoundries();
         this.handleObstacleColision(visitedObject);
         this.handleColisionWithTank();
+        this.handleColisionWithBullet();
     }
     handleOutsideBoundries(){
         const nextCords = this.getNextCords();
@@ -71,6 +90,10 @@ export class Bullet {
             this.destroyThisBullet();
         }
     }
+    handleColisionWithBullet() {
+        const isOpositeBulletHit = Bullet.destroyBulletIfHit(this);
+        if (isOpositeBulletHit) this.destroyThisBullet()
+    }   
 
     handleColisionWithTank(){
         const isTankHit = Tank.destroyTankIfHit(this.cords, this.variant);
@@ -80,6 +103,6 @@ export class Bullet {
     destroyThisBullet() {
         Bullet.removeInstance(this);
         this.hitCallback(this)
-        deleteClassInstance(this);
+        // deleteClassInstance(this);
     }
 }

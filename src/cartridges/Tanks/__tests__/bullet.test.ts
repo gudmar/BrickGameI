@@ -181,17 +181,108 @@ describe('Bullet tests', () => {
             expect(notPlacedTanksBefore).toBe(0);
             expect(notPlacedTanksAfter).toBe(0);
         })
-        it('Should destroy enemy bullet when reaches wall, but leave wall untached', () => {
-
+        it('Should destroy enemy bullet when reaches wall, should destroy walls brick', () => {
+            var shouldBeDestroyed = false;
+            visitedObject.background[5] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+            const playerBullet = new Bullet({
+                variant: Variants.ENEMY,
+                startCords: {col: 0, row: 0},
+                direction: directions.DOWN,
+                hitCallback: () => {shouldBeDestroyed = true}
+            })
+            runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 6)
+            expect(Bullet.instances.length).toBe(0);
+            expect(shouldBeDestroyed).toBeTruthy();
+            expect(visitedObject.background[5][0]).toBe(0)
         })
         it('Should destroy player tank and bullet when reaches player tank', () => {
-
+            var shouldBeDestroyed = false;
+            const tanks = new TankDecorator() as GameCreator;
+            tanks.startGame();
+            const enemyBullet = new Bullet({
+                variant: Variants.ENEMY,
+                startCords: {col: 9, row: 14},
+                direction: directions.DOWN,
+                hitCallback: () => {shouldBeDestroyed = true}
+            })
+            expect(Tank.instances.length).toBe(4);
+            const notPlacedTanksBefore = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
+            const notPlacedTanksAfter = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
+            runFunctionTimes(enemyBullet.move.bind(enemyBullet, visitedObject), 5)
+            const checkIfPlayerTankUplaced = () => {
+                const playerTank = Tank.instances.find(tank => tank.variant === Variants.PLAYER);
+                const isUnplaced = playerTank!.isPlacedOnBoard === false
+                return isUnplaced;
+            }
+            const isPlayerTankUnplaced = checkIfPlayerTankUplaced();
+            expect(Bullet.instances.length).toBe(0);
+            expect(shouldBeDestroyed).toBeTruthy();
+            expect(notPlacedTanksBefore).toBe(0);
+            expect(notPlacedTanksAfter).toBe(0);
+            expect(isPlayerTankUnplaced).toBeTruthy();
+        })
+        it('Should not destroy enemy tank if enemy bulet hits it', () => {
+            var shouldBeDestroyed = false;
+            const tanks = new TankDecorator() as GameCreator;
+            tanks.startGame();
+            const notPlacedTanksAfter = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
+            const enemyBullet = new Bullet({
+                variant: Variants.ENEMY,
+                startCords: {col: 9, row: 5},
+                direction: directions.UP,
+                hitCallback: () => {shouldBeDestroyed = true}
+            })
+            expect(Tank.instances.length).toBe(4);
+            const notPlacedTanksBefore = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
+            runFunctionTimes(enemyBullet.move.bind(enemyBullet, visitedObject), 5)
+            expect(Bullet.instances.length).toBe(0);
+            expect(shouldBeDestroyed).toBeTruthy();
+            expect(notPlacedTanksBefore).toBe(0);
+            expect(notPlacedTanksAfter).toBe(0);
         })
         it('Should not destroy any of bullets, when enemy bullets meet', () => {
-
+            var shouldBeDestroyedA = false;
+            var shouldBeDestroyedB = false;
+            const enemyBulletA = new Bullet({
+                variant: Variants.ENEMY,
+                startCords: {col: 9, row: 5},
+                direction: directions.DOWN,
+                hitCallback: () => {shouldBeDestroyedA = true}
+            })
+            const enemyBulletB = new Bullet({
+                variant: Variants.ENEMY,
+                startCords: {col: 9, row: 7},
+                direction: directions.UP,
+                hitCallback: () => {shouldBeDestroyedB = true}
+            })
+            const moveBothBullets = () => {enemyBulletA.move(visitedObject); enemyBulletB.move(visitedObject)}
+            runFunctionTimes(moveBothBullets, 3);
+            const { row: rowA } = enemyBulletA.cords;
+            const { row: rowB } = enemyBulletB.cords;
+            expect(Bullet.instances.length).toBe(2);
+            expect(rowA).toBe(8);
+            expect(rowB).toBe(4);
+            expect(shouldBeDestroyedA && shouldBeDestroyedB).toBeFalsy();
         })
         it('Should destroy both: oponent and player bullet when bullets meet (meet on the same field case: 0 0 1 0 1 0)', () => {
-
+            var shouldBeDestroyedA = false;
+            var shouldBeDestroyedB = false;
+            const enemyBullet = new Bullet({
+                variant: Variants.ENEMY,
+                startCords: {col: 9, row: 5},
+                direction: directions.DOWN,
+                hitCallback: () => {shouldBeDestroyedA = true}
+            })
+            const playerBullet = new Bullet({
+                variant: Variants.PLAYER,
+                startCords: {col: 9, row: 7},
+                direction: directions.UP,
+                hitCallback: () => {shouldBeDestroyedB = true}
+            })
+            const moveBothBullets = () => {playerBullet.move(visitedObject); enemyBullet.move(visitedObject)}
+            runFunctionTimes(moveBothBullets, 2);
+            expect(Bullet.instances.length).toBe(0);
+            expect(shouldBeDestroyedA && shouldBeDestroyedB).toBeTruthy();
         })
         it('Should destroy both: oponent and player bullet when bullets meet (not meet case: both bullets on neighbouring fields, and in next frame they would be on neighbours one after another 0 0 1 1 0 0)', () => {
 
