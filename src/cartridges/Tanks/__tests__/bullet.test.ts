@@ -18,18 +18,13 @@ const runFunctionTimes = (func: () => any, times:number) => {
 describe('Bullet tests', () => {
     let board = getEmptyBoard();
     const visitedObject: GameCreator = {} as GameCreator;
-    beforeEach(() => {
-        visitedObject.background = board;
-        Bullet.instances = [];
-        Tank.instances = [];
-        board = getEmptyBoard();
-    })
-    // afterEach(() => {
-    //     board = getEmptyBoard();
-    //     Tank.instances = [];
-    //     Bullet.instances = [];
-    // })
     describe('Player bullet', () => {
+        beforeEach(() => {
+            visitedObject.background = board;
+            Bullet.instances = [];
+            Tank.instances = [];
+            board = getEmptyBoard();
+        })
         it('Should create player bullet that moves in its direction', () => {
             const playerBullet = new Bullet({
                 variant: Variants.PLAYER,
@@ -132,12 +127,40 @@ describe('Bullet tests', () => {
         it('Should not destroy tank but destroy bullet of the same type when hits one', () => {
         })
     })
-    describe('Enemy bullet tests', () => {
-        it('Should create enemy bullet and move it in its direction', () => {
 
+    describe('Enemy bullet tests', () => {
+        beforeEach(() => {
+            visitedObject.background = board;
+            Bullet.instances = [];
+            Tank.instances = [];
+            console.log('SECOND DESCRIBE', Bullet.instances)
+            board = getEmptyBoard();
+        })
+        it('Should create enemy bullet and move it in its direction', () => {
+            const playerBullet = new Bullet({
+                variant: Variants.ENEMY,
+                startCords: {col: 9, row: 3},
+                direction: directions.DOWN,
+                hitCallback: () => {}
+            })
+            const {col: startCol, row: startRow} = playerBullet.cords;
+            runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 3)
+            const {col: endCol, row: endRow} = playerBullet.cords;
+            expect(startCol).toBe(9);
+            expect(startRow).toBe(3);
+            expect(endCol).toBe(9);
+            expect(endRow).toBe(6);
         })
         it('Should destroy enemy bullet when it hits end of board', () => {
-
+            const playerBullet = new Bullet({
+                variant: Variants.ENEMY,
+                startCords: {col: 9, row: 3},
+                direction: directions.UP,
+                hitCallback: () => {}
+            })
+            runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 4)
+            expect(Bullet.instances.length).toBe(0);
+            
         })
         it('Should destroy enemy bullet when it hits enemy tank, but leave tank not harmed', () => {
             var shouldBeDestroyed = false;
