@@ -1,5 +1,4 @@
 import { checkIfInBoardBoundreis } from "../../functions/__tests__/checkIfInBoardBoundries";
-import { deleteClassInstance } from "../../functions/__tests__/deleteClassInstance";
 import { Bulletable, directions, Variants } from "../../types/types";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { checkIfBulletHit } from "./checkIfBulletHit";
@@ -15,6 +14,7 @@ export class Bullet {
     direction: directions;
     id: number;
     cords: PawnCords;
+    sourceTank: Tank;
     hitCallback = (arg: any) => {};
 
     static removeInstance(instance:Bullet) {
@@ -38,24 +38,30 @@ export class Bullet {
     }
 
     constructor({
-        variant, startCords, direction, hitCallback = () => {}
+        startCords, sourceTank, hitCallback = () => {}
     }: Bulletable ) {
         if (!Bullet.nrOfBulletsSoFar) {
             Bullet.nrOfBulletsSoFar = 0;
         } else {
             Bullet.nrOfBulletsSoFar += 1;
         }
-        this.direction = direction;
-        this.variant = variant;
+        // this.direction = direction;
+        this.direction = sourceTank.direction;
+        const isAnyBulletOwnedByThisTank = Bullet.isAnyBulletOwnedByThisTank(sourceTank);
+        this.sourceTank = sourceTank;
+        this.variant = sourceTank.variant;
         this.id = Bullet.nrOfBulletsSoFar;
         this.cords = startCords;
         this.hitCallback = hitCallback;
-        Bullet.instances.push(this)
+        if (!(isAnyBulletOwnedByThisTank && sourceTank.variant === Variants.ENEMY)) Bullet.instances.push(this)
     }
     static moveAllBullets(visitedObject: GameCreator) {
         Bullet.instances.forEach((bullet) => {bullet.move(visitedObject)})
         Bullet.instances.forEach((bullet) => {bullet.handleColision(visitedObject)})
         mergeEverythingToLayer(visitedObject);
+    }
+    static isAnyBulletOwnedByThisTank(tank: Tank) {
+        return Bullet.instances.some(({sourceTank}) => sourceTank === tank)
     }
 
     move(visitedObject: GameCreator){

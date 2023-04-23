@@ -1,5 +1,6 @@
 import { GameLogic } from "../cartridges/AbstractGameLogic";
 import { PawnCords } from "../cartridges/GameCreator";
+import { Tank } from "../cartridges/Tanks/tank";
 
 export type OneToTen = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
@@ -23,9 +24,8 @@ export interface ScheaduleProps {
 }
 
 export interface Bulletable {
-    variant: Variants,
     startCords: PawnCords,
-    direction: directions,
+    sourceTank: Tank,
     hitCallback: (...args:any) => any,
 }
 

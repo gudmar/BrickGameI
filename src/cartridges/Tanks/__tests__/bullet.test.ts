@@ -17,6 +17,7 @@ const runFunctionTimes = (func: () => any, times:number) => {
 
 describe('Bullet tests', () => {
     let board = getEmptyBoard();
+    let sourceTank: any;
     const visitedObject: GameCreator = {} as GameCreator;
     describe('Player bullet', () => {
         beforeEach(() => {
@@ -24,15 +25,18 @@ describe('Bullet tests', () => {
             Bullet.instances = [];
             Tank.instances = [];
             board = getEmptyBoard();
+            sourceTank = {
+                direction: directions.UP,
+                variant: Variants.ENEMY,
+            }
         })
         it('Should create player bullet that moves in its direction', () => {
+            sourceTank.variant = Variants.PLAYER;
             const playerBullet = new Bullet({
-                variant: Variants.PLAYER,
                 startCords: {col: 9, row: 19},
-                direction: directions.UP,
+                sourceTank,
                 hitCallback: () => {}
             })
-            console.log(visitedObject)
             const {col: startCol, row: startRow} = playerBullet.cords;
             runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 3)
             const {col: endCol, row: endRow} = playerBullet.cords;
@@ -42,19 +46,19 @@ describe('Bullet tests', () => {
             expect(endRow).toBe(16);
         });
         it('Should create multiple bullets and keep track of them', () => {
+            sourceTank.variant = Variants.PLAYER;
             //eslint-disable-next-line
             const bullet1 = new Bullet({
-                variant: Variants.PLAYER,
                 startCords: {col: 9, row: 19},
-                direction: directions.UP,
+                sourceTank,
                 hitCallback: () => {}
             })
             Bullet.moveAllBullets(visitedObject);
+            sourceTank.variant = Variants.PLAYER;
             //eslint-disable-next-line
             const bullet2 = new Bullet({
-                variant: Variants.PLAYER,
                 startCords: {col: 9, row: 19},
-                direction: directions.UP,
+                sourceTank,
                 hitCallback: () => {}
             })
             runFunctionTimes(() => {
@@ -62,9 +66,8 @@ describe('Bullet tests', () => {
             }, 2);
             //eslint-disable-next-line
             const bullet3 = new Bullet({
-                variant: Variants.PLAYER,
                 startCords: {col: 9, row: 19},
-                direction: directions.UP,
+                sourceTank,
                 hitCallback: () => {}
             })
             runFunctionTimes(() => {
@@ -80,10 +83,11 @@ describe('Bullet tests', () => {
         })
         it('Should destroy bullet when it hits end of board', () => {
             var shouldBeDestroyed = false;
+            sourceTank.variant = Variants.PLAYER;
+            sourceTank.direction = directions.RIGHT;
             const playerBullet = new Bullet({
-                variant: Variants.PLAYER,
                 startCords: {col: 0, row: 0},
-                direction: directions.RIGHT,
+                sourceTank,
                 hitCallback: () => {shouldBeDestroyed = true}
             })
             runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 10)
@@ -92,12 +96,13 @@ describe('Bullet tests', () => {
         })  
         it('Should destroy board brick when hits it', () => {
             var shouldBeDestroyed = false;
+            sourceTank.variant = Variants.PLAYER;
+            sourceTank.direction = directions.DOWN;
             visitedObject.background[5] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
             //eslint-disable-next-line
             const playerBullet = new Bullet({
-                variant: Variants.PLAYER,
                 startCords: {col: 0, row: 0},
-                direction: directions.DOWN,
+                sourceTank,
                 hitCallback: () => {shouldBeDestroyed = true}
             })
             runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 6)
@@ -107,13 +112,13 @@ describe('Bullet tests', () => {
         })  
         it('Should destroy (unplace) enemy tank', () => {
             var shouldBeDestroyed = false;
+            sourceTank.variant = Variants.PLAYER;
             const tanks = new TankDecorator() as GameCreator;
             tanks.startGame();
             //eslint-disable-next-line
             const playerBullet = new Bullet({
-                variant: Variants.PLAYER,
                 startCords: {col: 9, row: 5},
-                direction: directions.UP,
+                sourceTank,
                 hitCallback: () => {shouldBeDestroyed = true}
             })
             expect(Tank.instances.length).toBe(4);
@@ -131,9 +136,8 @@ describe('Bullet tests', () => {
             tanks.startGame();
             //eslint-disable-next-line
             const playerBullet = new Bullet({
-                variant: Variants.ENEMY,
                 startCords: {col: 9, row: 5},
-                direction: directions.UP,
+                sourceTank,
                 hitCallback: () => {shouldBeDestroyed = true}
             })
             expect(Tank.instances.length).toBe(4);
@@ -154,12 +158,16 @@ describe('Bullet tests', () => {
             Tank.instances = [];
             console.log('SECOND DESCRIBE', Bullet.instances)
             board = getEmptyBoard();
+            sourceTank = {
+                direction: directions.UP,
+                variant: Variants.ENEMY,
+            }
         })
         it('Should create enemy bullet and move it in its direction', () => {
+            sourceTank.direction = directions.DOWN;
             const playerBullet = new Bullet({
-                variant: Variants.ENEMY,
                 startCords: {col: 9, row: 3},
-                direction: directions.DOWN,
+                sourceTank,
                 hitCallback: () => {}
             })
             const {col: startCol, row: startRow} = playerBullet.cords;
@@ -172,9 +180,8 @@ describe('Bullet tests', () => {
         })
         it('Should destroy enemy bullet when it hits end of board', () => {
             const playerBullet = new Bullet({
-                variant: Variants.ENEMY,
                 startCords: {col: 9, row: 3},
-                direction: directions.UP,
+                sourceTank,
                 hitCallback: () => {}
             })
             runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 4)
@@ -187,9 +194,8 @@ describe('Bullet tests', () => {
             tanks.startGame();
             //eslint-disable-next-line
             const playerBullet = new Bullet({
-                variant: Variants.ENEMY,
                 startCords: {col: 9, row: 5},
-                direction: directions.UP,
+                sourceTank,
                 hitCallback: () => {shouldBeDestroyed = true}
             })
             expect(Tank.instances.length).toBe(4);
@@ -204,11 +210,11 @@ describe('Bullet tests', () => {
         it('Should destroy enemy bullet when reaches wall, should destroy walls brick', () => {
             var shouldBeDestroyed = false;
             visitedObject.background[5] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+            sourceTank.direction = directions.DOWN;
             //eslint-disable-next-line
             const playerBullet = new Bullet({
-                variant: Variants.ENEMY,
                 startCords: {col: 0, row: 0},
-                direction: directions.DOWN,
+                sourceTank,
                 hitCallback: () => {shouldBeDestroyed = true}
             })
             runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 6)
@@ -220,11 +226,11 @@ describe('Bullet tests', () => {
             var shouldBeDestroyed = false;
             const tanks = new TankDecorator() as GameCreator;
             tanks.startGame();
+            sourceTank.direction = directions.DOWN;
             //eslint-disable-next-line
             const enemyBullet = new Bullet({
-                variant: Variants.ENEMY,
                 startCords: {col: 9, row: 14},
-                direction: directions.DOWN,
+                sourceTank,
                 hitCallback: () => {shouldBeDestroyed = true}
             })
             expect(Tank.instances.length).toBe(4);
@@ -250,9 +256,8 @@ describe('Bullet tests', () => {
             const notPlacedTanksAfter = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
             //eslint-disable-next-line
             const enemyBullet = new Bullet({
-                variant: Variants.ENEMY,
+                sourceTank,
                 startCords: {col: 9, row: 5},
-                direction: directions.UP,
                 hitCallback: () => {shouldBeDestroyed = true}
             })
             expect(Tank.instances.length).toBe(4);
@@ -266,16 +271,18 @@ describe('Bullet tests', () => {
         it('Should not destroy any of bullets, when enemy bullets meet', () => {
             var shouldBeDestroyedA = false;
             var shouldBeDestroyedB = false;
-            const enemyBulletA = new Bullet({
-                variant: Variants.ENEMY,
-                startCords: {col: 9, row: 5},
+            const sourceTankA: any = {
                 direction: directions.DOWN,
+                variant: Variants.ENEMY,
+            }
+            const enemyBulletA = new Bullet({
+                startCords: {col: 9, row: 5},
+                sourceTank: sourceTankA,
                 hitCallback: () => {shouldBeDestroyedA = true}
             })
             const enemyBulletB = new Bullet({
-                variant: Variants.ENEMY,
                 startCords: {col: 9, row: 7},
-                direction: directions.UP,
+                sourceTank,
                 hitCallback: () => {shouldBeDestroyedB = true}
             })
             runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 3)
@@ -289,18 +296,21 @@ describe('Bullet tests', () => {
         it('Should destroy both: oponent and player bullet when bullets meet (meet on the same field case: 0 0 1 0 1 0)', () => {
             var shouldBeDestroyedA = false;
             var shouldBeDestroyedB = false;
+            sourceTank.direction = directions.DOWN;
+            const sourceTankPlayer: any = {
+                direction: directions.UP,
+                variant: Variants.PLAYER,
+            }
             //eslint-disable-next-line
             const enemyBullet = new Bullet({
-                variant: Variants.ENEMY,
                 startCords: {col: 9, row: 5},
-                direction: directions.DOWN,
+                sourceTank,
                 hitCallback: () => {shouldBeDestroyedA = true}
             })
             //eslint-disable-next-line
             const playerBullet = new Bullet({
-                variant: Variants.PLAYER,
                 startCords: {col: 9, row: 7},
-                direction: directions.UP,
+                sourceTank: sourceTankPlayer,
                 hitCallback: () => {shouldBeDestroyedB = true}
             })
             runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 2)
@@ -311,18 +321,21 @@ describe('Bullet tests', () => {
         it('Should destroy both: oponent and player bullet when bullets meet (not meet case: both bullets on neighbouring fields, and in next frame they would be on neighbours one after another 0 0 1 1 0 0)', () => {
             var shouldBeDestroyedA = false;
             var shouldBeDestroyedB = false;
+            const sourceTankPlayer: any = {
+                variant: Variants.PLAYER,
+                direction: directions.UP,
+            }
+            sourceTank.direction = directions.DOWN;
             //eslint-disable-next-line
             const enemyBullet = new Bullet({
-                variant: Variants.ENEMY,
                 startCords: {col: 9, row: 5},
-                direction: directions.DOWN,
+                sourceTank,
                 hitCallback: () => {shouldBeDestroyedA = true}
             })
             //eslint-disable-next-line
             const playerBullet = new Bullet({
-                variant: Variants.PLAYER,
                 startCords: {col: 9, row: 8},
-                direction: directions.UP,
+                sourceTank: sourceTankPlayer,
                 hitCallback: () => {shouldBeDestroyedB = true}
             })
             runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 2)
@@ -332,18 +345,21 @@ describe('Bullet tests', () => {
         it('Should destroy both: oponent and player bullet when bullets met in 90 deg', () => {
             var shouldBeDestroyedA = false;
             var shouldBeDestroyedB = false;
+            sourceTank.direction = directions.DOWN;
+            const sourceTankPlayer: any = {
+                variant: Variants.PLAYER,
+                direction: directions.RIGHT,
+            }
             //eslint-disable-next-line
             const enemyBullet = new Bullet({
-                variant: Variants.ENEMY,
                 startCords: {col: 9, row: 5},
-                direction: directions.DOWN,
+                sourceTank,
                 hitCallback: () => {shouldBeDestroyedA = true}
             })
             //eslint-disable-next-line
             const playerBullet = new Bullet({
-                variant: Variants.PLAYER,
                 startCords: {col: 8, row: 6},
-                direction: directions.RIGHT,
+                sourceTank: sourceTankPlayer,
                 hitCallback: () => {shouldBeDestroyedB = true}
             })
             runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 2)
@@ -353,18 +369,21 @@ describe('Bullet tests', () => {
         it('Should not destroy any of bullets when bullets are on neighbouring bricks, but they are 90 deg', () => {
             var shouldBeDestroyedA = false;
             var shouldBeDestroyedB = false;
+            sourceTank.direction = directions.DOWN;
+            const sourceTankPlayer: any = {
+                direction: directions.RIGHT,
+                variant: Variants.PLAYER,
+            }
             //eslint-disable-next-line
             const enemyBullet = new Bullet({
-                variant: Variants.ENEMY,
                 startCords: {col: 7, row: 5},
-                direction: directions.DOWN,
+                sourceTank,
                 hitCallback: () => {shouldBeDestroyedA = true}
             })
             //eslint-disable-next-line
             const playerBullet = new Bullet({
-                variant: Variants.PLAYER,
                 startCords: {col: 5, row: 6},
-                direction: directions.RIGHT,
+                sourceTank: sourceTankPlayer,
                 hitCallback: () => {shouldBeDestroyedB = true}
             })
             runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 4)
@@ -372,7 +391,23 @@ describe('Bullet tests', () => {
             expect(shouldBeDestroyedA && shouldBeDestroyedB).toBeFalsy();
         })
         it('Should not be possible for 2 bullets from enemy tank to exist at the same time', ()=>{
+            const tanks = new TankDecorator() as GameCreator;
+            tanks.startGame();
+            const enemyTank: Tank = Tank.instances.find((instance) => instance.variant === Variants.ENEMY)!;
+            //eslint-disable-next-line
+            const enemyBullet1 = new Bullet({
+                sourceTank: enemyTank,
+                startCords: {col: 9, row: 5},
+                hitCallback: () => {}
+            })
+            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 1)
+            const enemyBullet2 = new Bullet({
+                sourceTank: enemyTank,
+                startCords: {col: 9, row: 5},
+                hitCallback: () => {}
+            })
 
+            expect(Bullet.instances.length).toBe(1);
         })
     })
 })
