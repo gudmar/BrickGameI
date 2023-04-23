@@ -42,13 +42,15 @@ describe('Bullet tests', () => {
             expect(endRow).toBe(16);
         });
         it('Should create multiple bullets and keep track of them', () => {
+            //eslint-disable-next-line
             const bullet1 = new Bullet({
                 variant: Variants.PLAYER,
                 startCords: {col: 9, row: 19},
                 direction: directions.UP,
                 hitCallback: () => {}
             })
-            bullet1.move(visitedObject);
+            Bullet.moveAllBullets(visitedObject);
+            //eslint-disable-next-line
             const bullet2 = new Bullet({
                 variant: Variants.PLAYER,
                 startCords: {col: 9, row: 19},
@@ -56,9 +58,9 @@ describe('Bullet tests', () => {
                 hitCallback: () => {}
             })
             runFunctionTimes(() => {
-                bullet1.move(visitedObject);
-                bullet2.move(visitedObject);    
+                Bullet.moveAllBullets(visitedObject);
             }, 2);
+            //eslint-disable-next-line
             const bullet3 = new Bullet({
                 variant: Variants.PLAYER,
                 startCords: {col: 9, row: 19},
@@ -66,9 +68,7 @@ describe('Bullet tests', () => {
                 hitCallback: () => {}
             })
             runFunctionTimes(() => {
-                bullet1.move(visitedObject);
-                bullet2.move(visitedObject);
-                bullet3.move(visitedObject);
+                Bullet.moveAllBullets(visitedObject);
             }, 2);
             const {col: b1Col, row: b1Row} = Bullet.instances[0].cords;
             const {col: b2Col, row: b2Row} = Bullet.instances[1].cords;
@@ -89,18 +89,18 @@ describe('Bullet tests', () => {
             runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 10)
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyed).toBeTruthy();
-            // expect(playerBullet).toBeUndefined();
         })  
         it('Should destroy board brick when hits it', () => {
             var shouldBeDestroyed = false;
             visitedObject.background[5] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+            //eslint-disable-next-line
             const playerBullet = new Bullet({
                 variant: Variants.PLAYER,
                 startCords: {col: 0, row: 0},
                 direction: directions.DOWN,
                 hitCallback: () => {shouldBeDestroyed = true}
             })
-            runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 6)
+            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 6)
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyed).toBeTruthy();
             expect(visitedObject.background[5][0]).toBe(0)
@@ -109,6 +109,7 @@ describe('Bullet tests', () => {
             var shouldBeDestroyed = false;
             const tanks = new TankDecorator() as GameCreator;
             tanks.startGame();
+            //eslint-disable-next-line
             const playerBullet = new Bullet({
                 variant: Variants.PLAYER,
                 startCords: {col: 9, row: 5},
@@ -117,7 +118,7 @@ describe('Bullet tests', () => {
             })
             expect(Tank.instances.length).toBe(4);
             const notPlacedTanksBefore = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
-            runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 5)
+            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 5)
             const notPlacedTanksAfter = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyed).toBeTruthy();
@@ -166,6 +167,7 @@ describe('Bullet tests', () => {
             var shouldBeDestroyed = false;
             const tanks = new TankDecorator() as GameCreator;
             tanks.startGame();
+            //eslint-disable-next-line
             const playerBullet = new Bullet({
                 variant: Variants.ENEMY,
                 startCords: {col: 9, row: 5},
@@ -174,7 +176,7 @@ describe('Bullet tests', () => {
             })
             expect(Tank.instances.length).toBe(4);
             const notPlacedTanksBefore = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
-            runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 5)
+            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 5)
             const notPlacedTanksAfter = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyed).toBeTruthy();
@@ -184,13 +186,14 @@ describe('Bullet tests', () => {
         it('Should destroy enemy bullet when reaches wall, should destroy walls brick', () => {
             var shouldBeDestroyed = false;
             visitedObject.background[5] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+            //eslint-disable-next-line
             const playerBullet = new Bullet({
                 variant: Variants.ENEMY,
                 startCords: {col: 0, row: 0},
                 direction: directions.DOWN,
                 hitCallback: () => {shouldBeDestroyed = true}
             })
-            runFunctionTimes(playerBullet.move.bind(playerBullet, visitedObject), 6)
+            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 6)
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyed).toBeTruthy();
             expect(visitedObject.background[5][0]).toBe(0)
@@ -199,6 +202,7 @@ describe('Bullet tests', () => {
             var shouldBeDestroyed = false;
             const tanks = new TankDecorator() as GameCreator;
             tanks.startGame();
+            //eslint-disable-next-line
             const enemyBullet = new Bullet({
                 variant: Variants.ENEMY,
                 startCords: {col: 9, row: 14},
@@ -208,7 +212,7 @@ describe('Bullet tests', () => {
             expect(Tank.instances.length).toBe(4);
             const notPlacedTanksBefore = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
             const notPlacedTanksAfter = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
-            runFunctionTimes(enemyBullet.move.bind(enemyBullet, visitedObject), 5)
+            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 5)
             const checkIfPlayerTankUplaced = () => {
                 const playerTank = Tank.instances.find(tank => tank.variant === Variants.PLAYER);
                 const isUnplaced = playerTank!.isPlacedOnBoard === false
@@ -226,6 +230,7 @@ describe('Bullet tests', () => {
             const tanks = new TankDecorator() as GameCreator;
             tanks.startGame();
             const notPlacedTanksAfter = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
+            //eslint-disable-next-line
             const enemyBullet = new Bullet({
                 variant: Variants.ENEMY,
                 startCords: {col: 9, row: 5},
@@ -234,7 +239,7 @@ describe('Bullet tests', () => {
             })
             expect(Tank.instances.length).toBe(4);
             const notPlacedTanksBefore = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
-            runFunctionTimes(enemyBullet.move.bind(enemyBullet, visitedObject), 5)
+            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 5)
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyed).toBeTruthy();
             expect(notPlacedTanksBefore).toBe(0);
@@ -255,8 +260,7 @@ describe('Bullet tests', () => {
                 direction: directions.UP,
                 hitCallback: () => {shouldBeDestroyedB = true}
             })
-            const moveBothBullets = () => {enemyBulletA.move(visitedObject); enemyBulletB.move(visitedObject)}
-            runFunctionTimes(moveBothBullets, 3);
+            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 3)
             const { row: rowA } = enemyBulletA.cords;
             const { row: rowB } = enemyBulletB.cords;
             expect(Bullet.instances.length).toBe(2);
@@ -267,31 +271,69 @@ describe('Bullet tests', () => {
         it('Should destroy both: oponent and player bullet when bullets meet (meet on the same field case: 0 0 1 0 1 0)', () => {
             var shouldBeDestroyedA = false;
             var shouldBeDestroyedB = false;
+            //eslint-disable-next-line
             const enemyBullet = new Bullet({
                 variant: Variants.ENEMY,
                 startCords: {col: 9, row: 5},
                 direction: directions.DOWN,
                 hitCallback: () => {shouldBeDestroyedA = true}
             })
+            //eslint-disable-next-line
             const playerBullet = new Bullet({
                 variant: Variants.PLAYER,
                 startCords: {col: 9, row: 7},
                 direction: directions.UP,
                 hitCallback: () => {shouldBeDestroyedB = true}
             })
-            const moveBothBullets = () => {playerBullet.move(visitedObject); enemyBullet.move(visitedObject)}
-            runFunctionTimes(moveBothBullets, 2);
+            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 2)
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyedA && shouldBeDestroyedB).toBeTruthy();
         })
+        
         it('Should destroy both: oponent and player bullet when bullets meet (not meet case: both bullets on neighbouring fields, and in next frame they would be on neighbours one after another 0 0 1 1 0 0)', () => {
 
         })
         it('Should destroy both: oponent and player bullet when bullets met in 90 deg', () => {
-
+            var shouldBeDestroyedA = false;
+            var shouldBeDestroyedB = false;
+            //eslint-disable-next-line
+            const enemyBullet = new Bullet({
+                variant: Variants.ENEMY,
+                startCords: {col: 9, row: 5},
+                direction: directions.DOWN,
+                hitCallback: () => {shouldBeDestroyedA = true}
+            })
+            //eslint-disable-next-line
+            const playerBullet = new Bullet({
+                variant: Variants.PLAYER,
+                startCords: {col: 8, row: 6},
+                direction: directions.RIGHT,
+                hitCallback: () => {shouldBeDestroyedB = true}
+            })
+            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 2)
+            expect(Bullet.instances.length).toBe(0);
+            expect(shouldBeDestroyedA && shouldBeDestroyedB).toBeTruthy();
         })
         it('Should not destroy any of bullets when bullets are on neighbouring bricks, but they are 90 deg', () => {
-
+            var shouldBeDestroyedA = false;
+            var shouldBeDestroyedB = false;
+            //eslint-disable-next-line
+            const enemyBullet = new Bullet({
+                variant: Variants.ENEMY,
+                startCords: {col: 7, row: 5},
+                direction: directions.DOWN,
+                hitCallback: () => {shouldBeDestroyedA = true}
+            })
+            //eslint-disable-next-line
+            const playerBullet = new Bullet({
+                variant: Variants.PLAYER,
+                startCords: {col: 5, row: 6},
+                direction: directions.RIGHT,
+                hitCallback: () => {shouldBeDestroyedB = true}
+            })
+            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 4)
+            expect(Bullet.instances.length).toBe(2);
+            expect(shouldBeDestroyedA && shouldBeDestroyedB).toBeFalsy();
         })
         it('Should not be possible for 2 bullets from enemy tank to exist at the same time', ()=>{
 

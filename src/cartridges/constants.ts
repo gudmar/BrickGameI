@@ -199,4 +199,3 @@ export const TYPE_MISMATCH = 'Type mismatch'
 // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 
-

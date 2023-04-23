@@ -9,6 +9,7 @@ export class Bullet {
     static nrOfBulletsSoFar:number;
     static instances:Bullet[] = [];
     static buletsSoFar:number;
+    isMovedThisTurn = false;
     variant: Variants;
     direction: directions;
     id: number;
@@ -54,9 +55,15 @@ export class Bullet {
         this.hitCallback = hitCallback;
         Bullet.instances.push(this)
     }
+    static moveAllBullets(visitedObject: GameCreator) {
+        Bullet.instances.forEach((bullet) => {bullet.move(visitedObject)})
+        Bullet.instances.forEach((bullet) => {bullet.handleColision(visitedObject)})
+    }
+
     move(visitedObject: GameCreator){
-        this.handleColision(visitedObject);
+        this.handleOutsideBoundries();
         this.cords = this.getNextCords();
+        // this.handleColision(visitedObject);
         mergeEverythingToLayer(visitedObject);
     }
 
@@ -71,7 +78,7 @@ export class Bullet {
     }
 
     handleColision(visitedObject: GameCreator) {
-        this.handleOutsideBoundries();
+        // this.handleOutsideBoundries();
         this.handleObstacleColision(visitedObject);
         this.handleColisionWithTank();
         this.handleColisionWithBullet();
