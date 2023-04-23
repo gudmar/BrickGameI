@@ -2,6 +2,7 @@ import { checkIfInBoardBoundreis } from "../../functions/__tests__/checkIfInBoar
 import { deleteClassInstance } from "../../functions/__tests__/deleteClassInstance";
 import { Bulletable, directions, Variants } from "../../types/types";
 import { GameCreator, PawnCords } from "../GameCreator";
+import { checkIfBulletHit } from "./checkIfBulletHit";
 import { Tank } from "./tank";
 import { mergeEverythingToLayer } from "./tankUtils";
 
@@ -27,12 +28,8 @@ export class Bullet {
     }
 
     destroyThisBulletIfHit(bulletInstance: Bullet) {
-        const { cords, variant } = bulletInstance
         if (bulletInstance === this) return false;
-        if (variant === this.variant) return false;
-        const {row: givenRow, col: givenCol} = cords;
-        const {row, col} = this.cords;
-        const isThisBulletHit = (row === givenRow && col === givenCol)
+        const isThisBulletHit = checkIfBulletHit(this, bulletInstance)
         if (isThisBulletHit) {
             this.destroyThisBullet();
             return true;
@@ -58,13 +55,14 @@ export class Bullet {
     static moveAllBullets(visitedObject: GameCreator) {
         Bullet.instances.forEach((bullet) => {bullet.move(visitedObject)})
         Bullet.instances.forEach((bullet) => {bullet.handleColision(visitedObject)})
+        mergeEverythingToLayer(visitedObject);
     }
 
     move(visitedObject: GameCreator){
         this.handleOutsideBoundries();
         this.cords = this.getNextCords();
         // this.handleColision(visitedObject);
-        mergeEverythingToLayer(visitedObject);
+        // mergeEverythingToLayer(visitedObject);
     }
 
     getNextCords(){

@@ -126,6 +126,24 @@ describe('Bullet tests', () => {
             expect(notPlacedTanksAfter).toBe(1);
         })
         it('Should not destroy tank but destroy bullet of the same type when hits one', () => {
+            var shouldBeDestroyed = false;
+            const tanks = new TankDecorator() as GameCreator;
+            tanks.startGame();
+            //eslint-disable-next-line
+            const playerBullet = new Bullet({
+                variant: Variants.ENEMY,
+                startCords: {col: 9, row: 5},
+                direction: directions.UP,
+                hitCallback: () => {shouldBeDestroyed = true}
+            })
+            expect(Tank.instances.length).toBe(4);
+            const notPlacedTanksBefore = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
+            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 5)
+            const notPlacedTanksAfter = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
+            expect(Bullet.instances.length).toBe(0);
+            expect(shouldBeDestroyed).toBeTruthy();
+            expect(notPlacedTanksBefore).toBe(0);
+            expect(notPlacedTanksAfter).toBe(0);
         })
     })
 
@@ -291,7 +309,25 @@ describe('Bullet tests', () => {
         })
         
         it('Should destroy both: oponent and player bullet when bullets meet (not meet case: both bullets on neighbouring fields, and in next frame they would be on neighbours one after another 0 0 1 1 0 0)', () => {
-
+            var shouldBeDestroyedA = false;
+            var shouldBeDestroyedB = false;
+            //eslint-disable-next-line
+            const enemyBullet = new Bullet({
+                variant: Variants.ENEMY,
+                startCords: {col: 9, row: 5},
+                direction: directions.DOWN,
+                hitCallback: () => {shouldBeDestroyedA = true}
+            })
+            //eslint-disable-next-line
+            const playerBullet = new Bullet({
+                variant: Variants.PLAYER,
+                startCords: {col: 9, row: 8},
+                direction: directions.UP,
+                hitCallback: () => {shouldBeDestroyedB = true}
+            })
+            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 2)
+            expect(Bullet.instances.length).toBe(0);
+            expect(shouldBeDestroyedA && shouldBeDestroyedB).toBeTruthy();
         })
         it('Should destroy both: oponent and player bullet when bullets met in 90 deg', () => {
             var shouldBeDestroyedA = false;
