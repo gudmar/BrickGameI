@@ -1,5 +1,5 @@
-import { getEmptyBoard } from "../../cartridges/constants";
-import { PawnCords } from "../../cartridges/GameCreator";
+import { getEmptyBoard } from "../cartridges/constants";
+import { PawnCords } from "../cartridges/GameCreator";
 import { getArrayOfArraysSize } from "./getArrayOfArraysSize";
 
 export const checkIfInBoardBoundreis = (cords: PawnCords, board: number[][] = getEmptyBoard()) => {

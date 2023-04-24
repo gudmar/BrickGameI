@@ -35,6 +35,7 @@ describe('Testing TailHandler', () => {
         })
         it('Should return true if given cors are not the last tail element, but belong to tail', () => {
             tailHandlerInstance.tail = [
+                {col: 2, row: 1},
                 {col: 3, row: 1},
                 {col: 4, row: 1},
                 {col: 5, row: 1},

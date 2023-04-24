@@ -1,6 +1,6 @@
 import { getEmptyBoard } from "../../constants";
 import { EXPECTED_COLISION, EXPECTED_EMPTY_LAYER, EXPECTED_LAYER_OBATACLE, getLayerWithColistion, getLayerWithObstacle, TANK } from "../mocks/getLayerWithTankMock";
-import { getLayerWithTank } from "../tank";
+import { getLayerWithTank } from "../tankUtils";
 
 
 
@@ -24,10 +24,10 @@ describe('Testing getLayerWithTank', () => {
         expect(reslt).toEqual(expeced);
     })
     it('Should  inform about colision in case tank is placed on an obstacle, and mergeFunction is swapped for as signal function', () => {
-        let isColision = false;
+        let isColision = 0;
         const detectColisionOr = (brickA: number, brickB: number) => {
-            if (brickA === 1 && brickB === 1) isColision = true;
-            return brickA || brickB
+            if (brickA === 1 && brickB === 1) isColision = 1;
+            return brickA || brickB ? 1 : 0;
         }
         const layer = getLayerWithColistion();
         const tankCords = {row: 5, col: 5};

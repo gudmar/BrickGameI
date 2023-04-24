@@ -89,6 +89,7 @@ export class TailHandler {
     }
 
     doesMoveCrashIntoTail(visitedObject:GameCreator ,deltaRow:number, deltaCol:number){
+        if (!this.tail.length) return false;
         const {row: pawnRow, col: pawnCol} = visitedObject.pawnCords;
         const plannedRow = pawnRow + deltaRow;
         const plannedCol = pawnCol + deltaCol;

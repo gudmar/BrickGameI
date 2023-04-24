@@ -1,6 +1,7 @@
 import { GameCreator } from "../../GameCreator";
 import { TANKS_COLISION_EMPTY, TANKS_COLISION_OBSTACLE, TANKS_NO_COLISION_EMPTY, TANKS_NO_COLISION_OBSTACLES, TANKS_NO_COLISION_WITH_NOT_PLACED, TANKS_OUTSIDE_BOARD_EMPTY, VISITED_EMPTY, VISITED_OBSTACLES } from "../mocks/detectColisionMock";
-import { checkIsColision, Tank } from "../tank";
+import { Tank } from "../tank";
+import { checkIsColision } from "../tankUtils";
 
 describe('Testing detectColision', () => {
     const createTanksReturnOne = (data: any[]) => {

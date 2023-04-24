@@ -1,4 +1,4 @@
-import { checkIfInBoardBoundreis } from "../../functions/__tests__/checkIfInBoardBoundries";
+import { checkIfInBoardBoundreis } from "../../functions/checkIfInBoardBoundries";
 import { Bulletable, directions, Variants } from "../../types/types";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { checkIfBulletHit } from "./checkIfBulletHit";

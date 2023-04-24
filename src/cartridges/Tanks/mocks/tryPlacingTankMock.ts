@@ -1,6 +1,7 @@
 import { directions, Variants } from "../../../types/types";
 import { getEmptyBoard } from "../../constants";
 import { Bullet } from "../bullet";
+import { Tank } from "../tank";
 
 export const getEmptyLayerForPlacingTank = () => [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
@@ -48,9 +49,11 @@ export const TANKS_COLISION_WITH_BULLET = [
 
 export const createBullet = () => {
     const bullet = new Bullet({
-        variant: Variants.ENEMY,
+        sourceTank: {
+            variant: Variants.ENEMY,
+            direction: directions.UP,
+        } as Tank,
         startCords: {col: 1, row: 1},
-        direction: directions.UP,
         hitCallback: ()=>{},
     })
 
