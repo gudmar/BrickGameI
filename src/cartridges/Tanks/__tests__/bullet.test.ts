@@ -1,19 +1,10 @@
+import { runFunctionTimes } from "../../../functions/runFunctionTimes";
 import { directions, Variants } from "../../../types/types";
 import { getEmptyBoard } from "../../constants";
 import { GameCreator } from "../../GameCreator";
 import { Bullet } from "../bullet";
 import { Tank } from "../tank";
 import { TankDecorator } from "../tanks";
-
-const runFunctionTimes = (func: () => any, times:number) => {
-    const runner = (func: () => any, iteration:number) => {
-        if (iteration < times) {
-            runner(func, iteration + 1);
-            func();
-        }
-    }
-    runner(func, 0);
-}
 
 describe('Bullet tests', () => {
     let board = getEmptyBoard();
@@ -409,5 +400,13 @@ describe('Bullet tests', () => {
 
             expect(Bullet.instances.length).toBe(1);
         })
+
+        it('Should destroy oponent tank when fired from distance 0', () => {
+
+        })
+        it('Should destroy wall brick when fired from distance 0', () => {
+            
+        })
+
     })
 })

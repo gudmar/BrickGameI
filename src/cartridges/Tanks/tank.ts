@@ -1,5 +1,7 @@
+import { getBoardMaxIndexes } from "../../functions/getBoardMaxIndexes";
 import { directions, Variants } from "../../types/types";
 import { GameCreator, PawnCords } from "../GameCreator";
+import { Bullet } from "./bullet";
 import { TankRotator } from "./tankRotator";
 import { checkIsColision, didRotate, getLayerWithAllPlacedObstacles, getLayerWithAllPlacedTanks, getLayerWithTank } from "./tankUtils";
 
@@ -23,6 +25,9 @@ export class Tank{
     isPlacedOnBoard = false;
     direction: directions = directions.UP;
     tankRotator: TankRotator;
+    nrOfBulletsShot: number = 0;
+    MAX_ENEMY_BULLETS: number = 1;
+    MAX_PLAYER_BULLETS: number = 4;
     static instances: Tank[];
 
     static destroyTankIfHit(cords:PawnCords, bulletVariant: Variants) {
@@ -56,6 +61,37 @@ export class Tank{
         //         this.rotateLeft();
         //     }
         // }
+    }
+
+    shot(visitedObject: GameCreator) {
+        const startCords = this.getCordsOfShotBullet();
+        if (this.isNrOfBulletsExceeded()) return false;
+        const {maxHeightIndex, maxWidthIndex} = getBoardMaxIndexes(visitedObject);
+        if (startCords.row < 0 || startCords.col < 0 || startCords.row > maxHeightIndex - 1 || startCords.col > maxWidthIndex - 1) {
+            return false;
+        }
+        new Bullet({
+            startCords,
+            sourceTank: this,
+            hitCallback: () => {this.nrOfBulletsShot--}
+        })
+        this.nrOfBulletsShot++;
+        return true;
+    }
+
+    isNrOfBulletsExceeded() {
+        return this.variant === Variants.ENEMY ? this.nrOfBulletsShot >= this.MAX_ENEMY_BULLETS : this.nrOfBulletsShot >= this.MAX_PLAYER_BULLETS;
+    }
+
+    getCordsOfShotBullet() {
+        const TANK_CENTER_TO_BARREL_DISTANCE = 2
+        const {row: tankRow, col: tankCol} = this.cords;
+        switch(this.direction){
+            case directions.UP: return {row: tankRow - TANK_CENTER_TO_BARREL_DISTANCE, col: tankCol}
+            case directions.DOWN: return {row: tankRow + TANK_CENTER_TO_BARREL_DISTANCE, col: tankCol}
+            case directions.LEFT: return {row: tankRow, col: tankCol - TANK_CENTER_TO_BARREL_DISTANCE}
+            default: return {row: tankRow, col: tankCol + TANK_CENTER_TO_BARREL_DISTANCE}
+        }
     }
 
     delete() {
