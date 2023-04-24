@@ -70,12 +70,13 @@ export class Tank{
         if (startCords.row < 0 || startCords.col < 0 || startCords.row > maxHeightIndex - 1 || startCords.col > maxWidthIndex - 1) {
             return false;
         }
-        new Bullet({
+        const bullet = new Bullet({
             startCords,
             sourceTank: this,
             hitCallback: () => {this.nrOfBulletsShot--}
         })
         this.nrOfBulletsShot++;
+        bullet.handleColision(visitedObject)
         return true;
     }
 

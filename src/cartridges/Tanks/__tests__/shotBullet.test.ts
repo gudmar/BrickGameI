@@ -142,13 +142,40 @@ describe('Testing tank.shot', () => {
         expect(enemyTank.nrOfBulletsShot).toBe(0);
     })
     it('Should empty enemyBullets field when bullet hits enemy tank', () => {
-        
+        const tanks = new TankDecorator() as GameCreator;
+        tanks.startGame();
+        const enemyTank: Tank = Tank.instances.find((instance) => instance.variant === Variants.PLAYER)!;
+        enemyTank.cords = {row: 5, col: 8};
+        enemyTank.direction = directions.UP;
+        enemyTank.shot(visitedObject);
+        const action = () => {Bullet.moveAllBullets(visitedObject);}
+        runFunctionTimes(action, 2)
+        expect(Bullet.instances.length).toBe(0);
+        expect(enemyTank.nrOfBulletsShot).toBe(0);        
     })
     it('Should empty enemyBullets field when bullet hits player tank', () => {
-        
+        const tanks = new TankDecorator() as GameCreator;
+        tanks.startGame();
+        const enemyTank: Tank = Tank.instances.find((instance) => instance.variant === Variants.ENEMY)!;
+        enemyTank.cords = {row: 14, col: 8};
+        enemyTank.direction = directions.DOWN;
+        enemyTank.shot(visitedObject);
+        const action = () => {Bullet.moveAllBullets(visitedObject);}
+        runFunctionTimes(action, 2)
+        expect(Bullet.instances.length).toBe(0);
+        expect(enemyTank.nrOfBulletsShot).toBe(0);                
     })
     it('Should empty enemyBullets field when bullet reaches end of the board', () => {
-        
+        const tanks = new TankDecorator() as GameCreator;
+        tanks.startGame();
+        const enemyTank: Tank = Tank.instances.find((instance) => instance.variant === Variants.ENEMY)!;
+        enemyTank.cords = {row: 5, col: 5};
+        enemyTank.direction = directions.UP;
+        enemyTank.shot(visitedObject);
+        const action = () => {Bullet.moveAllBullets(visitedObject);}
+        runFunctionTimes(action, 4)
+        expect(Bullet.instances.length).toBe(0);
+        expect(enemyTank.nrOfBulletsShot).toBe(0);   
     })
 
     it('Should not produce more then 4 bullets at the time when player tank', () => {
@@ -168,11 +195,34 @@ describe('Testing tank.shot', () => {
     })
 
     it('Should destroy brick when bullet is created on wall brick', () => {
-
+        const tanks = new TankDecorator() as GameCreator;
+        tanks.startGame();
+        const visitedObjectWithObstacle = {
+            pawnLayer: getEmptyBoard(),
+            background: getEmptyBoard(),
+        } as GameCreator;
+        visitedObjectWithObstacle.background[3] = [1, 1, 1, 1, 1, 1, 1, 1, 1];
+        const enemyTank: Tank = Tank.instances.find((instance) => instance.variant === Variants.PLAYER)!;
+        enemyTank.cords = {row: 5, col: 5};
+        enemyTank.direction = directions.UP;
+        enemyTank.shot(visitedObjectWithObstacle);
+        expect(Bullet.instances.length).toBe(0);
+        expect(enemyTank.nrOfBulletsShot).toBe(0);
+        expect(visitedObjectWithObstacle.background[3]).toEqual([1, 1, 1, 1, 1, 0, 1, 1, 1]);
     })
 
     it('Should destroy oponent tank, when bullet is created on it', () => {
-        
+        const tanks = new TankDecorator() as GameCreator;
+        tanks.startGame();
+        const playerTank: Tank = Tank.instances.find((instance) => instance.variant === Variants.PLAYER)!;
+        playerTank.cords = {row: 4, col: 8};
+        playerTank.direction = directions.UP;
+        playerTank.shot(visitedObject);
+        const nrOfPlacedTanks = Tank.instances.filter(({ isPlacedOnBoard }) => isPlacedOnBoard === true).length;
+        expect(Bullet.instances.length).toBe(0);
+        expect(playerTank.nrOfBulletsShot).toBe(0);
+        expect(nrOfPlacedTanks).toBe(3)
+
     })
     
 
