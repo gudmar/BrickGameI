@@ -22,6 +22,5 @@ export const rotateArray = (arr: any[][], nrOfRotations: number) => {
     for(let rotation = 0; rotation < getTranslatedNrOfRotations(nrOfRotations); rotation++) {
         result = rotateOnceRight(result);
     }
-    console.log('result', result)
     return result;
 }

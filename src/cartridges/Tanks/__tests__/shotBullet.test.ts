@@ -215,7 +215,7 @@ describe('Testing tank.shot', () => {
         const tanks = new TankDecorator() as GameCreator;
         tanks.startGame();
         const playerTank: Tank = Tank.instances.find((instance) => instance.variant === Variants.PLAYER)!;
-        playerTank.cords = {row: 4, col: 8};
+        playerTank.cords = {row: 3, col: 8};
         playerTank.direction = directions.UP;
         playerTank.shot(visitedObject);
         const nrOfPlacedTanks = Tank.instances.filter(({ isPlacedOnBoard }) => isPlacedOnBoard === true).length;

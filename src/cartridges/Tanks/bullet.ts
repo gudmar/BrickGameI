@@ -3,7 +3,7 @@ import { Bulletable, directions, Variants } from "../../types/types";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { checkIfBulletHit } from "./checkIfBulletHit";
 import { Tank } from "./tank";
-import { mergeEverythingToLayer } from "./tankUtils";
+import { mergeTanksAndBulletsToLayer } from "./tankUtils";
 
 export class Bullet {
     static nrOfBulletsSoFar:number;
@@ -58,7 +58,7 @@ export class Bullet {
     static moveAllBullets(visitedObject: GameCreator) {
         Bullet.instances.forEach((bullet) => {bullet.move(visitedObject)})
         Bullet.instances.forEach((bullet) => {bullet.handleColision(visitedObject)})
-        mergeEverythingToLayer(visitedObject);
+        // mergeTanksAndBulletsToLayer(visitedObject);
     }
     static isAnyBulletOwnedByThisTank(tank: Tank) {
         return Bullet.instances.some(({sourceTank}) => sourceTank === tank)
@@ -67,6 +67,7 @@ export class Bullet {
     move(visitedObject: GameCreator){
         this.handleOutsideBoundries();
         this.cords = this.getNextCords();
+        console.log(this.cords)
         // this.handleColision(visitedObject);
         // mergeEverythingToLayer(visitedObject);
     }

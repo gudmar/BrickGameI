@@ -75,6 +75,7 @@ export class Tank{
             sourceTank: this,
             hitCallback: () => {this.nrOfBulletsShot--}
         })
+        console.log(Bullet.instances)
         this.nrOfBulletsShot++;
         bullet.handleColision(visitedObject)
         return true;
@@ -176,6 +177,7 @@ export class Tank{
     }
 
     destroyIfHit(cordsToCheck: PawnCords, bulletVariant: Variants) {
+        if (!this.isPlacedOnBoard) return false;
         const {row, col} = cordsToCheck;
         const tankCords = this.getCordsTakenByTank();
         const isThisTankHit = tankCords.find(({row: brickRow, col: brickCol}) => {

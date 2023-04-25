@@ -106,8 +106,26 @@ export const getLayerWithAllPlacedObstacles = ({ notIncludeTankInstance, initial
     return layerCopy;
 }
 
-export const mergeEverythingToLayer = (visitedObject: GameCreator) => {
+export const getMergedLayerWithTanksAndBullets = (initialLayer: number[][] = getEmptyBoard()) => {
+    var layerCp = copyBackground(initialLayer);
+    const tanks = Tank.instances.filter((tank) => tank.isPlacedOnBoard);
+    tanks.forEach((tank) => layerCp = getLayerWithTank(layerCp, tank.cords, tank.currentTank, or));
+    Bullet.instances.forEach(bullet => {
+        const {row, col} = bullet.cords;
+        layerCp[row][col] = 1;
+    })
+    return layerCp;
+}
 
+export const mergeTanksAndBulletsToLayer = (visitedObject: GameCreator) => {
+    let layer = getEmptyBoard();
+    const tanks = Tank.instances.filter((tank) => tank.isPlacedOnBoard);
+    tanks.forEach((tank) => layer = getLayerWithTank(layer, tank.cords, tank.currentTank, or));
+    Bullet.instances.forEach(bullet => {
+        const {row, col} = bullet.cords;
+        layer[row][col] = 1;
+    })
+    visitedObject.pawnLayer = layer;
 }
 
 export const getLayerWithAllPlacedTanks = (notIncludeTankInstance?:Tank, mergeFunction:(a:number, b:number)=>(1|0) = or) => {

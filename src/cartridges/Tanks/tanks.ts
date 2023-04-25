@@ -1,14 +1,16 @@
+import { START_TIMER, STOP_TIMER } from "../../constants/gameCodes";
 import { GameCreatorInterface } from "../../types/GameCreatorInterface";
 import { directions, Variants } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { getEmptyBoard } from "../constants";
 import { GameCreator } from "../GameCreator";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
+import { Bullet } from "./bullet";
 import { GameIntroCloasure } from "./IntroGameCloasure";
 import { Judge } from "./judge";
 import { Tank } from "./tank";
 import { TankCommander } from "./tankCommander";
-import { getLayerWithAllPlacedTanks, mergeAllPlacedTanks } from "./tankUtils";
+import { getLayerWithAllPlacedTanks, getMergedLayerWithTanksAndBullets, mergeAllPlacedTanks } from "./tankUtils";
 
 
 
@@ -81,6 +83,7 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
 
     rotate(visitedObject: GameCreator) {
         // NOT needed
+        this.playerTank!.shot(visitedObject)
     }
 
     reInitiateGame(visitedObject:GameCreator) {
@@ -105,7 +108,9 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     setVisitorToNextStateOnTick(visitedObject:GameCreator, time: number) {
-        visitedObject.pawnLayer = mergeAllPlacedTanks(visitedObject.background);
+        // visitedObject.pawnLayer = mergeAllPlacedTanks(visitedObject.background);
+        visitedObject.pawnLayer = getMergedLayerWithTanksAndBullets(visitedObject.background);
+        Bullet.moveAllBullets(visitedObject);
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number): void {
@@ -117,13 +122,13 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     moveEachEnemyTank(){}
 
     passCode(visitedObject: GameCreator, code: string): void {
-        
+        if (code === STOP_TIMER) console.log(Tank.instances)
+        if (code === START_TIMER) console.log(Bullet.instances)
     };
     setLevel(visitedObject: GameCreator): void {
         visitedObject.pawnLayer = getEmptyBoard();
     };
     pauseGame(visitedObject: GameCreator): void {
-        
     }
 
 }
