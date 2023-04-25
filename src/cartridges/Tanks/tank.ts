@@ -28,6 +28,9 @@ export class Tank{
     nrOfBulletsShot: number = 0;
     MAX_ENEMY_BULLETS: number = 1;
     MAX_PLAYER_BULLETS: number = 4;
+    NR_TURNS_NOT_AVAILABLE = 4;
+    nrTurnsNotAvailableAfterHit = 0;
+    canBePlaced = true;
     static instances: Tank[];
 
     static destroyTankIfHit(cords:PawnCords, bulletVariant: Variants) {
@@ -47,6 +50,7 @@ export class Tank{
         Tank.instances.push(this);
         this.tryPlacing();
         this.tankRotator = new TankRotator(this);
+        
     }
 
     setInitialTank() {
@@ -109,7 +113,14 @@ export class Tank{
         return PLAYER_TANK;
     }
 
+    correctCanBePlaced() {
+        if (!this.isPlacedOnBoard) this.nrTurnsNotAvailableAfterHit++;
+        if (this.isPlacedOnBoard) this.nrTurnsNotAvailableAfterHit = 0;
+        if (this.nrTurnsNotAvailableAfterHit > this.NR_TURNS_NOT_AVAILABLE) this.canBePlaced = true;
+    }
+
     move(visitedObject: GameCreator, direction: directions){
+        // this.correctCanBePlaced();
         const rotationOutcome = this.tankRotator.tryRotate(visitedObject, direction);
         if (rotationOutcome === didRotate.ROTATED) return;
         if (rotationOutcome === didRotate.NOT_ROTATED) {
@@ -207,6 +218,7 @@ export class Tank{
     }
 
     destroy(){
+        this.canBePlaced = false;
         this.isPlacedOnBoard = false; // tanks are not destroyed, they are just temporary removed from board
     }
 

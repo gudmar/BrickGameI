@@ -7,7 +7,7 @@ function* TankPlaceCords() {
     yield {col: 1, row: 1};
     yield {col: 8, row: 1};
     yield {col: 1, row: 18};
-    yield {col: 9, row: 8};
+    yield {col: 8, row: 8};
     return {col: 1, row: 8};
 }
 
@@ -86,7 +86,8 @@ export class TankCommander {
     }
     
     tryPlacing(){
-        if (this.controlledTank.isPlacedOnBoard) return;
+        this.controlledTank.correctCanBePlaced();
+        if (this.controlledTank.isPlacedOnBoard || !this.controlledTank.canBePlaced) return;
         const possibleCords = TankPlaceCords();
         for (let cord of possibleCords) {
             this.controlledTank.cords = cord;
@@ -128,7 +129,9 @@ export class TankCommander {
 
 
 
-    shot() {}
+    shot() {
+        this.controlledTank.shot(this.visitedObject)
+    }
     forward(){
         const {direction} = this.controlledTank;
         switch(direction){
