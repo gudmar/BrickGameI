@@ -11,7 +11,7 @@ import { Judge } from "./judge";
 import { getTankLevelBoard } from "./levels";
 import { Tank } from "./tank";
 import { TankCommander } from "./tankCommander";
-import { getLayerWithAllPlacedTanks, getMergedLayerWithTanksAndBullets, mergeAllPlacedTanks } from "./tankUtils";
+import { getLayerWithAllPlacedTanks, getMergedLayerWithTanksAndBullets } from "./tankUtils";
 
 
 
@@ -34,20 +34,11 @@ const INITIAL_PLAYER_TANK_CORDS = {col: 4, row: 13}
 class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     MAX_ENEMY_TANKS_NUMBER = 3;
     playerTank: Tank | undefined;
-    enemyTanksLayer = getEmptyBoard(); // = getLayerWithAllPlacedTanks(this.playerTank);
+    enemyTanksLayer = getEmptyBoard();
     playerBullets = [];
     enemyBullets = [];
     enemyTankCommanders:any[]|undefined;
 
-    // enemyTankCommanders = TankCommander.createCommanders(3);
-
-    // getInitialListOfEnemyTanks(){
-    //     const tankList = [];
-    //     for(let i = 0; i < this.MAX_ENEMY_TANKS_NUMBER; i++){
-    //         tankList.push(new Tank())
-    //     }
-    //     return tankList;
-    // }
     initiate(visitedObject: GameCreator) {
         this.clean(visitedObject);
         this.playerTank = new Tank(Variants.PLAYER, INITIAL_PLAYER_TANK_CORDS);
@@ -58,7 +49,6 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
         visitedObject.score = 0;
         this.reInitiateGame(visitedObject);
         this.setLevel(visitedObject)
-        // console.log('Tank initiation', Tank.instances)
     }
 
     getMoveDirection(deltaRow:number, deltaCol: number) {

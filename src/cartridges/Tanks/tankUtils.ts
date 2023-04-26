@@ -125,7 +125,7 @@ export const getRotatedDirection = (direction: directions, rotations: number) =>
         directions.RIGHT,
     ]
     const initialIndex = orderedDirections.findIndex(dir => dir === direction);
-    const resultIndex = (rotations + initialIndex) % 4;
+    const resultIndex = Math.abs((rotations + initialIndex) % 4);
     return orderedDirections[resultIndex]
 }
 

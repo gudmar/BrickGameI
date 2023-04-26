@@ -67,9 +67,7 @@ export class Bullet {
     move(visitedObject: GameCreator){
         this.handleOutsideBoundries();
         this.cords = this.getNextCords();
-        console.log(this.cords)
-        // this.handleColision(visitedObject);
-        // mergeEverythingToLayer(visitedObject);
+        // console.log(this.cords)
     }
 
     getNextCords(){

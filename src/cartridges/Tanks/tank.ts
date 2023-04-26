@@ -173,7 +173,7 @@ export class Tank{
 
     randomlyRotateTank() {
         const nrOfRotations = getRandom(0, 3);
-        this.currentTank = rotateArray(ENEMY_TANK, nrOfRotations);
+        this.currentTank = rotateArray(this.currentTank, nrOfRotations);
         this.direction = getRotatedDirection(this.direction, nrOfRotations)
     }
 
@@ -191,7 +191,7 @@ export class Tank{
         const layerWithPlacedTanks = getLayerWithAllPlacedObstacles({
             mergeFunction: setColisionOr
         });
-        this.randomlyRotateTank();
+        if (this.variant === Variants.ENEMY) this.randomlyRotateTank();
         getLayerWithTank(layerWithPlacedTanks, this.cords, this.currentTank, setColisionOr);
         if (!isColision) this.isPlacedOnBoard = true;
     }
