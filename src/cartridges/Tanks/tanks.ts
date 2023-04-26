@@ -8,6 +8,7 @@ import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { Bullet } from "./bullet";
 import { GameIntroCloasure } from "./IntroGameCloasure";
 import { Judge } from "./judge";
+import { getTankLevelBoard } from "./levels";
 import { Tank } from "./tank";
 import { TankCommander } from "./tankCommander";
 import { getLayerWithAllPlacedTanks, getMergedLayerWithTanksAndBullets, mergeAllPlacedTanks } from "./tankUtils";
@@ -28,16 +29,14 @@ export class TankDecorator {
     }
 }
 
-const INITIAL_PLAYER_TANK_CORDS = {col: 8, row: 18};
+const INITIAL_PLAYER_TANK_CORDS = {col: 4, row: 13}
 
 class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     MAX_ENEMY_TANKS_NUMBER = 3;
-    playerTank: Tank | undefined;// = new Tank(Variants.PLAYER, INITIAL_PLAYER_TANK_CORDS);
-    // enemyTanksList = getLayerWithAllTanks();
+    playerTank: Tank | undefined;
     enemyTanksLayer = getEmptyBoard(); // = getLayerWithAllPlacedTanks(this.playerTank);
     playerBullets = [];
     enemyBullets = [];
-    PLAYER_TANK_PLACE_CORDS = {col: 8, row: 18}
     enemyTankCommanders:any[]|undefined;
 
     // enemyTankCommanders = TankCommander.createCommanders(3);
@@ -58,6 +57,7 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
         visitedObject.isCheater = false;
         visitedObject.score = 0;
         this.reInitiateGame(visitedObject);
+        this.setLevel(visitedObject)
         // console.log('Tank initiation', Tank.instances)
     }
 
@@ -126,7 +126,8 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
         if (code === START_TIMER) console.log(Bullet.instances)
     };
     setLevel(visitedObject: GameCreator): void {
-        visitedObject.pawnLayer = getEmptyBoard();
+        console.log(visitedObject.level)
+        visitedObject.background = getTankLevelBoard(visitedObject.level);
     };
     pauseGame(visitedObject: GameCreator): void {
     }

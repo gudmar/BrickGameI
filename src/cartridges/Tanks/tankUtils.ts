@@ -1,5 +1,5 @@
 import { copyBackground } from "../../functions/copyBackground";
-import { BrickMap } from "../../types/types";
+import { BrickMap, directions } from "../../types/types";
 import { getEmptyBoard } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { or } from "../layers/toggle/toggleFunction";
@@ -115,6 +115,18 @@ export const getMergedLayerWithTanksAndBullets = (initialLayer: number[][] = get
         layerCp[row][col] = 1;
     })
     return layerCp;
+}
+
+export const getRotatedDirection = (direction: directions, rotations: number) => {
+    const orderedDirections = [
+        directions.DOWN,
+        directions.LEFT,
+        directions.UP,
+        directions.RIGHT,
+    ]
+    const initialIndex = orderedDirections.findIndex(dir => dir === direction);
+    const resultIndex = (rotations + initialIndex) % 4;
+    return orderedDirections[resultIndex]
 }
 
 export const mergeTanksAndBulletsToLayer = (visitedObject: GameCreator) => {

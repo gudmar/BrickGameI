@@ -1,9 +1,11 @@
 import { getBoardMaxIndexes } from "../../functions/getBoardMaxIndexes";
+import { getRandom } from "../../functions/getRandom";
+import { rotateArray } from "../../functions/rotateArray";
 import { directions, Variants } from "../../types/types";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { Bullet } from "./bullet";
 import { TankRotator } from "./tankRotator";
-import { checkIsColision, didRotate, getLayerWithAllPlacedObstacles, getLayerWithAllPlacedTanks, getLayerWithTank } from "./tankUtils";
+import { checkIsColision, didRotate, getLayerWithAllPlacedObstacles, getLayerWithAllPlacedTanks, getLayerWithTank, getRotatedDirection } from "./tankUtils";
 
 const PLAYER_TANK = [
     [0, 1, 0],
@@ -169,6 +171,12 @@ export class Tank{
         this.tryMove(visitedObject, delta)
     }
 
+    randomlyRotateTank() {
+        const nrOfRotations = getRandom(0, 3);
+        this.currentTank = rotateArray(ENEMY_TANK, nrOfRotations);
+        this.direction = getRotatedDirection(this.direction, nrOfRotations)
+    }
+
     tryPlacing() {
         let isColision = false;
         const setColisionOr = (a: number, b:number) => {
@@ -183,6 +191,7 @@ export class Tank{
         const layerWithPlacedTanks = getLayerWithAllPlacedObstacles({
             mergeFunction: setColisionOr
         });
+        this.randomlyRotateTank();
         getLayerWithTank(layerWithPlacedTanks, this.cords, this.currentTank, setColisionOr);
         if (!isColision) this.isPlacedOnBoard = true;
     }

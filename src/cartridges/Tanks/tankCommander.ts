@@ -7,6 +7,7 @@ function* TankPlaceCords() {
     yield {col: 1, row: 1};
     yield {col: 8, row: 1};
     yield {col: 1, row: 18};
+    yield {col: 8, row: 18};
     yield {col: 8, row: 8};
     return {col: 1, row: 8};
 }
