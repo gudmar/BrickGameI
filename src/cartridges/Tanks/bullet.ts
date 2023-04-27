@@ -2,8 +2,8 @@ import { checkIfInBoardBoundreis } from "../../functions/checkIfInBoardBoundries
 import { Bulletable, directions, Variants } from "../../types/types";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { checkIfBulletHit } from "./checkIfBulletHit";
+import { gameEvents, Judge } from "./judge";
 import { Tank } from "./tank";
-import { mergeTanksAndBulletsToLayer } from "./tankUtils";
 
 export class Bullet {
     static nrOfBulletsSoFar:number;
@@ -15,6 +15,7 @@ export class Bullet {
     id: number;
     cords: PawnCords;
     sourceTank: Tank;
+    judge = new Judge();
     hitCallback = (arg: any) => {};
 
     static removeInstance(instance:Bullet) {
@@ -45,7 +46,6 @@ export class Bullet {
         } else {
             Bullet.nrOfBulletsSoFar += 1;
         }
-        // this.direction = direction;
         this.direction = sourceTank.direction;
         const isAnyBulletOwnedByThisTank = Bullet.isAnyBulletOwnedByThisTank(sourceTank);
         this.sourceTank = sourceTank;
@@ -53,12 +53,12 @@ export class Bullet {
         this.id = Bullet.nrOfBulletsSoFar;
         this.cords = startCords;
         this.hitCallback = hitCallback;
+
         if (!(isAnyBulletOwnedByThisTank && sourceTank.variant === Variants.ENEMY)) Bullet.instances.push(this)
     }
     static moveAllBullets(visitedObject: GameCreator) {
         Bullet.instances.forEach((bullet) => {bullet.move(visitedObject)})
         Bullet.instances.forEach((bullet) => {bullet.handleColision(visitedObject)})
-        // mergeTanksAndBulletsToLayer(visitedObject);
     }
     static isAnyBulletOwnedByThisTank(tank: Tank) {
         return Bullet.instances.some(({sourceTank}) => sourceTank === tank)
@@ -67,7 +67,6 @@ export class Bullet {
     move(visitedObject: GameCreator){
         this.handleOutsideBoundries();
         this.cords = this.getNextCords();
-        // console.log(this.cords)
     }
 
     getNextCords(){
@@ -83,8 +82,8 @@ export class Bullet {
     handleColision(visitedObject: GameCreator) {
         // this.handleOutsideBoundries();
         this.handleObstacleColision(visitedObject);
-        this.handleColisionWithTank();
-        this.handleColisionWithBullet();
+        this.handleColisionWithTank(visitedObject);
+        this.handleColisionWithBullet(visitedObject);
     }
     handleOutsideBoundries(){
         const nextCords = this.getNextCords();
@@ -98,21 +97,31 @@ export class Bullet {
         if (isObstacle) {
             visitedObject.background[row][col] = 0;
             this.destroyThisBullet();
+            if (this.variant === Variants.PLAYER) {
+                this.judge.inform(visitedObject, gameEvents.HIT_BRICK);
+            }
         }
     }
-    handleColisionWithBullet() {
+    handleColisionWithBullet(visitedObject: GameCreator) {
         const isOpositeBulletHit = Bullet.destroyBulletIfHit(this);
-        if (isOpositeBulletHit) this.destroyThisBullet()
+        if (isOpositeBulletHit) {
+            this.destroyThisBullet();
+            this.judge.inform(visitedObject, gameEvents.HIT_BULLET)
+        }
     }   
 
-    handleColisionWithTank(){
+    handleColisionWithTank(visitedObject: GameCreator){
         const isTankHit = Tank.destroyTankIfHit(this.cords, this.variant);
-        if (isTankHit) this.destroyThisBullet();
+        if (isTankHit) {
+            this.destroyThisBullet();
+            if (this.variant === Variants.PLAYER){
+                this.judge.inform(visitedObject, gameEvents.HIT_TANK)
+            }
+        }
     }
 
     destroyThisBullet() {
         Bullet.removeInstance(this);
         this.hitCallback(this)
-        // deleteClassInstance(this);
     }
 }

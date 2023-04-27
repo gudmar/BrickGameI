@@ -18,13 +18,13 @@ rotation of tank when placing
   + Make oponent shot
   + Make oponent bullet destroy player (not other oponent) tank
   - Make points count
-  - Make level increase
+  + Make level increase
   - Make codes work
   + Enemy tanks should not appear each clock tick, but once per a few
   - Fix speed: onSpeed move should be faster, not onSpeed events should be slower
   - Tanks should appear in random positions, not starting from the same list index
-  - Enemy tanks should be randomly rotated when appear
-  - Player default position shoud be available for enemy tanks, but palyer default
+  + Enemy tanks should be randomly rotated when appear
+  + Player default position shoud be available for enemy tanks, but palyer default
   + Player default position moved more to center
   
 
@@ -32,6 +32,10 @@ rotation of tank when placing
 
 * Maze:
   - When game won, and enter pressed on pawn on, old pawn does not diappear
+
+
+All:
+  - Games switched with arrows appear in strange directon
   
 TO ADD NEW GAME:
 1) Create GameIntroCloasure, a class transforimng GameIntro that takes a background as constructor arg, to a class that returns GameIntro instnace but takes noting,
