@@ -65,7 +65,6 @@ export class TankCommander {
                 const tankCommander = new TankCommander(visitedObject);
                 TankCommander.instances.push(tankCommander);
             }
-            console.log(TankCommander.instances)
             // return TankCommander.instances;
         } else {
             console.error('Attempt to create TankControllers, when they are already created')

@@ -33,7 +33,25 @@ export class Tank{
     NR_TURNS_NOT_AVAILABLE = 4;
     nrTurnsNotAvailableAfterHit = 0;
     canBePlaced = true;
+    static MAX_NR_TURNS_CHEET_WORKS = 10;
+    static _temporaryFreezeEnemyTanks = false;
+    static nrOfTurnsFromCheetCode = 0;
     static instances: Tank[];
+    
+    
+    static set temporaryFreezeEnemyTanks(val: boolean) {
+        Tank.nrOfTurnsFromCheetCode = 0;
+        Tank._temporaryFreezeEnemyTanks = val;
+    }
+
+    static tryDeleteCheetFlag() {
+        Tank.nrOfTurnsFromCheetCode++;
+        if (Tank.nrOfTurnsFromCheetCode === Tank.MAX_NR_TURNS_CHEET_WORKS) {
+            Tank.temporaryFreezeEnemyTanks = false;
+        }
+    }
+
+    static get temporaryFreezeEnemyTanks(){ return Tank._temporaryFreezeEnemyTanks }
 
     static destroyTankIfHit(cords:PawnCords, bulletVariant: Variants) {
         const isTankDestroyed = Tank.instances.find((instance) =>
@@ -70,6 +88,7 @@ export class Tank{
     }
 
     shot(visitedObject: GameCreator) {
+        if (this.variant === Variants.ENEMY && Tank.temporaryFreezeEnemyTanks) return;
         const startCords = this.getCordsOfShotBullet();
         if (this.isNrOfBulletsExceeded()) return false;
         const {maxHeightIndex, maxWidthIndex} = getBoardMaxIndexes(visitedObject);
@@ -81,7 +100,6 @@ export class Tank{
             sourceTank: this,
             hitCallback: () => {this.nrOfBulletsShot--}
         })
-        console.log(Bullet.instances)
         this.nrOfBulletsShot++;
         bullet.handleColision(visitedObject)
         return true;
@@ -122,7 +140,7 @@ export class Tank{
     }
 
     move(visitedObject: GameCreator, direction: directions){
-        // this.correctCanBePlaced();
+        if (Tank.temporaryFreezeEnemyTanks && this.variant !== Variants.PLAYER) return;
         const rotationOutcome = this.tankRotator.tryRotate(visitedObject, direction);
         if (rotationOutcome === didRotate.ROTATED) return;
         if (rotationOutcome === didRotate.NOT_ROTATED) {

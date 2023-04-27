@@ -17,7 +17,7 @@ rotation of tank when placing
   + Make bullet destroy oponent tank
   + Make oponent shot
   + Make oponent bullet destroy player (not other oponent) tank
-  - Make points count
+  + Make points count
   + Make level increase
   - Make codes work
   + Enemy tanks should not appear each clock tick, but once per a few

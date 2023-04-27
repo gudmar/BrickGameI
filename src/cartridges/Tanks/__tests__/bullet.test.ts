@@ -147,7 +147,6 @@ describe('Bullet tests', () => {
             visitedObject.background = board;
             Bullet.instances = [];
             Tank.instances = [];
-            console.log('SECOND DESCRIBE', Bullet.instances)
             board = getEmptyBoard();
             sourceTank = {
                 direction: directions.UP,

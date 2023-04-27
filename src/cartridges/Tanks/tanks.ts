@@ -1,4 +1,4 @@
-import { START_TIMER, STOP_TIMER } from "../../constants/gameCodes";
+import { ADD_POINTS, STOP_TIMER } from "../../constants/gameCodes";
 import { GameCreatorInterface } from "../../types/GameCreatorInterface";
 import { directions, Variants } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
@@ -7,7 +7,7 @@ import { GameCreator } from "../GameCreator";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { Bullet } from "./bullet";
 import { GameIntroCloasure } from "./IntroGameCloasure";
-import { Judge } from "./judge";
+import { gameEvents, Judge } from "./judge";
 import { getTankLevelBoard } from "./levels";
 import { Tank } from "./tank";
 import { TankCommander } from "./tankCommander";
@@ -38,6 +38,7 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     playerBullets = [];
     enemyBullets = [];
     enemyTankCommanders:any[]|undefined;
+    judge = new Judge();
 
     initiate(visitedObject: GameCreator) {
         this.clean(visitedObject);
@@ -67,7 +68,6 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
 
     move(visitedObject:GameCreator, deltaRow: number, deltaCol: number) {
         const direction = this.getMoveDirection(deltaRow, deltaCol);
-        console.log('Tanks, move', direction)
         this.playerTank!.move(visitedObject, direction);
     }
 
@@ -107,16 +107,22 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
         this.enemyTankCommanders?.forEach((commander) => {
             commander.makeMove();
         })
+        Tank.tryDeleteCheetFlag();
     }
 
     moveEachEnemyTank(){}
 
     passCode(visitedObject: GameCreator, code: string): void {
-        if (code === STOP_TIMER) console.log(Tank.instances)
-        if (code === START_TIMER) console.log(Bullet.instances)
+        if (code === STOP_TIMER) {
+            Tank.temporaryFreezeEnemyTanks = true;
+            visitedObject.isCheater = true;
+        }
+        if (code === ADD_POINTS) {
+            this.judge.inform(visitedObject, gameEvents.CHEATER_MONEY)
+            visitedObject.isCheater = true;
+        }
     };
     setLevel(visitedObject: GameCreator): void {
-        console.log(visitedObject.level)
         visitedObject.background = getTankLevelBoard(visitedObject.level);
     };
     pauseGame(visitedObject: GameCreator): void {

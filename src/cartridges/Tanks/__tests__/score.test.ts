@@ -21,7 +21,6 @@ const prepareEnemyTank = () => {
     tankForTests.cords = {col: 1, row: 18};
     tankForTests.isPlacedOnBoard = true;
     tankForTests.direction = directions.RIGHT;
-    console.log(tankForTests)
     return tankForTests;
 }
 
@@ -38,11 +37,10 @@ describe('Testing score in Tanks', () => {
         visitedObjectMock.background[5] = [1, 1, 1, 1, 1, 1, 1, 0, 1, 0];
         const tanks = new TankDecorator() as GameCreator;
         tanks.startGame();
-        console.log(Tank.instances)
     })
     it('Should add 100 points when enemy tank destroyed', () => {
         const playerTank = preparePlayerTank();
-        const enemyTank = prepareEnemyTank();
+        prepareEnemyTank();
         playerTank!.shot(visitedObjectMock);
         runFunctionTimes(() => Bullet.moveAllBullets(visitedObjectMock), 9);
         expect(visitedObjectMock.score).toBe(100);

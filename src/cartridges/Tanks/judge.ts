@@ -13,6 +13,5 @@ export class Judge{
             case gameEvents.HIT_BRICK: visitedObject.score += 10; break;
             case gameEvents.CHEATER_MONEY: visitedObject.score += 5000; break;
         }
-        console.log(visitedObject.score)
     }
 }
