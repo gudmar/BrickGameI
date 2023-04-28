@@ -4,12 +4,16 @@ import { getEmptyBoard } from "../../constants";
 import { GameCreator } from "../../GameCreator";
 import { Bullet } from "../bullet";
 import { Tank } from "../tank";
+import { TankPlacePositionProvider } from "../tankCommander";
 import { TankDecorator } from "../tanks";
 
 describe('Bullet tests', () => {
     let board = getEmptyBoard();
     let sourceTank: any;
     const visitedObject: GameCreator = {} as GameCreator;
+    afterEach(()=>{
+        TankPlacePositionProvider.nrOfTankPlacedSinceGameStart = 0;
+    })
     describe('Player bullet', () => {
         beforeEach(() => {
             visitedObject.background = board;
@@ -152,6 +156,9 @@ describe('Bullet tests', () => {
                 direction: directions.UP,
                 variant: Variants.ENEMY,
             }
+        })
+        afterEach(()=>{
+            TankPlacePositionProvider.nrOfTankPlacedSinceGameStart = 0;
         })
         it('Should create enemy bullet and move it in its direction', () => {
             sourceTank.direction = directions.DOWN;

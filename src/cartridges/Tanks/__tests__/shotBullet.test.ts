@@ -4,6 +4,7 @@ import { getEmptyBoard } from "../../constants";
 import { GameCreator } from "../../GameCreator";
 import { Bullet } from "../bullet";
 import { Tank } from "../tank";
+import { TankPlacePositionProvider } from "../tankCommander";
 import { TankDecorator } from "../tanks";
 
 describe('Testing tank.shot', () => {
@@ -14,6 +15,7 @@ describe('Testing tank.shot', () => {
     afterEach(() => {
         Tank.instances = [];
         Bullet.instances = [];
+        TankPlacePositionProvider.nrOfTankPlacedSinceGameStart = 0;
     })
 
     const visitedObject = {

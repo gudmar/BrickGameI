@@ -1,7 +1,49 @@
 import { directions, Variants } from "../../types/types";
-import { GameCreator } from "../GameCreator";
+import { GameCreator, PawnCords } from "../GameCreator";
 import { Tank } from "./tank";
 import { getRandom } from "../../functions/getRandom";
+
+const getRandomArrayElement = (array:any[]) => {
+    const randomIndex = array.length === 0 ? 0 : getRandom(0, array.length);
+    const [randomElement] = array.splice(randomIndex, 1);
+    return randomElement
+}
+
+export class TankPlacePositionProvider {
+    static nrOfTankPlacedSinceGameStart = 0;
+    static possibleCords = [
+        {col: 1, row: 1},
+        {col: 8, row: 1},
+        {col: 1, row: 18},
+        {col: 8, row: 18},
+        {col: 8, row: 8},
+        {col: 1, row: 8},
+    ]
+    static shuffledPossibleCords:any[] = [];
+    static shufflePossibleCords() {
+        const newArray: any[] = [];
+        const shuffle = (arr: any[]) => {
+            if (!arr.length) return;
+            const nextElement = getRandomArrayElement(arr);
+            newArray.push(nextElement);
+            shuffle(arr);
+        }
+        shuffle([...TankPlacePositionProvider.possibleCords]);
+        TankPlacePositionProvider.shuffledPossibleCords = newArray;
+    }
+    static getNextCord() {
+        let result: PawnCords;
+        if (!TankPlacePositionProvider.shuffledPossibleCords.length) TankPlacePositionProvider.shufflePossibleCords()
+        if (TankPlacePositionProvider.nrOfTankPlacedSinceGameStart < TankPlacePositionProvider.possibleCords.length) {
+            result = TankPlacePositionProvider.possibleCords[TankPlacePositionProvider.nrOfTankPlacedSinceGameStart]
+        } else {
+            result = TankPlacePositionProvider.shuffledPossibleCords[TankPlacePositionProvider.nrOfTankPlacedSinceGameStart % TankPlacePositionProvider.possibleCords.length];
+        }
+        TankPlacePositionProvider.nrOfTankPlacedSinceGameStart++;
+        return result
+    }
+    
+}
 
 function* TankPlaceCords() {
     yield {col: 1, row: 1};
@@ -88,12 +130,16 @@ export class TankCommander {
     tryPlacing(){
         this.controlledTank.correctCanBePlaced();
         if (this.controlledTank.isPlacedOnBoard || !this.controlledTank.canBePlaced) return;
-        const possibleCords = TankPlaceCords();
-        for (let cord of possibleCords) {
-            this.controlledTank.cords = cord;
+        for (let cord of TankPlacePositionProvider.possibleCords) {
+            this.controlledTank.cords = TankPlacePositionProvider.getNextCord();
             this.controlledTank.tryPlacing();
             if (this.controlledTank.isPlacedOnBoard) return;
         }
+        // for (let cord of possibleCords) {
+        //     this.controlledTank.cords = cord;
+        //     this.controlledTank.tryPlacing();
+        //     if (this.controlledTank.isPlacedOnBoard) return;
+        // }
     }
     makeMove() {
         if (!this.controlledTank.isPlacedOnBoard) {
