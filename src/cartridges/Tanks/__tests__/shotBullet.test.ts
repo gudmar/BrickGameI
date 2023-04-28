@@ -157,7 +157,7 @@ describe('Testing tank.shot', () => {
         const tanks = new TankDecorator() as GameCreator;
         tanks.startGame();
         const enemyTank: Tank = Tank.instances.find((instance) => instance.variant === Variants.ENEMY)!;
-        enemyTank.cords = {row: 14, col: 8};
+        enemyTank.cords = {row: 10, col: 4};
         enemyTank.direction = directions.DOWN;
         enemyTank.shot(visitedObject);
         const action = () => {Bullet.moveAllBullets(visitedObject);}

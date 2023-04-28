@@ -13,7 +13,7 @@ const PLAYER_TANK = [
     [1, 1, 1],
 ]
 
-const ENEMY_TANK = [
+export const ENEMY_TANK = [
     [0, 1, 0],
     [1, 1, 1],
     [1, 0, 1],

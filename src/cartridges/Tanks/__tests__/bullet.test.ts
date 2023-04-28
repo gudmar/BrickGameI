@@ -219,14 +219,14 @@ describe('Bullet tests', () => {
             sourceTank.direction = directions.DOWN;
             //eslint-disable-next-line
             const enemyBullet = new Bullet({
-                startCords: {col: 9, row: 14},
+                startCords: {col: 4, row: 10},
                 sourceTank,
                 hitCallback: () => {shouldBeDestroyed = true}
             })
             expect(Tank.instances.length).toBe(4);
             const notPlacedTanksBefore = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
             const notPlacedTanksAfter = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
-            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 5)
+            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 8)
             const checkIfPlayerTankUplaced = () => {
                 const playerTank = Tank.instances.find(tank => tank.variant === Variants.PLAYER);
                 const isUnplaced = playerTank!.isPlacedOnBoard === false
