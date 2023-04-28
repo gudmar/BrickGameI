@@ -16,6 +16,7 @@ const createNewTanks = (tankDescriptors: TankDescriptor[]) => {
 }
 
 describe('Testing Tank tryPlacing', () => {
+    afterEach(() => {Tank.instances = []})
     it('Should place tank when other tanks do not colide', () => {
         createNewTanks(TANKS_NO_COLISION_EMPTY)
         const placedTank = Tank.instances[0];

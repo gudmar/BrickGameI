@@ -15,7 +15,9 @@ export const divideTime = (time: number, speed?: Speed) => {
     if (speed !== undefined && speed > 10) throw new Error(`Speed value: ${speed} is grater then 10`);
     if (speed !== undefined && speed < 1) throw new Error(`Speed value: ${speed} is less then 10`);
     if (!speed) return time;
-    const divider = 110 - 10 * speed;
+    // const divider = 70 - 10 * speed;
+    const divider = 60 - 10 * speed * 0.5;
+    // const divider = 110 - 10 * speed;
     const result = Math.floor(time / divider);
     return result;
 }

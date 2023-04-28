@@ -28,7 +28,8 @@ rotation of tank when placing
   + Player default position moved more to center
   
 
-  
+TESTS:
+  - Problem that initially enemy tank was placed staticly, now randomly, and tests are not written with thought that tanks will be placed dynamicly. Solution to tank.currentTank = ENEMY_TANK
 
 * Maze:
   - When game won, and enter pressed on pawn on, old pawn does not diappear

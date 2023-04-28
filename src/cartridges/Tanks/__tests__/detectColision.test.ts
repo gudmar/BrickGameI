@@ -1,6 +1,6 @@
 import { GameCreator } from "../../GameCreator";
 import { TANKS_COLISION_EMPTY, TANKS_COLISION_OBSTACLE, TANKS_NO_COLISION_EMPTY, TANKS_NO_COLISION_OBSTACLES, TANKS_NO_COLISION_WITH_NOT_PLACED, TANKS_OUTSIDE_BOARD_EMPTY, VISITED_EMPTY, VISITED_OBSTACLES } from "../mocks/detectColisionMock";
-import { Tank } from "../tank";
+import { ENEMY_TANK, Tank } from "../tank";
 import { checkIsColision } from "../tankUtils";
 
 describe('Testing detectColision', () => {
@@ -8,6 +8,7 @@ describe('Testing detectColision', () => {
         let instance;
         data.forEach((tankData) => {
             instance = new Tank(tankData.variant, tankData.cords);
+            instance.currentTank = ENEMY_TANK;
             instance.isPlacedOnBoard = tankData.isPlaced;
         })
         return instance;
