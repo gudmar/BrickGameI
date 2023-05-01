@@ -1,6 +1,7 @@
-import { GameLogic } from "../cartridges/AbstractGameLogic";
+
 import { PawnCords } from "../cartridges/GameCreator";
 import { Tank } from "../cartridges/Tanks/tank";
+import { TankVisitor } from "../cartridges/Tanks/tanks";
 
 export type OneToTen = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
@@ -27,6 +28,7 @@ export interface Bulletable {
     startCords: PawnCords,
     sourceTank: Tank,
     hitCallback: (...args:any) => any,
+    nextStateCalculator?: TankVisitor,
 }
 
 export enum Variants {PLAYER, ENEMY}

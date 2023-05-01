@@ -3,6 +3,7 @@ import { GameCreatorInterface } from "../../types/GameCreatorInterface";
 import { directions, Variants } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { getEmptyBoard } from "../constants";
+import { setLifesToNextFigure } from "../Functions/setLifesToNextFigure";
 import { GameCreator } from "../GameCreator";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { Bullet } from "./bullet";
@@ -31,20 +32,23 @@ export class TankDecorator {
 
 const INITIAL_PLAYER_TANK_CORDS = {col: 4, row: 13}
 
-class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
+export class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     MAX_ENEMY_TANKS_NUMBER = 3;
     playerTank: Tank | undefined;
     enemyTanksLayer = getEmptyBoard();
     playerBullets = [];
     enemyBullets = [];
     enemyTankCommanders:any[]|undefined;
+    lifes = 4;
     judge = new Judge();
 
     initiate(visitedObject: GameCreator) {
+        // visitedObject.lifes = this.lifes;
+        // visitedObject.reInitilateGame = this.reInitiateGame;
         this.clean(visitedObject);
-        this.playerTank = new Tank(Variants.PLAYER, INITIAL_PLAYER_TANK_CORDS);
+        this.playerTank = new Tank(Variants.PLAYER, INITIAL_PLAYER_TANK_CORDS, this);
         this.enemyTanksLayer = getLayerWithAllPlacedTanks(this.playerTank);
-        this.enemyTankCommanders = TankCommander.createCommanders(visitedObject, 3);
+        this.enemyTankCommanders = TankCommander.createCommanders(visitedObject, 3, this);
         visitedObject.name = 'Tanks';
         visitedObject.isCheater = false;
         visitedObject.score = 0;
@@ -77,8 +81,14 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     reInitiateGame(visitedObject:GameCreator) {
+        if (this.lifes < 0) {
+            visitedObject.isGameOver = true;
+            visitedObject.gameLost();
+        }
         visitedObject.background = getEmptyBoard();
         this.setLevel(visitedObject);
+        setLifesToNextFigure(this, visitedObject);
+        Tank.instances.forEach((tank) => tank.isPlacedOnBoard = false)
         this.placePlayerTank(visitedObject);
         this.enemyTankCommanders!.forEach((commander) => {
             commander.tryPlacing();
@@ -88,6 +98,7 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     placePlayerTank(visitedObject: GameCreator) {
         this.playerTank!.cords = INITIAL_PLAYER_TANK_CORDS;
         this.playerTank!.setInitialTank();
+        this.playerTank!.isPlacedOnBoard = true;
     }
 
     clean(visitedObject: GameCreator) {
@@ -100,7 +111,7 @@ class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
     setVisitorToNextStateOnTick(visitedObject:GameCreator, time: number) {
         // visitedObject.pawnLayer = mergeAllPlacedTanks(visitedObject.background);
         visitedObject.pawnLayer = getMergedLayerWithTanksAndBullets(visitedObject.background);
-        Bullet.moveAllBullets(visitedObject);
+        Bullet.moveAllBullets(this, visitedObject);
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number): void {

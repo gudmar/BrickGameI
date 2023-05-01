@@ -2,6 +2,7 @@ import { directions, Variants } from "../../types/types";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { Tank } from "./tank";
 import { getRandom } from "../../functions/getRandom";
+import { TankVisitor } from "./tanks";
 
 const getRandomArrayElement = (array:any[]) => {
     const randomIndex = array.length === 0 ? 0 : getRandom(0, array.length);
@@ -98,13 +99,14 @@ const getRandomCommand = () => {
 }
 
 export class TankCommander {
-    controlledTank = new Tank(Variants.ENEMY, {col: 1, row: 1});
+    controlledTank: Tank; //= new Tank(Variants.ENEMY, {col: 1, row: 1});
     visitedObject: GameCreator;
+    nextStateCalculator?: TankVisitor;
     static instances: TankCommander[] = [];
-    static createCommanders(visitedObject:GameCreator, maxNrOfControllers:number) {
+    static createCommanders(visitedObject:GameCreator, maxNrOfControllers:number, nextStateCalculator?: TankVisitor) {
         if (TankCommander.instances.length === 0) {
             for(let i = 0; i < maxNrOfControllers; i++) {
-                const tankCommander = new TankCommander(visitedObject);
+                const tankCommander = new TankCommander(visitedObject, nextStateCalculator);
                 TankCommander.instances.push(tankCommander);
             }
             // return TankCommander.instances;
@@ -114,8 +116,10 @@ export class TankCommander {
         return TankCommander.instances;
     }
 
-    constructor(visitedObject: GameCreator) {
+    constructor(visitedObject: GameCreator, nextStateCalculator?: TankVisitor) {
+        this.controlledTank = new Tank(Variants.ENEMY, {col: 1, row: 1}, nextStateCalculator);
         this.visitedObject = visitedObject;
+        this.nextStateCalculator = nextStateCalculator;
     }
 
     static deleteCommanders() {

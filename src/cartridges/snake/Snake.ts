@@ -1,9 +1,9 @@
 import { ADD_POINTS, BUMP, DONT_BUMP, SHORT_SNAKE, START_TIMER, STOP_TIMER, UP_LOCK } from "../../constants/gameCodes";
 import { GameCreatorInterface } from "../../types/GameCreatorInterface";
-import { KeyPress } from "../../types/KeyPress";
 import { directions } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
-import { getEmptyBoard, getEmptyNextFigure } from "../constants";
+import { getEmptyBoard } from "../constants";
+import { setLifesToNextFigure } from "../Functions/setLifesToNextFigure";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { FoodLocalisator } from "./FoodLocalisator";
@@ -57,17 +57,6 @@ set foodCords(val: PawnCords) {
         this.initiateWithoutScore(visitedObject)
     }
 
-    setLifesToNextFigure(visitedObject: GameCreator) {
-        const CLOUMN_TO_DISPLAY_LIFES = 0;
-        if (this.lifes > 4) this.lifes = 4;
-        if (this.lifes < 0) this.lifes = 0;
-        const nextFigure = getEmptyNextFigure();
-        for(let rowIndex = 3; rowIndex >= (4 - this.lifes); rowIndex--) {
-            nextFigure[rowIndex][CLOUMN_TO_DISPLAY_LIFES] = 1;
-        }
-        visitedObject.nextFigure = nextFigure;
-    }
-
     initiate(visitedObject:GameCreator){
         if (this.lifes === 0) {
             this.lifes = 4;
@@ -86,7 +75,7 @@ set foodCords(val: PawnCords) {
         this.direction = directions.RIGHT;
         this.tailHandler.resetTailToDefaultPosition();
         this.setPawnLayer(visitedObject);
-        this.setLifesToNextFigure(visitedObject);
+        setLifesToNextFigure(this, visitedObject);
     }
 
     setPawnLayer(visitedObject: GameCreator) {
@@ -179,7 +168,7 @@ set foodCords(val: PawnCords) {
 
     informDeathWrongMove(visitedObject:GameCreator){
         this.lifes--;
-        this.setLifesToNextFigure(visitedObject);
+        setLifesToNextFigure(this, visitedObject);
         if (this.lifes === 0) {
             visitedObject.isGameOver = true;
             visitedObject.gameLost();
@@ -272,8 +261,4 @@ set foodCords(val: PawnCords) {
             visitedObject.pawnLayer[row][col] = 1;
         }    
     }
-    // setVisitorToNextStateOnKeyPress(visitedObject: GameCreator, keyPresses: KeyPress){
-        
-    // }
-
 }

@@ -5,6 +5,7 @@ import { directions, Variants } from "../../types/types";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { Bullet } from "./bullet";
 import { TankRotator } from "./tankRotator";
+import { TankVisitor } from "./tanks";
 import { checkIsColision, didRotate, getLayerWithAllPlacedObstacles, getLayerWithAllPlacedTanks, getLayerWithTank, getRotatedDirection } from "./tankUtils";
 
 const PLAYER_TANK = [
@@ -33,6 +34,7 @@ export class Tank{
     NR_TURNS_NOT_AVAILABLE = 4;
     nrTurnsNotAvailableAfterHit = 0;
     canBePlaced = true;
+    nextStateCalculator?: TankVisitor;
     static MAX_NR_TURNS_CHEET_WORKS = 10;
     static _temporaryFreezeEnemyTanks = false;
     static nrOfTurnsFromCheetCode = 0;
@@ -60,7 +62,8 @@ export class Tank{
         return !!isTankDestroyed;
     }
 
-    constructor(variant: Variants, cords: PawnCords){
+    constructor(variant: Variants, cords: PawnCords, nextStateCalculator?: TankVisitor){
+        this.nextStateCalculator = nextStateCalculator;
         this.variant = variant;
         this.currentTank = this.getInitialTank();
         this.cords = cords;
@@ -70,21 +73,16 @@ export class Tank{
         Tank.instances.push(this);
         this.tryPlacing();
         this.tankRotator = new TankRotator(this);
-        
+        console.log('State calc', this.nextStateCalculator)
     }
 
     setInitialTank() {
         this.currentTank = this.getInitialTank();
-        this.setInitialOrientationIfEnemy();
+        this.setInitialOrientationIfPlayer();
     }
 
-    setInitialOrientationIfEnemy() {
-        // if (this.variant === Variants.ENEMY) {
-        //     const nrOfRotations = getRandom(0, 3);
-        //     for (let i = 0; i < nrOfRotations; i++) {
-        //         this.rotateLeft();
-        //     }
-        // }
+    setInitialOrientationIfPlayer() {
+        this.direction = directions.UP;
     }
 
     shot(visitedObject: GameCreator) {
@@ -98,7 +96,8 @@ export class Tank{
         const bullet = new Bullet({
             startCords,
             sourceTank: this,
-            hitCallback: () => {this.nrOfBulletsShot--}
+            hitCallback: () => {this.nrOfBulletsShot--},
+            nextStateCalculator: this.nextStateCalculator,
         })
         this.nrOfBulletsShot++;
         bullet.handleColision(visitedObject)
@@ -215,6 +214,7 @@ export class Tank{
     }
 
     destroyIfHit(cordsToCheck: PawnCords, bulletVariant: Variants) {
+        
         if (!this.isPlacedOnBoard) return false;
         const {row, col} = cordsToCheck;
         const tankCords = this.getCordsTakenByTank();
@@ -222,8 +222,10 @@ export class Tank{
             return row === brickRow && col === brickCol
         })
         if (isThisTankHit) {
-            if (this.variant !== bulletVariant) this.destroy();
-            return true;
+            if (this.variant !== bulletVariant){
+                this.destroy();
+                return true;
+            }
         }
         return false;
     }

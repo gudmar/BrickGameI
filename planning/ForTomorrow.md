@@ -19,10 +19,10 @@ rotation of tank when placing
   + Make oponent bullet destroy player (not other oponent) tank
   + Make points count
   + Make level increase
-  - Make codes work
+  + Make codes work
   + Enemy tanks should not appear each clock tick, but once per a few
-  - Fix speed: onSpeed move should be faster, not onSpeed events should be slower
-  - Tanks should appear in random positions, not starting from the same list index
+  + Fix speed: onSpeed move should be faster, not onSpeed events should be slower
+  + Tanks should appear in random positions, not starting from the same list index
   + Enemy tanks should be randomly rotated when appear
   + Player default position shoud be available for enemy tanks, but palyer default
   + Player default position moved more to center

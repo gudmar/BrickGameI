@@ -4,6 +4,7 @@ import { GameCreator, PawnCords } from "../GameCreator";
 import { checkIfBulletHit } from "./checkIfBulletHit";
 import { gameEvents, Judge } from "./judge";
 import { Tank } from "./tank";
+import { TankVisitor } from "./tanks";
 
 export class Bullet {
     static nrOfBulletsSoFar:number;
@@ -17,6 +18,7 @@ export class Bullet {
     sourceTank: Tank;
     judge = new Judge();
     hitCallback = (arg: any) => {};
+    nextStateCalculator?: TankVisitor;
 
     static removeInstance(instance:Bullet) {
         const instancesToLeave = Bullet.instances.filter((i: Bullet) => i !== instance)
@@ -39,7 +41,7 @@ export class Bullet {
     }
 
     constructor({
-        startCords, sourceTank, hitCallback = () => {}
+        startCords, sourceTank, hitCallback = () => {}, nextStateCalculator,
     }: Bulletable ) {
         if (!Bullet.nrOfBulletsSoFar) {
             Bullet.nrOfBulletsSoFar = 0;
@@ -53,10 +55,11 @@ export class Bullet {
         this.id = Bullet.nrOfBulletsSoFar;
         this.cords = startCords;
         this.hitCallback = hitCallback;
+        this.nextStateCalculator = nextStateCalculator;
 
         if (!(isAnyBulletOwnedByThisTank && sourceTank.variant === Variants.ENEMY)) Bullet.instances.push(this)
     }
-    static moveAllBullets(visitedObject: GameCreator) {
+    static moveAllBullets(tanksInstance: TankVisitor, visitedObject: GameCreator) {
         Bullet.instances.forEach((bullet) => {bullet.move(visitedObject)})
         Bullet.instances.forEach((bullet) => {bullet.handleColision(visitedObject)})
     }
@@ -116,6 +119,11 @@ export class Bullet {
             this.destroyThisBullet();
             if (this.variant === Variants.PLAYER){
                 this.judge.inform(visitedObject, gameEvents.HIT_TANK)
+            } else if (this.variant === Variants.ENEMY) {
+                if (this.nextStateCalculator !== undefined) {
+                    this.nextStateCalculator.lifes--;
+                    this.nextStateCalculator.reInitiateGame(visitedObject);    
+                }
             }
         }
     }
