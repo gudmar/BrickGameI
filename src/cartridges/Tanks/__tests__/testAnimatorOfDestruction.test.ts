@@ -2,7 +2,7 @@ import { NextStateCalculator } from "../../AbstractNextStateCalculator";
 import { getEmptyBoard } from "../../constants";
 import { GameCreator } from "../../GameCreator";
 import { AnimatorOfDestruction } from "../animatorOfDestruction";
-import { MIDDLE_BOARD_EXPECTED, MIDDLE_CORDS } from "../mocks/mergeBurningTankEffect";
+import { BURNING_TOUCHES_DOWN_RIGHT, BURNING_TOUCHES_DOWN_RIGHT_CORDS, BURNING_TOUCHES_LEFT_UPPER, BURNING_TOUCHES_LEFT_UPPER_CORDS, MIDDLE_BOARD_EXPECTED, MIDDLE_CORDS, TANK_TOUCHES_DOWN_RIGHT, TANK_TOUCHES_DOWN_RIGHT_CORDS, TANK_TOUCHES_LEFT_UPPER, TANK_TOUCHES_LEFT_UPPER_CORDS } from "../mocks/mergeBurningTankEffect";
 import { TankVisitor } from "../tanks";
 
 describe('Testing animatorOfDestruction for tanks', () => {
@@ -67,16 +67,28 @@ describe('Testing animatorOfDestruction for tanks', () => {
             expect(result).toEqual(expected);
         });
         it('Should merge burning effect for burning effect touching left upper layer corner', () => {
-
+            const expected = BURNING_TOUCHES_LEFT_UPPER;
+            const cords = BURNING_TOUCHES_LEFT_UPPER_CORDS;
+            const result = animator.mergeBurningTankToBoard(getEmptyBoard(), cords, true)
+            expect(result).toEqual(expected);
         })
         it('Shoud merge burning effect for tank touching left upper layer corner', () => {
-
+            const expected = TANK_TOUCHES_LEFT_UPPER;
+            const cords = TANK_TOUCHES_LEFT_UPPER_CORDS;
+            const result = animator.mergeBurningTankToBoard(getEmptyBoard(), cords, true)
+            expect(result).toEqual(expected);
         })
         it('Should merge burning effect for burning effect touching down right board corner', () => {
-
+            const expected = BURNING_TOUCHES_DOWN_RIGHT;
+            const cords = BURNING_TOUCHES_DOWN_RIGHT_CORDS;
+            const result = animator.mergeBurningTankToBoard(getEmptyBoard(), cords, true)
+            expect(result).toEqual(expected);
         })
         it('Should merge burning effect for tank touching down right part of board', () => {
-    
+            const expected = TANK_TOUCHES_DOWN_RIGHT;
+            const cords = TANK_TOUCHES_DOWN_RIGHT_CORDS;
+            const result = animator.mergeBurningTankToBoard(getEmptyBoard(), cords, true)
+            expect(result).toEqual(expected);
         })
     })
 })
