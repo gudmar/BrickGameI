@@ -26,6 +26,7 @@ rotation of tank when placing
   + Enemy tanks should be randomly rotated when appear
   + Player default position shoud be available for enemy tanks, but palyer default
   + Player default position moved more to center
+  - Animation in case player tank destroyed
   
 
 TESTS:

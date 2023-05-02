@@ -41,6 +41,13 @@ export class TankVisitor extends NextStateCalculator implements GameCreatorInter
     enemyTankCommanders:any[]|undefined;
     lifes = 4;
     judge = new Judge();
+    isAnimated = false;
+
+    get playerTankCords() {
+        const playerTank = Tank.instances.find(tank => tank.variant === Variants.PLAYER);
+        const { row, col } = playerTank!.cords;
+        return {row, col };
+    }
 
     initiate(visitedObject: GameCreator) {
         // visitedObject.lifes = this.lifes;
