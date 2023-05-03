@@ -4,7 +4,7 @@ import { getEmptyBoard } from "../../constants";
 import { GameCreator } from "../../GameCreator";
 import { Bullet } from "../bullet";
 import { Tank } from "../tank"
-import { TankDecorator } from "../tanks";
+import { TankDecorator, TankVisitor } from "../tanks";
 
 const preparePlayerTank = () => {
     const enemyTankInTheWay = Tank.instances.find(tank => tank.cords.row > 15 && tank.cords.col > 5 && tank.variant === Variants.ENEMY);
@@ -26,6 +26,7 @@ const prepareEnemyTank = () => {
 
 describe('Testing score in Tanks', () => {
     let visitedObjectMock: any;
+    const tankInstance = {} as TankVisitor;
     beforeEach(() => {
         Tank.instances = [];
         Bullet.instances = [];
@@ -33,6 +34,7 @@ describe('Testing score in Tanks', () => {
             score: 0,
             background: getEmptyBoard(),
             pawnLayer: getEmptyBoard(),
+            level: 1,
         }
         visitedObjectMock.background[5] = [1, 1, 1, 1, 1, 1, 1, 0, 1, 0];
         const tanks = new TankDecorator() as GameCreator;
@@ -42,7 +44,7 @@ describe('Testing score in Tanks', () => {
         const playerTank = preparePlayerTank();
         prepareEnemyTank();
         playerTank!.shot(visitedObjectMock);
-        runFunctionTimes(() => Bullet.moveAllBullets(visitedObjectMock), 9);
+        runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObjectMock), 9);
         expect(visitedObjectMock.score).toBe(100);
     })
     it('Should add 50 points when enemy bullet hit by player bullet', () => {
@@ -50,27 +52,27 @@ describe('Testing score in Tanks', () => {
         const enemyTank = prepareEnemyTank();
         playerTank!.shot(visitedObjectMock);
         enemyTank!.shot(visitedObjectMock);
-        runFunctionTimes(() => Bullet.moveAllBullets(visitedObjectMock), 9);
+        runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObjectMock), 9);
         expect(visitedObjectMock.score).toBe(50);
     })
     it('Should add 10 points when player bullet hits brick', () => {
         const playerTank = preparePlayerTank();
         playerTank!.direction = directions.UP;
         playerTank!.shot(visitedObjectMock);
-        runFunctionTimes(() => Bullet.moveAllBullets(visitedObjectMock), 19);
+        runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObjectMock), 19);
         expect(visitedObjectMock.score).toBe(10);
     })
     it('SHould not add points when enemy bullet hits wall', () => {
         const enemyTank = prepareEnemyTank();
         enemyTank!.shot(visitedObjectMock);
-        runFunctionTimes(() => Bullet.moveAllBullets(visitedObjectMock), 19);
+        runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObjectMock), 19);
         expect(visitedObjectMock.score).toBe(0);
     }) 
     it('Should not add points when enemy bullet hits player tank', () => {
         preparePlayerTank();
         const enemyTank = prepareEnemyTank();
         enemyTank!.shot(visitedObjectMock);
-        runFunctionTimes(() => Bullet.moveAllBullets(visitedObjectMock), 9);
+        runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObjectMock), 9);
         expect(visitedObjectMock.score).toBe(0);
     })
     it('Should not add points when enemy bullet hits enemy tank', () => {
@@ -78,7 +80,7 @@ describe('Testing score in Tanks', () => {
         const enemyTank = prepareEnemyTank();
         playerTank!.variant = Variants.ENEMY
         enemyTank!.shot(visitedObjectMock);
-        runFunctionTimes(() => Bullet.moveAllBullets(visitedObjectMock), 9);
+        runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObjectMock), 9);
         expect(visitedObjectMock.score).toBe(0);
     })
     it('Should not add points when enemy bullet hits enemy bullet', () => {
@@ -87,7 +89,8 @@ describe('Testing score in Tanks', () => {
         playerTank!.variant = Variants.ENEMY
         enemyTank!.shot(visitedObjectMock);
         playerTank!.shot(visitedObjectMock);
-        runFunctionTimes(() => Bullet.moveAllBullets(visitedObjectMock), 9);
+        runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObjectMock), 9);
+        expect(Bullet.instances.length).toBe(0);
         expect(visitedObjectMock.score).toBe(0);
     })
 })

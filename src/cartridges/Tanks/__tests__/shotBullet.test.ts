@@ -5,23 +5,27 @@ import { GameCreator } from "../../GameCreator";
 import { Bullet } from "../bullet";
 import { Tank } from "../tank";
 import { TankPlacePositionProvider } from "../tankCommander";
-import { TankDecorator } from "../tanks";
+import { TankDecorator, TankVisitor } from "../tanks";
 
 describe('Testing tank.shot', () => {
+
+    const tankInstance = {} as TankVisitor;
+    const visitedObject = {
+        pawnLayer: getEmptyBoard(),
+        background: getEmptyBoard(),
+    } as GameCreator;
+
     beforeEach(() => {
         Tank.instances = [];
         Bullet.instances = [];
+        visitedObject.pawnLayer = getEmptyBoard();
+        visitedObject.background = getEmptyBoard();
     })
     afterEach(() => {
         Tank.instances = [];
         Bullet.instances = [];
         TankPlacePositionProvider.nrOfTankPlacedSinceGameStart = 0;
     })
-
-    const visitedObject = {
-        pawnLayer: getEmptyBoard(),
-        background: getEmptyBoard(),
-    } as GameCreator;
 
     it('Should shot bullet from tank aiming up (not to border), return true', () => {
         const tanks = new TankDecorator() as GameCreator;
@@ -121,7 +125,7 @@ describe('Testing tank.shot', () => {
         playerTank.direction = directions.UP;
         const action = () => {    
             playerTank.shot(visitedObject);
-            Bullet.moveAllBullets(visitedObject);
+            Bullet.moveAllBullets(tankInstance, visitedObject);
         }
         runFunctionTimes(action, 8)
         expect(Bullet.instances.length).toBe(4);
@@ -138,7 +142,7 @@ describe('Testing tank.shot', () => {
         enemyTank.cords = {row: 5, col: 5};
         enemyTank.direction = directions.UP;
         enemyTank.shot(visitedObjectWithObstacle);
-        const action = () => {Bullet.moveAllBullets(visitedObjectWithObstacle);}
+        const action = () => {Bullet.moveAllBullets(tankInstance, visitedObjectWithObstacle);}
         runFunctionTimes(action, 3)
         expect(Bullet.instances.length).toBe(0);
         expect(enemyTank.nrOfBulletsShot).toBe(0);
@@ -150,7 +154,7 @@ describe('Testing tank.shot', () => {
         enemyTank.cords = {row: 5, col: 8};
         enemyTank.direction = directions.UP;
         enemyTank.shot(visitedObject);
-        const action = () => {Bullet.moveAllBullets(visitedObject);}
+        const action = () => {Bullet.moveAllBullets(tankInstance, visitedObject);}
         runFunctionTimes(action, 2)
         expect(Bullet.instances.length).toBe(0);
         expect(enemyTank.nrOfBulletsShot).toBe(0);        
@@ -162,7 +166,7 @@ describe('Testing tank.shot', () => {
         enemyTank.cords = {row: 10, col: 4};
         enemyTank.direction = directions.DOWN;
         enemyTank.shot(visitedObject);
-        const action = () => {Bullet.moveAllBullets(visitedObject);}
+        const action = () => {Bullet.moveAllBullets(tankInstance, visitedObject);}
         runFunctionTimes(action, 2)
         expect(Bullet.instances.length).toBe(0);
         expect(enemyTank.nrOfBulletsShot).toBe(0);                
@@ -174,7 +178,7 @@ describe('Testing tank.shot', () => {
         enemyTank.cords = {row: 5, col: 5};
         enemyTank.direction = directions.UP;
         enemyTank.shot(visitedObject);
-        const action = () => {Bullet.moveAllBullets(visitedObject);}
+        const action = () => {Bullet.moveAllBullets(tankInstance, visitedObject);}
         runFunctionTimes(action, 4)
         expect(Bullet.instances.length).toBe(0);
         expect(enemyTank.nrOfBulletsShot).toBe(0);   
@@ -187,7 +191,7 @@ describe('Testing tank.shot', () => {
         enemyTank.cords = {row: 5, col: 5};
         enemyTank.direction = directions.UP;
         const outcome = enemyTank.shot(visitedObject);
-        Bullet.moveAllBullets(visitedObject);
+        Bullet.moveAllBullets(tankInstance, visitedObject);
         const outcome2 = enemyTank.shot(visitedObject);
         const bullet = Bullet.instances[0];
         expect(Bullet.instances.length).toBe(1);

@@ -2,10 +2,12 @@ import { range } from "../../functions/range";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { TankVisitor } from "./tanks";
 
+const MAX_NR_OF_ANIMATIONS = 10;
 
 export class AnimatorOfDestruction{
     visitedObject: GameCreator;
     nextStateCalculator: TankVisitor;
+    nrOfAnimationsSoFar = 0;
     constructor(visitedObject: GameCreator, nextStateCalculator: TankVisitor){
         this.nextStateCalculator = nextStateCalculator;
         this.visitedObject = visitedObject;
@@ -16,8 +18,19 @@ export class AnimatorOfDestruction{
     get isAnimated() { return this.nextStateCalculator.isAnimated }
 
     tick(){
-
+        const isAnimationStopped = this.tryStopAnimation();
+        if (isAnimationStopped) return;
+        const pawnLayer = this.mergeBurningTankToBoard(this.visitedObject.pawnLayer, this.nextStateCalculator.playerTankCords, this.nrOfAnimationsSoFar % 2 === 0)
+        this.visitedObject.pawnLayer = pawnLayer;
     }
+    tryStopAnimation(){
+        if (this.nrOfAnimationsSoFar >= MAX_NR_OF_ANIMATIONS) {
+            this.nextStateCalculator.isAnimated = false;
+            this.nrOfAnimationsSoFar = 0;
+            return true;
+        }
+        return false;
+    };
     mergeBurningTankToBoard(pawnLayer: number[][], tankCords: PawnCords, startFromZero: boolean) {
         const maxRow = pawnLayer.length - 1;
         const maxCol = pawnLayer[0].length - 1;

@@ -73,7 +73,6 @@ export class Tank{
         Tank.instances.push(this);
         this.tryPlacing();
         this.tankRotator = new TankRotator(this);
-        console.log('State calc', this.nextStateCalculator)
     }
 
     setInitialTank() {
@@ -224,8 +223,8 @@ export class Tank{
         if (isThisTankHit) {
             if (this.variant !== bulletVariant){
                 this.destroy();
-                return true;
             }
+            return true;
         }
         return false;
     }

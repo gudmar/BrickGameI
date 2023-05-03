@@ -5,12 +5,13 @@ import { GameCreator } from "../../GameCreator";
 import { Bullet } from "../bullet";
 import { Tank } from "../tank";
 import { TankPlacePositionProvider } from "../tankCommander";
-import { TankDecorator } from "../tanks";
+import { TankDecorator, TankVisitor } from "../tanks";
 
 describe('Bullet tests', () => {
     let board = getEmptyBoard();
     let sourceTank: any;
     const visitedObject: GameCreator = {} as GameCreator;
+    const tankInstance = {} as TankVisitor;
     afterEach(()=>{
         TankPlacePositionProvider.nrOfTankPlacedSinceGameStart = 0;
     })
@@ -48,7 +49,7 @@ describe('Bullet tests', () => {
                 sourceTank,
                 hitCallback: () => {}
             })
-            Bullet.moveAllBullets(visitedObject);
+            Bullet.moveAllBullets(tankInstance, visitedObject);
             sourceTank.variant = Variants.PLAYER;
             //eslint-disable-next-line
             const bullet2 = new Bullet({
@@ -57,7 +58,7 @@ describe('Bullet tests', () => {
                 hitCallback: () => {}
             })
             runFunctionTimes(() => {
-                Bullet.moveAllBullets(visitedObject);
+                Bullet.moveAllBullets(tankInstance, visitedObject);
             }, 2);
             //eslint-disable-next-line
             const bullet3 = new Bullet({
@@ -66,7 +67,7 @@ describe('Bullet tests', () => {
                 hitCallback: () => {}
             })
             runFunctionTimes(() => {
-                Bullet.moveAllBullets(visitedObject);
+                Bullet.moveAllBullets(tankInstance, visitedObject);
             }, 2);
             const {col: b1Col, row: b1Row} = Bullet.instances[0].cords;
             const {col: b2Col, row: b2Row} = Bullet.instances[1].cords;
@@ -100,7 +101,7 @@ describe('Bullet tests', () => {
                 sourceTank,
                 hitCallback: () => {shouldBeDestroyed = true}
             })
-            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 6)
+            runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObject), 6)
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyed).toBeTruthy();
             expect(visitedObject.background[5][0]).toBe(0)
@@ -118,7 +119,7 @@ describe('Bullet tests', () => {
             })
             expect(Tank.instances.length).toBe(4);
             const notPlacedTanksBefore = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
-            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 5)
+            runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObject), 5)
             const notPlacedTanksAfter = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyed).toBeTruthy();
@@ -137,7 +138,7 @@ describe('Bullet tests', () => {
             })
             expect(Tank.instances.length).toBe(4);
             const notPlacedTanksBefore = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
-            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 5)
+            runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObject), 5)
             const notPlacedTanksAfter = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyed).toBeTruthy();
@@ -197,7 +198,7 @@ describe('Bullet tests', () => {
             })
             expect(Tank.instances.length).toBe(4);
             const notPlacedTanksBefore = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
-            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 5)
+            runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObject), 5)
             const notPlacedTanksAfter = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyed).toBeTruthy();
@@ -214,7 +215,7 @@ describe('Bullet tests', () => {
                 sourceTank,
                 hitCallback: () => {shouldBeDestroyed = true}
             })
-            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 6)
+            runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObject), 6)
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyed).toBeTruthy();
             expect(visitedObject.background[5][0]).toBe(0)
@@ -233,7 +234,7 @@ describe('Bullet tests', () => {
             expect(Tank.instances.length).toBe(4);
             const notPlacedTanksBefore = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
             const notPlacedTanksAfter = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
-            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 8)
+            runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObject), 8)
             const checkIfPlayerTankUplaced = () => {
                 const playerTank = Tank.instances.find(tank => tank.variant === Variants.PLAYER);
                 const isUnplaced = playerTank!.isPlacedOnBoard === false
@@ -251,6 +252,7 @@ describe('Bullet tests', () => {
             const tanks = new TankDecorator() as GameCreator;
             tanks.startGame();
             const notPlacedTanksAfter = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
+            // sourceTank.variant = Variants.PLAYER;
             //eslint-disable-next-line
             const enemyBullet = new Bullet({
                 sourceTank,
@@ -259,7 +261,7 @@ describe('Bullet tests', () => {
             })
             expect(Tank.instances.length).toBe(4);
             const notPlacedTanksBefore = Tank.instances.filter((tank) => tank.isPlacedOnBoard === false).length
-            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 5)
+            runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObject), 5)
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyed).toBeTruthy();
             expect(notPlacedTanksBefore).toBe(0);
@@ -282,7 +284,7 @@ describe('Bullet tests', () => {
                 sourceTank,
                 hitCallback: () => {shouldBeDestroyedB = true}
             })
-            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 3)
+            runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObject), 3)
             const { row: rowA } = enemyBulletA.cords;
             const { row: rowB } = enemyBulletB.cords;
             expect(Bullet.instances.length).toBe(2);
@@ -310,7 +312,7 @@ describe('Bullet tests', () => {
                 sourceTank: sourceTankPlayer,
                 hitCallback: () => {shouldBeDestroyedB = true}
             })
-            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 2)
+            runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObject), 2)
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyedA && shouldBeDestroyedB).toBeTruthy();
         })
@@ -335,7 +337,7 @@ describe('Bullet tests', () => {
                 sourceTank: sourceTankPlayer,
                 hitCallback: () => {shouldBeDestroyedB = true}
             })
-            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 2)
+            runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObject), 2)
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyedA && shouldBeDestroyedB).toBeTruthy();
         })
@@ -359,7 +361,7 @@ describe('Bullet tests', () => {
                 sourceTank: sourceTankPlayer,
                 hitCallback: () => {shouldBeDestroyedB = true}
             })
-            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 2)
+            runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObject), 2)
             expect(Bullet.instances.length).toBe(0);
             expect(shouldBeDestroyedA && shouldBeDestroyedB).toBeTruthy();
         })
@@ -383,7 +385,7 @@ describe('Bullet tests', () => {
                 sourceTank: sourceTankPlayer,
                 hitCallback: () => {shouldBeDestroyedB = true}
             })
-            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 4)
+            runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObject), 4)
             expect(Bullet.instances.length).toBe(2);
             expect(shouldBeDestroyedA && shouldBeDestroyedB).toBeFalsy();
         })
@@ -397,7 +399,7 @@ describe('Bullet tests', () => {
                 startCords: {col: 9, row: 5},
                 hitCallback: () => {}
             })
-            runFunctionTimes(() => Bullet.moveAllBullets(visitedObject), 1)
+            runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObject), 1)
             const enemyBullet2 = new Bullet({
                 sourceTank: enemyTank,
                 startCords: {col: 9, row: 5},

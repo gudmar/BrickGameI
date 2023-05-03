@@ -111,6 +111,7 @@ export class Bullet {
             this.destroyThisBullet();
             this.judge.inform(visitedObject, gameEvents.HIT_BULLET)
         }
+        console.log('Visited', visitedObject)
     }   
 
     handleColisionWithTank(visitedObject: GameCreator){

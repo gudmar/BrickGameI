@@ -1,5 +1,5 @@
 import { GameCreator } from "../../GameCreator";
-import { TANKS_COLISION_EMPTY, TANKS_COLISION_OBSTACLE, TANKS_NO_COLISION_EMPTY, TANKS_NO_COLISION_OBSTACLES, TANKS_NO_COLISION_WITH_NOT_PLACED, TANKS_OUTSIDE_BOARD_EMPTY, VISITED_EMPTY, VISITED_OBSTACLES } from "../mocks/detectColisionMock";
+import { TANKS_COLISION_EMPTY, TANKS_COLISION_EMPTY_ALL_PLACED, TANKS_COLISION_OBSTACLE, TANKS_NO_COLISION_EMPTY, TANKS_NO_COLISION_OBSTACLES, TANKS_NO_COLISION_WITH_NOT_PLACED, TANKS_OUTSIDE_BOARD_EMPTY, VISITED_EMPTY, VISITED_OBSTACLES } from "../mocks/detectColisionMock";
 import { ENEMY_TANK, Tank } from "../tank";
 import { checkIsColision } from "../tankUtils";
 
@@ -28,7 +28,7 @@ describe('Testing detectColision', () => {
         expect(result).toBeFalsy();
     })
     it('Should detect colision when 2 of tanks have common points', () => {
-        const tank = createTanksReturnOne(TANKS_COLISION_EMPTY);
+        const tank = createTanksReturnOne(TANKS_COLISION_EMPTY_ALL_PLACED);
         const visitedObject = VISITED_EMPTY as GameCreator;
         const result = checkIsColision(tank!, visitedObject, move);
         expect(result).toBeTruthy();
