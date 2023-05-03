@@ -59,7 +59,7 @@ export class Tank{
         const isTankDestroyed = Tank.instances.find((instance) =>
             instance.destroyIfHit(cords, bulletVariant)
         );
-        return !!isTankDestroyed;
+        return isTankDestroyed;
     }
 
     constructor(variant: Variants, cords: PawnCords, nextStateCalculator?: TankVisitor){

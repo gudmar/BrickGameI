@@ -6,6 +6,7 @@ import { getEmptyBoard } from "../constants";
 import { setLifesToNextFigure } from "../Functions/setLifesToNextFigure";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
+import { AnimatorOfDestruction } from "./animatorOfDestruction";
 import { Bullet } from "./bullet";
 import { GameIntroCloasure } from "./IntroGameCloasure";
 import { gameEvents, Judge } from "./judge";
@@ -42,6 +43,7 @@ export class TankVisitor extends NextStateCalculator implements GameCreatorInter
     lifes = 4;
     judge = new Judge();
     isAnimated = false;
+    animatorOfDestruction?: AnimatorOfDestruction;
 
     get playerTankCords() {
         const playerTank = Tank.instances.find(tank => tank.variant === Variants.PLAYER);
@@ -52,6 +54,7 @@ export class TankVisitor extends NextStateCalculator implements GameCreatorInter
     initiate(visitedObject: GameCreator) {
         // visitedObject.lifes = this.lifes;
         // visitedObject.reInitilateGame = this.reInitiateGame;
+        this.animatorOfDestruction = new AnimatorOfDestruction(visitedObject, this);
         this.clean(visitedObject);
         this.playerTank = new Tank(Variants.PLAYER, INITIAL_PLAYER_TANK_CORDS, this);
         this.enemyTanksLayer = getLayerWithAllPlacedTanks(this.playerTank);
@@ -122,6 +125,10 @@ export class TankVisitor extends NextStateCalculator implements GameCreatorInter
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number): void {
+        if (this.isAnimated) {
+            this.animatorOfDestruction!.tick();
+            return;
+        }
         this.enemyTankCommanders?.forEach((commander) => {
             commander.makeMove();
         })

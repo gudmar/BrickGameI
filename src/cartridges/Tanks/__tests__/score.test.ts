@@ -28,8 +28,8 @@ describe('Testing score in Tanks', () => {
     let visitedObjectMock: any;
     const tankInstance = {} as TankVisitor;
     beforeEach(() => {
-        Tank.instances = [];
         Bullet.instances = [];
+        Tank.instances = [];
         visitedObjectMock = {
             score: 0,
             background: getEmptyBoard(),
@@ -39,6 +39,7 @@ describe('Testing score in Tanks', () => {
         visitedObjectMock.background[5] = [1, 1, 1, 1, 1, 1, 1, 0, 1, 0];
         const tanks = new TankDecorator() as GameCreator;
         tanks.startGame();
+        tanks.background[5] = [1, 1, 1, 1, 1, 1, 1, 0, 1, 0];
     })
     it('Should add 100 points when enemy tank destroyed', () => {
         const playerTank = preparePlayerTank();
@@ -57,9 +58,16 @@ describe('Testing score in Tanks', () => {
     })
     it('Should add 10 points when player bullet hits brick', () => {
         const playerTank = preparePlayerTank();
+        const enemyTank = prepareEnemyTank();
+        enemyTank.isPlacedOnBoard = false;
         playerTank!.direction = directions.UP;
         playerTank!.shot(visitedObjectMock);
-        runFunctionTimes(() => Bullet.moveAllBullets(tankInstance, visitedObjectMock), 19);
+        
+        runFunctionTimes(() => {
+            Bullet.moveAllBullets(tankInstance, visitedObjectMock);
+            console.log('cord', Bullet.instances[0]?.cords, visitedObjectMock.score)
+        }, 19);
+        Tank.instances.forEach(t => console.log(t.cords, t.isPlacedOnBoard))
         expect(visitedObjectMock.score).toBe(10);
     })
     it('SHould not add points when enemy bullet hits wall', () => {

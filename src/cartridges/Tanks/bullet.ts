@@ -111,16 +111,15 @@ export class Bullet {
             this.destroyThisBullet();
             this.judge.inform(visitedObject, gameEvents.HIT_BULLET)
         }
-        console.log('Visited', visitedObject)
     }   
 
     handleColisionWithTank(visitedObject: GameCreator){
-        const isTankHit = Tank.destroyTankIfHit(this.cords, this.variant);
-        if (isTankHit) {
+        const hitTank = Tank.destroyTankIfHit(this.cords, this.variant);
+        if (hitTank !== undefined) {
             this.destroyThisBullet();
             if (this.variant === Variants.PLAYER){
                 this.judge.inform(visitedObject, gameEvents.HIT_TANK)
-            } else if (this.variant === Variants.ENEMY) {
+            } else if (this.variant === Variants.ENEMY && hitTank.variant === Variants.PLAYER) {
                 if (this.nextStateCalculator !== undefined) {
                     this.nextStateCalculator.lifes--;
                     this.nextStateCalculator.reInitiateGame(visitedObject);    
