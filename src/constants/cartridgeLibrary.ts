@@ -1,6 +1,7 @@
 import { Animations } from "../cartridges/Animations/Animations";
 import { LayersApplayer } from "../cartridges/layers/LayersApplayer";
 import { MazeMoverDecorator } from "../cartridges/MovingKeys/MazeMover";
+import { RaceDecorator } from "../cartridges/Race/Race";
 import { SnakeDecorator } from "../cartridges/snake/Snake";
 import { TankDecorator } from "../cartridges/Tanks/tanks";
 import { TestCartridge } from "../cartridges/test";
@@ -22,6 +23,7 @@ export const cartridges = {
     'TETRIS': 'Tetris',
     'SNAKE': 'Snake',
     'TANKS': 'Tanks',
+    'RACE': 'Race',
 }
 
 interface Library {
@@ -29,7 +31,7 @@ interface Library {
 }
 
 export const CARTRIDGE_ORDER = [
-    cartridges.MAZE, cartridges.TETRIS, cartridges.TANKS, cartridges.SNAKE
+    cartridges.MAZE, cartridges.TETRIS, cartridges.TANKS, cartridges.SNAKE, cartridges.RACE,
 ]
 
 export const cartridgeLibrary: Library = {
@@ -58,14 +60,19 @@ export const cartridgeLibrary: Library = {
         description: cartridges.TETRIS,
         // show: true,
     },
+    [cartridges.TANKS]: {
+        logicHandler: TankDecorator,
+        description: cartridges.TANKS,
+        // show: true,
+    },
     [cartridges.SNAKE]: {
         logicHandler: SnakeDecorator,
         description: cartridges.SNAKE,
         // show: true,
     },
-    [cartridges.TANKS]: {
-        logicHandler: TankDecorator,
-        description: cartridges.TANKS,
+    [cartridges.RACE]: {
+        logicHandler: RaceDecorator,
+        description: cartridges.RACE,
         // show: true,
     },
 

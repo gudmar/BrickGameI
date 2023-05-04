@@ -12,12 +12,47 @@ export const UP_UNLOCK = 'feather'
 export const DONT_BUMP = 'lagiewka'
 export const BUMP = 'hit'
 export const SHORT_SNAKE = 'cut'
+export const JUGGERNAUT = 'juggernaut'
+export const GHOST = 'ghost'
+
+const GET_POINTS_TEXT = 'Get extra 5000 and cheater label';
+const START_TIMER_TEXT = 'Start timer';
+const STOP_TIMER_TEXT = 'Stop timer';
 
 export const gameCodes = [
-    STOP_TIMER, START_TIMER, UP_LOCK, ADD_POINTS, UP_UNLOCK, DONT_BUMP, BUMP, SHORT_SNAKE
+    STOP_TIMER,
+    START_TIMER,
+    UP_LOCK,
+    ADD_POINTS,
+    UP_UNLOCK,
+    DONT_BUMP,
+    BUMP,
+    SHORT_SNAKE
 ]
 
 export const codesDescription = {
+    [cartridges.RACE]:[
+        {
+            code: ADD_POINTS,
+            description: GET_POINTS_TEXT,
+        },
+        {
+            code: JUGGERNAUT,
+            description: 'Destroy bumped cars'
+        },
+        {
+            code: GHOST,
+            description: 'Penetrate other cars'
+        },
+        {
+            code: STOP_TIMER,
+            description: STOP_TIMER_TEXT,
+        },
+        {
+            code: START_TIMER,
+            description: START_TIMER_TEXT,
+        }
+    ],
     [cartridges.SNAKE]:[
         {
             code: SHORT_SNAKE,
@@ -25,15 +60,15 @@ export const codesDescription = {
         },
         {
             code: STOP_TIMER,
-            description: 'Stop timer',
+            description: STOP_TIMER_TEXT,
         },
         {
             code: START_TIMER,
-            description: 'Start timer',
+            description: START_TIMER_TEXT,
         },
         {
             code: ADD_POINTS,
-            description: 'Get 5000',
+            description: GET_POINTS_TEXT,
         },
         {
             code: DONT_BUMP,
@@ -47,11 +82,11 @@ export const codesDescription = {
     [cartridges.TETRIS]: [
         {
             code: STOP_TIMER,
-            description: 'Stop timer',
+            description: STOP_TIMER_TEXT,
         },
         {
             code: START_TIMER,
-            description: 'Start timer',
+            description: START_TIMER_TEXT,
         },
         {
             code: UP_UNLOCK,
@@ -63,7 +98,7 @@ export const codesDescription = {
         },
         {
             code: ADD_POINTS,
-            description: 'Get 5000',
+            description: GET_POINTS_TEXT,
         },
     ],
     [cartridges.MAZE]: [
@@ -91,7 +126,7 @@ export const codesDescription = {
         },
         {
             code: ADD_POINTS,
-            description: 'Get 5000',
+            description: GET_POINTS_TEXT,
         },
 
     ]
