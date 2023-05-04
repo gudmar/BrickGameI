@@ -42,7 +42,7 @@ export class TankVisitor extends NextStateCalculator implements GameCreatorInter
     enemyTankCommanders:any[]|undefined;
     lifes = 4;
     judge = new Judge();
-    isAnimated = false;
+    isAnimating = false;
     animatorOfDestruction?: AnimatorOfDestruction;
 
     get playerTankCords() {
@@ -119,16 +119,16 @@ export class TankVisitor extends NextStateCalculator implements GameCreatorInter
     }
 
     setVisitorToNextStateOnTick(visitedObject:GameCreator, time: number) {
-        // visitedObject.pawnLayer = mergeAllPlacedTanks(visitedObject.background);
+        if (visitedObject.isAnimating) {
+            this.animatorOfDestruction!.tick();
+            return;
+        }
+
         visitedObject.pawnLayer = getMergedLayerWithTanksAndBullets(visitedObject.background);
         Bullet.moveAllBullets(this, visitedObject);
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number): void {
-        if (this.isAnimated) {
-            this.animatorOfDestruction!.tick();
-            return;
-        }
         this.enemyTankCommanders?.forEach((commander) => {
             commander.makeMove();
         })

@@ -81,10 +81,11 @@ export class Tank{
     }
 
     setInitialOrientationIfPlayer() {
-        this.direction = directions.UP;
+         this.direction = directions.UP;
     }
-
+  
     shot(visitedObject: GameCreator) {
+        // if (visitedObject.isAnimating) return;
         if (this.variant === Variants.ENEMY && Tank.temporaryFreezeEnemyTanks) return;
         const startCords = this.getCordsOfShotBullet();
         if (this.isNrOfBulletsExceeded()) return false;
@@ -138,6 +139,7 @@ export class Tank{
     }
 
     move(visitedObject: GameCreator, direction: directions){
+        // if (visitedObject.isAnimating) return;
         if (Tank.temporaryFreezeEnemyTanks && this.variant !== Variants.PLAYER) return;
         const rotationOutcome = this.tankRotator.tryRotate(visitedObject, direction);
         if (rotationOutcome === didRotate.ROTATED) return;
@@ -251,6 +253,7 @@ export class Tank{
     }
 
     tryMove(visitedObject:GameCreator, delta: PawnCords){
+        // if (visitedObject.isAnimating) return;
         const {row: deltaRow, col: deltaCol} = delta;
         const {row, col} = this.cords;
         const plannedCords = {row: deltaRow + row, col: deltaCol + col }

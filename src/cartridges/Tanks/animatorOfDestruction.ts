@@ -2,7 +2,7 @@ import { range } from "../../functions/range";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { TankVisitor } from "./tanks";
 
-const MAX_NR_OF_ANIMATIONS = 10;
+const MAX_NR_OF_ANIMATIONS = 16;
 
 export class AnimatorOfDestruction{
     visitedObject: GameCreator;
@@ -12,21 +12,25 @@ export class AnimatorOfDestruction{
         this.nextStateCalculator = nextStateCalculator;
         this.visitedObject = visitedObject;
     }
-    set isAnimated(val: boolean){
-        this.nextStateCalculator.isAnimated = val;
+    set isAnimating(val: boolean){
+        this.visitedObject.isAnimating = val;
     }
-    get isAnimated() { return this.nextStateCalculator.isAnimated }
+    get isAnimating() { return this.visitedObject.isAnimating }
 
     tick(){
+        console.log(this.nrOfAnimationsSoFar)
         const isAnimationStopped = this.tryStopAnimation();
         if (isAnimationStopped) return;
         const pawnLayer = this.mergeBurningTankToBoard(this.visitedObject.pawnLayer, this.nextStateCalculator.playerTankCords, this.nrOfAnimationsSoFar % 2 === 0)
         this.visitedObject.pawnLayer = pawnLayer;
+        this.nrOfAnimationsSoFar++;
     }
     tryStopAnimation(){
+        console.log(this.nrOfAnimationsSoFar)
         if (this.nrOfAnimationsSoFar >= MAX_NR_OF_ANIMATIONS) {
-            this.nextStateCalculator.isAnimated = false;
+            this.visitedObject.isAnimating = false;
             this.nrOfAnimationsSoFar = 0;
+            this.nextStateCalculator.reInitiateGame(this.visitedObject)
             return true;
         }
         return false;

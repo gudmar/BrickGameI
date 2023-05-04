@@ -27,6 +27,10 @@ rotation of tank when placing
   + Player default position shoud be available for enemy tanks, but palyer default
   + Player default position moved more to center
   - Animation in case player tank destroyed
+    - Bullet tank hit turns on animation, but
+    - Animation does not happen untill game re-initialized,
+    - Tank does not leave animation state,
+    - Animation looks like it could not launch
   
 
 TESTS:

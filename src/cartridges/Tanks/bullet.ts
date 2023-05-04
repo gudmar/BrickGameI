@@ -122,7 +122,7 @@ export class Bullet {
             } else if (this.variant === Variants.ENEMY && hitTank.variant === Variants.PLAYER) {
                 if (this.nextStateCalculator !== undefined) {
                     this.nextStateCalculator.lifes--;
-                    this.nextStateCalculator.reInitiateGame(visitedObject);    
+                    visitedObject.isAnimating = true;
                 }
             }
         }
