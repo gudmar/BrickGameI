@@ -1,12 +1,17 @@
+import { getRandom } from "../../../functions/getRandom";
 import { GameCreator } from "../../GameCreator";
 import { Sites, TrackGenerator } from "../TrackGenerator";
+
+jest.mock('../../../functions/getRandom');
 
 describe('Testing track generator', () => {
     describe('Testing generateBlueprint', () => {
         const visitedObject = {level: 0};
         beforeEach(() => {
             visitedObject.level = 0;
+            jest.clearAllMocks();
         })
+        afterEach(() => jest.clearAllMocks())
         it('Should generate [0 0], [0, 0], [0, 1] when game started and initial site is randomly chosen to RIGHT', () => {
             const generator = new TrackGenerator({testRandomValue: Sites.RIGHT, visitedObject: visitedObject as GameCreator});
             const result = generator.generateBlueprint();
@@ -26,21 +31,18 @@ describe('Testing track generator', () => {
             expect(result).toEqual([[0, 0], [0, 0], [0, 1]])
         })
         it('Should generate 00 10 10 if left 1 game phase and no change in direction given', () => {
-            jest.mock('../../../functions/getRandom', () => ({
-                getRandom: () => 1
-            }))
-
+            getRandom.mockImplementation(() => 1234)
             const generator = new TrackGenerator({testRandomValue: Sites.RIGHT, visitedObject: visitedObject as GameCreator});
-            // generator.headTail = Sites.RIGHT;
-            // generator.site = Sites.RIGHT;
-            // generator.lastBlueprint = generator.getInitialBlueprint();
-            generator.gamePhase = 9;
-            
+            generator.gamePhase = 9;            
             const result = generator.generateBlueprint();
             expect(result).toEqual([[0, 0], [0, 1], [0, 1]])
         })
         it('Should generate 00 10 01 if left 1 game phase and change in direction given', () => {
-
+            getRandom.mockImplementation(() => 0)
+            const generator = new TrackGenerator({testRandomValue: Sites.RIGHT, visitedObject: visitedObject as GameCreator});
+            generator.gamePhase = 9;
+            const result = generator.generateBlueprint();
+            expect(result).toEqual([[0, 0], [0, 1], [1, 0]])
         })
 
     });
