@@ -29,7 +29,7 @@ export class TrackGenerator{
         this.distance = 0;
     }
 
-    get headTail() { return this.testRandomValue || getRandom(0, 1)}
+    get headTail() { return this.testRandomValue !== undefined ? this.testRandomValue : getRandom(0, 1)}
     set headTail(val: number|undefined) { this.testRandomValue = val}
 
     updateTrackIfNeeded() {

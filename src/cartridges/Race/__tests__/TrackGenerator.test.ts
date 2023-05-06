@@ -31,14 +31,14 @@ describe('Testing track generator', () => {
             expect(result).toEqual([[0, 0], [0, 0], [0, 1]])
         })
         it('Should generate 00 10 10 if left 1 game phase and no change in direction given', () => {
-            getRandom.mockImplementation(() => 1234)
+            (getRandom as jest.MockedFunction<typeof getRandom>).mockImplementation(() => 1234)
             const generator = new TrackGenerator({testRandomValue: Sites.RIGHT, visitedObject: visitedObject as GameCreator});
             generator.gamePhase = 9;            
             const result = generator.generateBlueprint();
             expect(result).toEqual([[0, 0], [0, 1], [0, 1]])
         })
         it('Should generate 00 10 01 if left 1 game phase and change in direction given', () => {
-            getRandom.mockImplementation(() => 0)
+            (getRandom as jest.MockedFunction<typeof getRandom>).mockImplementation(() => 0)
             const generator = new TrackGenerator({testRandomValue: Sites.RIGHT, visitedObject: visitedObject as GameCreator});
             generator.gamePhase = 9;
             const result = generator.generateBlueprint();
