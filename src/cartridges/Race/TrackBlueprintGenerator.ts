@@ -1,7 +1,6 @@
 import { getRandom } from "../../functions/getRandom";
 import { GameCreator } from "../GameCreator";
-
-const INITIAL_PROBABILITY_LEVEL_CHANGES = 10;
+import { CAR_PERIOD, INITIAL_PROBABILITY_LEVEL_CHANGES } from "./constants";
 
 export enum Sites {LEFT, RIGHT}
 
@@ -33,7 +32,7 @@ export class TrackGenerator{
     set headTail(val: number|undefined) { this.testRandomValue = val}
 
     updateTrackIfNeeded() {
-        const shouldUpdate = this.gamePhase % 9 === 0 && this.gamePhase !== 0;
+        const shouldUpdate = this.gamePhase % CAR_PERIOD === 0 && this.gamePhase !== 0;
         if (!shouldUpdate) return;
         const nextTrackBit = this.getNextBlueprintBit();
         const [, middle, last] = this.lastBlueprint;
