@@ -1,4 +1,4 @@
-import { addToLayer } from "../../functions/AddToLayer";
+import { addToLayer, addToLayerCutIfNotFit } from "../../functions/AddToLayer";
 import { range } from "../../functions/range";
 import { PawnCords } from "../GameCreator";
 import { CAR, CAR_PERIOD, getTrackEmptyBit, TRACK_EMPTY_BIT } from "./constants";
@@ -10,6 +10,9 @@ const LAST_COLUMN_INDEX = 9;
 const FIRST_COLUMN_INDEX = 0;
 const LINE_LENGTH = 3;
 const BIT_LENGTH = CAR_PERIOD / 2;
+const TRACK_PREDICTION_LENGTH = 3;
+const TRACK_BIT_LENGTH = LAST_COLUMN_INDEX + 1;
+const BOARD_HEIGHT = 20;
 const getOffset = (gamePhase: number, site: Sites) => {
     const initialOffset = site === Sites.RIGHT ? INITIAL_OFFSET_RIGHT : INITIAL_OFFSET_LFET;
     const offset = initialOffset + Math.floor(gamePhase / 2) % (CAR_PERIOD / 2);
@@ -17,6 +20,7 @@ const getOffset = (gamePhase: number, site: Sites) => {
 }
 
 export const ROAD_BLOCK_ERROR = 'Road block not allowed'
+export const WRONG_PREDICTION_SIZE_ERROR = 'Prediction for track should be exectly 3 track bits long'
 
 const drawLineOnTrack = (gamePhase:number, track:number[][], site: Sites) => {
     const line = range(LINE_LENGTH);
@@ -38,11 +42,22 @@ export const renderEmptyTrack = (gamePhase: number) => {
 }
 
 export const renderTrackBit = (trackBit: number[], gamePhase: number) => {
-    const emptyTrackHalfBit = renderEmptyTrack(gamePhase);
+    const emptyTrackHalfBit = getTrackEmptyBit();
     const emptyTrack = [...emptyTrackHalfBit, ...emptyTrackHalfBit];
     const [left, right] = trackBit;
     if (left && right) throw new Error(ROAD_BLOCK_ERROR)
     if (left) return addToLayer(emptyTrack, CAR, {row: 6, col: 2})
     if (right) return addToLayer(emptyTrack, CAR, {row: 6, col: 5})
     return emptyTrack;
+}
+
+export const renderTrack = (trackBits: number[][], gamePhase: number) => {
+    if(!Array.isArray(trackBits) || trackBits.length !== TRACK_PREDICTION_LENGTH) throw new Error(WRONG_PREDICTION_SIZE_ERROR);
+    const nrOfRowsShouldShift = gamePhase === TRACK_BIT_LENGTH ? TRACK_BIT_LENGTH : gamePhase % TRACK_BIT_LENGTH;
+    const trackWithLines = [...renderEmptyTrack(gamePhase),...renderEmptyTrack(gamePhase),...renderEmptyTrack(gamePhase),...renderEmptyTrack(gamePhase)];
+    const [trackBit1, trackBit2, trackBit3] = trackBits.map((trackBit) => renderTrackBit(trackBit, gamePhase));
+    const track = [...trackBit3, ...trackBit2, ...trackBit1];
+    const trackSlice = addToLayerCutIfNotFit(trackWithLines, track, {col: 0, row: nrOfRowsShouldShift - TRACK_BIT_LENGTH})
+    // const trackSlice = track.slice(nrOfRowsShouldShift, nrOfRowsShouldShift + BOARD_HEIGHT);
+    return trackSlice;
 }

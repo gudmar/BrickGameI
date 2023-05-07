@@ -1,4 +1,4 @@
-import { addToLayer, OVERFLOW_ERROR } from "../AddToLayer";
+import { addToLayer, addToLayerCutIfNotFit, OVERFLOW_ERROR } from "../AddToLayer";
 
 export const MOTHER_LAYER = [
     [0, 0, 0, 0, 0, 0],
@@ -50,6 +50,36 @@ const BOTH_EDGES_EXPECTED = [
     [0, 0, 0, 1, 0, 1],
     [0, 0, 0, 1, 1, 1],
 ]
+
+const CUT_OFF_UPPER_LEFT = [
+    [0, 1, 0, 0, 0, 0],
+    [1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+]
+
+const CUT_OFF_LOWER_RIGHT = [
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1],
+    [0, 0, 0, 0, 1, 0],
+]
+
+describe('Testing addToLayerCutIfNotFit', () => {
+    it('Should cut when index of col and row below 0', () => {
+        const result = addToLayerCutIfNotFit(MOTHER_LAYER, LAYER_TO_ADD, {row: -1, col: -1})
+        expect(result).toEqual(CUT_OFF_UPPER_LEFT);
+    })
+    it('Should cut when added figure is outside upper boundries', () => {
+        const result = addToLayerCutIfNotFit(MOTHER_LAYER, LAYER_TO_ADD, {row: 4, col: 4})
+        expect(result).toEqual(CUT_OFF_LOWER_RIGHT);
+    })
+
+})
 
 
 describe('Testing addToLayer function', () => {
