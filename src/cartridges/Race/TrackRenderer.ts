@@ -1,6 +1,7 @@
+import { addToLayer } from "../../functions/AddToLayer";
 import { range } from "../../functions/range";
 import { PawnCords } from "../GameCreator";
-import { CAR_PERIOD, getTrackEmptyBit, TRACK_EMPTY_BIT } from "./constants";
+import { CAR, CAR_PERIOD, getTrackEmptyBit, TRACK_EMPTY_BIT } from "./constants";
 import { Sites } from "./TrackBlueprintGenerator";
 
 const INITIAL_OFFSET_LFET = 2;
@@ -15,6 +16,7 @@ const getOffset = (gamePhase: number, site: Sites) => {
     return offset;
 }
 
+export const ROAD_BLOCK_ERROR = 'Road block not allowed'
 
 const drawLineOnTrack = (gamePhase:number, track:number[][], site: Sites) => {
     const line = range(LINE_LENGTH);
@@ -35,4 +37,12 @@ export const renderEmptyTrack = (gamePhase: number) => {
     return EMPTY;
 }
 
-throw new Error ('addToLayer implemented in functions/AddToLayer')
+export const renderTrackBit = (trackBit: number[], gamePhase: number) => {
+    const emptyTrackHalfBit = renderEmptyTrack(gamePhase);
+    const emptyTrack = [...emptyTrackHalfBit, ...emptyTrackHalfBit];
+    const [left, right] = trackBit;
+    if (left && right) throw new Error(ROAD_BLOCK_ERROR)
+    if (left) return addToLayer(emptyTrack, CAR, {row: 6, col: 2})
+    if (right) return addToLayer(emptyTrack, CAR, {row: 6, col: 5})
+    return emptyTrack;
+}
