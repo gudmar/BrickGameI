@@ -5,6 +5,10 @@
 
 * Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
 
+* Race:
+  - functions/AddToLayer : addToLayer tests !!! CAN BE TESTS FROM race, but should be moved to /functions/tests folder
+  - finish TrackRenderer using addToLayer
+
 * Tank:
 
 ************

@@ -1,4 +1,5 @@
 import { range } from "../../functions/range";
+import { PawnCords } from "../GameCreator";
 import { CAR_PERIOD, getTrackEmptyBit, TRACK_EMPTY_BIT } from "./constants";
 import { Sites } from "./TrackBlueprintGenerator";
 
@@ -34,3 +35,4 @@ export const renderEmptyTrack = (gamePhase: number) => {
     return EMPTY;
 }
 
+throw new Error ('addToLayer implemented in functions/AddToLayer')
