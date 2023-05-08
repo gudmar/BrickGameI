@@ -1,6 +1,7 @@
 import { getRandom } from "../../functions/getRandom";
 import { GameCreator } from "../GameCreator";
 import { CAR_PERIOD, INITIAL_PROBABILITY_LEVEL_CHANGES } from "./constants";
+import { renderTrack } from "./TrackRenderer";
 
 export enum Sites {LEFT, RIGHT}
 
@@ -12,6 +13,7 @@ export class TrackGenerator{
     gamePhase;
     testRandomValue?: number;
     visitedObject: GameCreator;
+    trackMoveTick: number;
 
     constructor({
         testRandomValue,
@@ -23,6 +25,13 @@ export class TrackGenerator{
         this.visitedObject = visitedObject;
         this.headTail = testRandomValue;
         this.site = this.getInitialSite();
+        this.gamePhase = 0;
+        this.trackMoveTick = 0;
+        this.lastBlueprint = this.getInitialBlueprint();
+        this.distance = 0;
+    }
+
+    reset() {
         this.gamePhase = 0;
         this.lastBlueprint = this.getInitialBlueprint();
         this.distance = 0;
@@ -78,13 +87,17 @@ export class TrackGenerator{
         this.updateTrackIfNeeded();
         return this.lastBlueprint;
     }
-
-    renderTrackBit(trackBit: number[][]){
-
+    next() {
+        const blueprint = this.generateBlueprint();
+        const nextTrakcView = renderTrack(blueprint, this.gamePhase, this.trackMoveTick);
+        this.gamePhase++;
+        return nextTrakcView;
     }
 
-    renderBoard(track: number[][]){
-
+    moveTrack() {
+        const blueprint = this.lastBlueprint;
+        const movedTrack = renderTrack(blueprint, this.gamePhase, Math.floor(this.trackMoveTick / 3));
+        this.trackMoveTick++;
+        return movedTrack;
     }
-    
 }

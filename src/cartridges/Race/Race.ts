@@ -6,6 +6,7 @@ import { GameCreator } from "../GameCreator";
 import { GamesIntro } from "../GamesIntro/GamesIntro";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { Judge } from "./Judge";
+import { TrackGenerator } from "./TrackBlueprintGenerator";
 
 const INTRO_BACKGROUND = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -54,9 +55,16 @@ export class RaceDecorator {
 
 class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
 
+    trackGenerator?: TrackGenerator;
+
+    // constructor(visitedObject: GameCreator) {
+    //     super();
+        
+    // }
 
     initiate(visitedObject: any): void {
-        
+        this.trackGenerator = new TrackGenerator({visitedObject})
+        visitedObject.background = this.trackGenerator.next();
     }
 
     passCode(visitedObject: GameCreator, code: string): void {
@@ -70,7 +78,7 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     pauseGame(visitedObject: GameCreator): void {
-        
+        visitedObject.isPaused = !visitedObject.isPaused;
     }
 
     setLevel(visitedObject: GameCreator): void {
@@ -82,11 +90,11 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number): void {
-        
+        visitedObject.background = this.trackGenerator!.next();
     }
 
     setVisitorToNextStateOnTick(visitedObject: any, time: number): void {
-        
+        visitedObject.background = this.trackGenerator?.moveTrack()
     }
 
     setVisitorToNextStateOnKeyPress(visitedObject: any, keyPresses: KeyPress): void {

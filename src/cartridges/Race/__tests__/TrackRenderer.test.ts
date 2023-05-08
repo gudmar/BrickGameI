@@ -86,32 +86,32 @@ describe('Testing track renderer', () => {
     })
     describe('Rendering board NOTE: sides of track move slower, once per 2 ticks', () => {
         it('Sould throw WRONG_PREDICTION_SIZE_ERROR error in case tarckBits.lenght is not 3', () => {
-            const throwingFunction = () => renderTrack([[0, 1]], 0);
+            const throwingFunction = () => renderTrack([[0, 1]], 0, 0);
             expect(throwingFunction).toThrow(WRONG_PREDICTION_SIZE_ERROR)
         })
         it('Should render initial board 00 00 01 with phase 0 correctly', () => {
             const expected = INITIAL_BOARD_GAME_PHASE_0;
-            const result = renderTrack([[0, 0], [0, 0], [0, 1]], 0)
+            const result = renderTrack([[0, 0], [0, 0], [0, 1]], 0, 0)
             expect(result).toEqual(expected);
         })
         it('Should render initial board 00 00 10 with phase 1 correctly', () => {
             const expected = INITIAL_BOARD_GAME_PHASE_1_RIGHT;
-            const result = renderTrack([[0, 0], [0, 0], [1, 0]], 1)
+            const result = renderTrack([[0, 0], [0, 0], [1, 0]], 1, 5)
             expect(result).toEqual(expected);
         })
         it('Should render initial board 00 00 10 with phase 2 correctly', () => {
             const expected = INITIAL_BOARD_GAME_PHASE_2_RIGHT;
-            const result = renderTrack([[0, 0], [0, 0], [1, 0]], 2)
+            const result = renderTrack([[0, 0], [0, 0], [1, 0]], 2, 1)
             expect(result).toEqual(expected);            
         })
         it(`Should  render initial board 00 00 10 with pahse ${CAR_PERIOD} correctly`, () => {
             const expected = BOARD_RIGHT_GAME_PHASE_10;
-            const result = renderTrack([[0, 0], [0, 0], [1, 0]], CAR_PERIOD)
+            const result = renderTrack([[0, 0], [0, 0], [1, 0]], CAR_PERIOD, 0)
             expect(result).toEqual(expected);            
         })
         it(`Should render board 00 01 10 with phase ${CAR_PERIOD - 1} correctly (switch start index back to 0)`, () => {
             const expected = BOARD_RIGHT_GAME_PHASE_9;
-            const result = renderTrack([[0, 0], [0, 0], [1, 0]], CAR_PERIOD - 1)
+            const result = renderTrack([[0, 0], [0, 0], [1, 0]], CAR_PERIOD - 1, 4)
             expect(result).toEqual(expected);            
         })
     })
