@@ -53,20 +53,9 @@ export const renderTrackBit = (trackBit: number[], gamePhase: number) => {
     return emptyTrack;
 }
 
-// export const renderTrack = (trackBits: number[][], gamePhase: number) => {
-//     if(!Array.isArray(trackBits) || trackBits.length !== TRACK_PREDICTION_LENGTH) throw new Error(WRONG_PREDICTION_SIZE_ERROR);
-//     const nrOfRowsShouldShift = gamePhase === TRACK_BIT_LENGTH ? TRACK_BIT_LENGTH : gamePhase % TRACK_BIT_LENGTH;
-//     const trackWithLines = [...renderEmptyTrack(gamePhase),...renderEmptyTrack(gamePhase),...renderEmptyTrack(gamePhase),...renderEmptyTrack(gamePhase)];
-//     const [trackBit1, trackBit2, trackBit3] = trackBits.map((trackBit) => renderTrackBit(trackBit, gamePhase));
-//     const track = [...trackBit3, ...trackBit2, ...trackBit1];
-//     const trackSlice = addToLayerCutIfNotFit(trackWithLines, track, {col: 0, row: nrOfRowsShouldShift - TRACK_BIT_LENGTH})
-//     // const trackSlice = track.slice(nrOfRowsShouldShift, nrOfRowsShouldShift + BOARD_HEIGHT);
-//     return trackSlice;
-// }
-
 export const renderTrack = (trackBits: number[][], gamePhase: number, trackMoveTick: number) => {
     if(!Array.isArray(trackBits) || trackBits.length !== TRACK_PREDICTION_LENGTH) throw new Error(WRONG_PREDICTION_SIZE_ERROR);
-    const nrOfRowsShouldShift = gamePhase === TRACK_BIT_LENGTH ? TRACK_BIT_LENGTH : gamePhase % TRACK_BIT_LENGTH;
+    const nrOfRowsShouldShift = gamePhase % TRACK_BIT_LENGTH;
     const trackWithLines = [...renderEmptyTrack(trackMoveTick),...renderEmptyTrack(trackMoveTick),...renderEmptyTrack(trackMoveTick),...renderEmptyTrack(trackMoveTick)];
     const [trackBit1, trackBit2, trackBit3] = trackBits.map((trackBit) => renderTrackBit(trackBit, gamePhase));
     const track = [...trackBit3, ...trackBit2, ...trackBit1];

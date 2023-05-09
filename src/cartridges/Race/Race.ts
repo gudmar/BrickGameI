@@ -65,6 +65,7 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
     initiate(visitedObject: any): void {
         this.trackGenerator = new TrackGenerator({visitedObject})
         visitedObject.background = this.trackGenerator.next();
+        visitedObject.level = 9
     }
 
     passCode(visitedObject: GameCreator, code: string): void {
@@ -94,11 +95,7 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     setVisitorToNextStateOnTick(visitedObject: any, time: number): void {
+        if (visitedObject.isPaused) return;
         visitedObject.background = this.trackGenerator?.moveTrack()
     }
-
-    setVisitorToNextStateOnKeyPress(visitedObject: any, keyPresses: KeyPress): void {
-        
-    }
-
 }

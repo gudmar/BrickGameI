@@ -96,7 +96,7 @@ export class TrackGenerator{
 
     moveTrack() {
         const blueprint = this.lastBlueprint;
-        const movedTrack = renderTrack(blueprint, this.gamePhase, Math.floor(this.trackMoveTick / 3));
+        const movedTrack = renderTrack(blueprint, this.gamePhase - 1, Math.floor(this.trackMoveTick / 3));
         this.trackMoveTick++;
         return movedTrack;
     }
