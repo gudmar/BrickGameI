@@ -94,9 +94,10 @@ export class TrackGenerator{
         return nextTrakcView;
     }
 
-    moveTrack() {
+    moveTrack({acceleration} = {acceleration: false}) {
         const blueprint = this.lastBlueprint;
-        const movedTrack = renderTrack(blueprint, this.gamePhase - 1, Math.floor(this.trackMoveTick / 3));
+        const slowFactor = acceleration === true ? 1 : 3;
+        const movedTrack = renderTrack(blueprint, this.gamePhase - 1, Math.floor(this.trackMoveTick / slowFactor));
         this.trackMoveTick++;
         return movedTrack;
     }

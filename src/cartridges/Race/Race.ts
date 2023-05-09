@@ -56,6 +56,7 @@ export class RaceDecorator {
 class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
 
     trackGenerator?: TrackGenerator;
+    accelerator?: Accelerator;
 
     // constructor(visitedObject: GameCreator) {
     //     super();
@@ -66,6 +67,7 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
         this.trackGenerator = new TrackGenerator({visitedObject})
         visitedObject.background = this.trackGenerator.next();
         visitedObject.level = 9
+        this.accelerator = new Accelerator(visitedObject, this.trackGenerator)
     }
 
     passCode(visitedObject: GameCreator, code: string): void {
@@ -76,6 +78,10 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
             case STOP_TIMER: break;
             case START_TIMER: break;
         }
+    }
+
+    rotate(visitedObject: GameCreator): void {
+        this.accelerator?.accelerate();
     }
 
     pauseGame(visitedObject: GameCreator): void {
@@ -91,11 +97,37 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number): void {
-        visitedObject.background = this.trackGenerator!.next();
+        this.accelerator?.moveCar()
     }
 
     setVisitorToNextStateOnTick(visitedObject: any, time: number): void {
-        if (visitedObject.isPaused) return;
-        visitedObject.background = this.trackGenerator?.moveTrack()
+        this.accelerator?.moveTrack();
+        this.accelerator!.isNosOn = false;
+    }
+}
+
+const SLOW_CAR_FACTOR = 3;
+
+class Accelerator {
+    isNosOn = false;
+    visitedObject: GameCreator;
+    trackGenerator: TrackGenerator;
+    accelerationCounter: number = 0;
+    constructor(visitedObject:GameCreator, trackGenerator: TrackGenerator) {
+        this.visitedObject = visitedObject;
+        this.trackGenerator = trackGenerator;
+    }
+    moveCar(){
+        if (!this.isNosOn && !this.visitedObject.isPaused) this.visitedObject.background = this.trackGenerator!.next();
+    }
+    moveTrack() {
+        if (!this.isNosOn && !this.visitedObject.isPaused) this.visitedObject.background = this.trackGenerator?.moveTrack();
+    }
+    accelerate() {
+        this.accelerationCounter++;
+        if (this.visitedObject.isPaused) return;
+        this.isNosOn = true;
+        if (this.accelerationCounter % SLOW_CAR_FACTOR === 0) this.visitedObject.background = this.trackGenerator!.next();
+        this.visitedObject.background = this.trackGenerator?.moveTrack({acceleration: true});
     }
 }
