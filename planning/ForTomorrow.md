@@ -6,8 +6,9 @@
 * Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
 
 * Race:
-  - When adding new car and randomly selecting site, a bug occures. Cars 
-  switch sides for a little while. More often newly generated car has another side, the more often bug occures
+- Player car
+- Player car colision detection
+- animation
 
 * Tank:
 
