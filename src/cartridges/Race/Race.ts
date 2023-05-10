@@ -1,8 +1,9 @@
 import { ADD_POINTS, GHOST, JUGGERNAUT, START_TIMER, STOP_TIMER } from "../../constants/gameCodes";
-import { addToLayer } from "../../functions/AddToLayer";
+import { addToLayer, addToLayerCutIfNotFit } from "../../functions/AddToLayer";
+import { replaceWithA } from "../../functions/brickMapLogicFunctions";
 import { checkIfLayersOverlap } from "../../functions/colisionDetection";
+import { range } from "../../functions/range";
 import { GameCreatorInterface } from "../../types/GameCreatorInterface";
-import { KeyPress } from "../../types/KeyPress";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { getEmptyBoard } from "../constants";
 import { setLifesToNextFigure } from "../Functions/setLifesToNextFigure";
@@ -12,7 +13,7 @@ import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { or } from "../layers/toggle/toggleFunction";
 import { CAR } from "./constants";
 import { Judge } from "./Judge";
-import { Sites, TrackGenerator } from "./TrackBlueprintGenerator";
+import { TrackGenerator } from "./TrackBlueprintGenerator";
 
 const INTRO_BACKGROUND = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -88,9 +89,11 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
 
     drawPawnLeft(visitedObject: GameCreator): void {
         visitedObject.pawnLayer = addToLayer(getEmptyBoard(), CAR, PLAYER_CAR_CORDS_LEFT, or)
+        visitedObject.pawnCords = PLAYER_CAR_CORDS_LEFT
     }
     drawPawnRight(visitedObject: GameCreator): void{
         visitedObject.pawnLayer = addToLayer(getEmptyBoard(), CAR, PLAYER_CAR_CORDS_RIGHT, or)
+        visitedObject.pawnCords = PLAYER_CAR_CORDS_RIGHT
     }
 
     passCode(visitedObject: GameCreator, code: string): void {
@@ -104,6 +107,7 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     rotate(visitedObject: GameCreator): void {
+        if (this.isGameFrozen(visitedObject)) return;
         this.accelerator?.accelerate();
     }
 
@@ -130,6 +134,7 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     setVisitorToNextStateOnTick(visitedObject: any, time: number): void {
+        this.animator.tick();
         if (this.isGameFrozen(visitedObject)) return;
         this.accelerator?.moveTrack();
         this.accelerator!.isNosOn = false;
@@ -159,23 +164,60 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
 
 
     move(visitedObject: GameCreator, deltaRow:number, deltaCol:number) {
+        if (this.isGameFrozen(visitedObject)) return;
         if (deltaCol === -1) this.drawPawnRight(visitedObject)
         if (deltaCol === 1) this.drawPawnLeft(visitedObject)
         this.handleAccident(visitedObject);
     }
 }
 
+const ANIMATION_LENGTH = 40;
+const FIRE_SIZE = 5;
+
 class Animator {
     context: RaceVisitor;
     visitedObject: GameCreator;
+    animationCounter = ANIMATION_LENGTH;
     constructor(context: RaceVisitor, visitedObject: GameCreator) {
         this.context = context;
         this.visitedObject = visitedObject;
     }
+    tick(){
+        if (this.context.isAnimating) {
+            console.log(this.animationCounter)
+            this.animationCounter--;
+            const fire = this.generateChessboard(FIRE_SIZE, this.animationCounter % 2 === 0)
+            this.visitedObject.pawnLayer = addToLayerCutIfNotFit(this.visitedObject.background, fire, findFireStartCords(this.visitedObject), replaceWithA)
+            if (this.animationCounter <= 0) {
+                this.context.informDeathWrongMove(this.visitedObject);
+                this.context.isAnimating = false;
+                this.animationCounter = ANIMATION_LENGTH;
+            }    
+        }
+    }
     accident(){
         this.context.isAnimating = true;
-        this.context.informDeathWrongMove(this.visitedObject);
     }
+    generateChessboard(size: number, startFromZero: boolean){
+
+        return range(size).map((item, index) => 
+            index % 2 === 0 ?
+            this.generateRow(size, startFromZero):
+            this.generateRow(size, !startFromZero))
+    }
+    generateRow(size: number, startFromZero: boolean) {
+        return range(size).map((item, index) => {
+            return startFromZero ? 
+                index % 2 :
+                (index + 1) % 2
+        })
+    }
+
+}
+
+const findFireStartCords = (visitedObject: GameCreator) => {
+    const {row, col} = visitedObject.pawnCords;
+    return {row, col: col - 1}
 }
 
 const SLOW_CAR_FACTOR = 3;
