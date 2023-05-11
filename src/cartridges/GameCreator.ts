@@ -168,6 +168,9 @@ export class GameCreator extends GameLogic {
             this.nextStateCalculator.rotate(this)
         }
     }
+    public spaceUp() {
+        this.nextStateCalculator?.spaceUp(this);
+    }
     public increaseSpeed() { this.speed > 9 ? this.speed = 1 : this.speed++; }
 
     public increaseLevel() { 

@@ -70,6 +70,7 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
     lifes = 4;
     animator!: Animator;
     isAnimating: boolean = false;
+    isAccelerating: boolean = false;
     // pawnSide: Sites = Sites.RIGHT;
 
     // constructor(visitedObject: GameCreator) {
@@ -79,12 +80,17 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
 
     initiate(visitedObject: any): void {
         this.animator = new Animator(this, visitedObject);
+        this.isAccelerating = false;
         this.isAnimating = false;
         this.trackGenerator = new TrackGenerator({visitedObject})
         visitedObject.background = this.trackGenerator.next();
         visitedObject.level = 9
         this.accelerator = new Accelerator(visitedObject, this.trackGenerator)
         this.drawPawnLeft(visitedObject);
+    }
+
+    spaceUp(){
+        this.isAccelerating = false;
     }
 
     drawPawnLeft(visitedObject: GameCreator): void {
@@ -108,6 +114,7 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
 
     rotate(visitedObject: GameCreator): void {
         if (this.isGameFrozen(visitedObject)) return;
+        this.isAccelerating = true;
         this.accelerator?.accelerate();
     }
 
@@ -129,6 +136,7 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number): void {
         if (this.isGameFrozen(visitedObject)) return;
+        if (this.isAccelerating) return;
         this.accelerator?.moveCar();
         
     }
@@ -138,6 +146,7 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
         if (this.isGameFrozen(visitedObject)) return;
         this.accelerator?.moveTrack();
         this.accelerator!.isNosOn = false;
+        if (this.isAccelerating) this.accelerator?.accelerate();
         this.handleAccident(visitedObject);
     }
 

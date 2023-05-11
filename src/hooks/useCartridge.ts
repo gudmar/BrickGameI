@@ -8,6 +8,7 @@ import { useGameCodes } from './useGameCodes';
 import { KeyPress } from '../types/KeyPress';
 import { cartridgeLibrary } from '../constants/cartridgeLibrary';
 import { flush } from '../functions/flush';
+import { KEY_UP } from '../functions/KeyReader';
 
 
 
@@ -107,6 +108,12 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
         const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Rotate);
         setGameState(nextState);
     }
+
+    const handleSpaceUp = () => {
+        const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.SpaceUp);
+        setGameState(nextState);
+    }
+
     const handleLevelChange = () => {
         const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.Level);
         setGameState(nextState);
@@ -142,6 +149,8 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
     useKeyboard({ key: keys.ENTER, callback: handleGameStart })
     useKeyboard({ key: keys.X, callback: resetConsole })
     useKeyboard({ key: keys.F1, callback: logGameState })
+
+    useKeyboard({ key: keys.SPACE, modifier: KEY_UP, callback: handleSpaceUp })
 
 
 

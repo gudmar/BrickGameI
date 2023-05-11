@@ -28,6 +28,7 @@ export abstract class NextStateCalculator {
         }
         if (visitedObject.isGameOver) return;
         if (keyPresses === KeyPress.Rotate) { visitedObject.rotate() }
+        if (keyPresses === KeyPress.SpaceUp) { visitedObject.spaceUp() }
         if (keyPresses === KeyPress.Pause) {visitedObject.pauseGame()}
         
         if (!visitedObject.checkIfGameLocked()) {
