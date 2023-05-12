@@ -12,8 +12,7 @@ export const UP_UNLOCK = 'feather'
 export const DONT_BUMP = 'lagiewka'
 export const BUMP = 'hit'
 export const SHORT_SNAKE = 'cut'
-export const JUGGERNAUT = 'juggernaut'
-export const GHOST = 'ghost'
+export const GHOST = 'wraith'
 
 const GET_POINTS_TEXT = 'Get extra 5000 and cheater label';
 const START_TIMER_TEXT = 'Start timer';
@@ -27,7 +26,8 @@ export const gameCodes = [
     UP_UNLOCK,
     DONT_BUMP,
     BUMP,
-    SHORT_SNAKE
+    SHORT_SNAKE,
+    GHOST,
 ]
 
 export const codesDescription = {
@@ -35,10 +35,6 @@ export const codesDescription = {
         {
             code: ADD_POINTS,
             description: GET_POINTS_TEXT,
-        },
-        {
-            code: JUGGERNAUT,
-            description: 'Destroy bumped cars'
         },
         {
             code: GHOST,

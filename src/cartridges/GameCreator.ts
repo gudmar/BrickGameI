@@ -76,6 +76,10 @@ export class GameCreator extends GameLogic {
         this._pawnLayer = val;
     }
 
+    public getCalculatorValue(valueName: string) {
+        return this.nextStateCalculator[valueName];
+    }
+
     public resetLayer() {
         this.pawnLayer = getEmptyBoard();
     }

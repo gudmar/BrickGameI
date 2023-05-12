@@ -1,4 +1,4 @@
-import { ADD_POINTS, GHOST, JUGGERNAUT, START_TIMER, STOP_TIMER } from "../../constants/gameCodes";
+import { ADD_POINTS, GHOST, START_TIMER, STOP_TIMER } from "../../constants/gameCodes";
 import { addToLayer, addToLayerCutIfNotFit } from "../../functions/AddToLayer";
 import { replaceWithA } from "../../functions/brickMapLogicFunctions";
 import { checkIfLayersOverlap } from "../../functions/colisionDetection";
@@ -12,7 +12,7 @@ import { GamesIntro } from "../GamesIntro/GamesIntro";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { or } from "../layers/toggle/toggleFunction";
 import { CAR } from "./constants";
-import { Judge } from "./Judge";
+import { gameEvents, Judge } from "./Judge";
 import { TrackGenerator } from "./TrackBlueprintGenerator";
 
 const INTRO_BACKGROUND = [
@@ -71,12 +71,8 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
     animator!: Animator;
     isAnimating: boolean = false;
     isAccelerating: boolean = false;
-    // pawnSide: Sites = Sites.RIGHT;
-
-    // constructor(visitedObject: GameCreator) {
-    //     super();
-        
-    // }
+    isGhost: boolean = false;
+    isCheaterFrozen: boolean = false;
 
     initiate(visitedObject: any): void {
         this.animator = new Animator(this, visitedObject);
@@ -84,7 +80,11 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
         this.isAnimating = false;
         this.trackGenerator = new TrackGenerator({visitedObject})
         visitedObject.background = this.trackGenerator.next();
-        visitedObject.level = 9
+        visitedObject.level = 1
+        this.lifes = 4;
+        this.isAccelerating = false;
+        this.isGhost = false;
+        this.isCheaterFrozen = false;    
         this.accelerator = new Accelerator(visitedObject, this.trackGenerator)
         this.drawPawnLeft(visitedObject);
     }
@@ -103,12 +103,12 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     passCode(visitedObject: GameCreator, code: string): void {
+        console.log(code)
         switch(code){
-            case ADD_POINTS: break;
-            case JUGGERNAUT: break;
-            case GHOST: break;
-            case STOP_TIMER: break;
-            case START_TIMER: break;
+            case ADD_POINTS: visitedObject.informJudge(gameEvents.CHEATER_MONEY); visitedObject.isCheater = true; break;
+            case GHOST: this.isGhost = true; visitedObject.isCheater = true; break;
+            case STOP_TIMER: this.isCheaterFrozen = true; visitedObject.isCheater = true; break;
+            case START_TIMER: this.isCheaterFrozen = false; break;
         }
     }
 
@@ -153,6 +153,7 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     handleAccident(visitedObject: GameCreator){
+        if (this.isGhost) return;
         const isAccident = checkIfLayersOverlap(visitedObject.background, visitedObject.pawnLayer);
         if (isAccident) this.animator.accident()
     }
@@ -242,6 +243,7 @@ class Accelerator {
         this.trackGenerator = trackGenerator;
     }
     moveCar(){
+        if (this.visitedObject.getCalculatorValue('isCheaterFrozen')) return;
         if (!this.visitedObject.isPaused) this.visitedObject.background = this.trackGenerator!.next();
     }
     moveTrack() {
