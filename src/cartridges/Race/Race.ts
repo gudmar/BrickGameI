@@ -2,6 +2,7 @@ import { ADD_POINTS, GHOST, START_TIMER, STOP_TIMER } from "../../constants/game
 import { addToLayer, addToLayerCutIfNotFit } from "../../functions/AddToLayer";
 import { replaceWithA } from "../../functions/brickMapLogicFunctions";
 import { checkIfLayersOverlap } from "../../functions/colisionDetection";
+import { CurtainClearAnimation } from "../../functions/Curtain";
 import { range } from "../../functions/range";
 import { GameCreatorInterface } from "../../types/GameCreatorInterface";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
@@ -62,6 +63,7 @@ export class RaceDecorator {
 
 const PLAYER_CAR_CORDS_LEFT = { row: 16, col: 5 }
 const PLAYER_CAR_CORDS_RIGHT = { row: 16, col: 2 }
+enum AnimationTypes {fire, curtain}
 
 class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
 
@@ -73,6 +75,7 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
     isAccelerating: boolean = false;
     isGhost: boolean = false;
     isCheaterFrozen: boolean = false;
+    animationType = AnimationTypes.fire;
 
     initiate(visitedObject: any): void {
         this.animator = new Animator(this, visitedObject);
@@ -80,13 +83,13 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
         this.isAnimating = false;
         this.trackGenerator = new TrackGenerator({visitedObject})
         visitedObject.background = this.trackGenerator.next();
-        visitedObject.level = 1
         this.lifes = 4;
         this.isAccelerating = false;
         this.isGhost = false;
         this.isCheaterFrozen = false;    
         this.accelerator = new Accelerator(visitedObject, this.trackGenerator)
         this.drawPawnLeft(visitedObject);
+        this.animationType = AnimationTypes.fire;
     }
 
     spaceUp(){
@@ -123,13 +126,13 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 
     setLevel(visitedObject: GameCreator): void {
-        
+        this.animator.curtain();
     }
 
     passMessageCarOvertaken(){}
 
     clean(visitedObject: GameCreator) {
-
+        visitedObject.level = 1
     }
 
     isGameFrozen(visitedObject: GameCreator){
@@ -183,33 +186,55 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
     }
 }
 
-const ANIMATION_LENGTH = 40;
+const FIRE_ANIMATION_LENGTH = 40;
+const CURTAIN_ANIMATION_LENGTH = 40;
 const FIRE_SIZE = 5;
 
 class Animator {
     context: RaceVisitor;
     visitedObject: GameCreator;
-    animationCounter = ANIMATION_LENGTH;
+    curtainInstance?:CurtainClearAnimation;
+    animationCounter = 0;
     constructor(context: RaceVisitor, visitedObject: GameCreator) {
         this.context = context;
         this.visitedObject = visitedObject;
     }
     tick(){
         if (this.context.isAnimating) {
-            console.log(this.animationCounter)
-            this.animationCounter--;
-            const fire = this.generateChessboard(FIRE_SIZE, this.animationCounter % 2 === 0)
-            this.visitedObject.pawnLayer = addToLayerCutIfNotFit(this.visitedObject.background, fire, findFireStartCords(this.visitedObject), replaceWithA)
-            if (this.animationCounter <= 0) {
-                this.context.informDeathWrongMove(this.visitedObject);
-                this.context.isAnimating = false;
-                this.animationCounter = ANIMATION_LENGTH;
-            }    
+            if (this.context.animationType === AnimationTypes.fire) this.tickFire();
+            if (this.context.animationType === AnimationTypes.curtain) this.tickCurtain();
+        }
+    }
+    tickFire(){
+        this.animationCounter--;
+        const fire = this.generateChessboard(FIRE_SIZE, this.animationCounter % 2 === 0)
+        this.visitedObject.pawnLayer = addToLayerCutIfNotFit(this.visitedObject.background, fire, findFireStartCords(this.visitedObject), replaceWithA)
+        if (this.animationCounter <= 0) {
+            this.context.informDeathWrongMove(this.visitedObject);
+            this.context.isAnimating = false;
+            this.animationCounter = FIRE_ANIMATION_LENGTH;
+        }    
+    }
+    tickCurtain(){
+        this.visitedObject.background = this.curtainInstance?.getBackground() as number[][];
+        if (this.curtainInstance!.done) {
+            this.animationCounter = FIRE_ANIMATION_LENGTH;
+            this.context.isAnimating = false;
         }
     }
     accident(){
+        this.animationCounter = FIRE_ANIMATION_LENGTH;
+        this.context.animationType = AnimationTypes.fire;
         this.context.isAnimating = true;
     }
+    curtain(){
+        this.animationCounter = CURTAIN_ANIMATION_LENGTH;
+        this.context.animationType = AnimationTypes.curtain;
+        this.context.isAnimating = true;
+        this.curtainInstance = new CurtainClearAnimation(this.visitedObject.background);
+    }
+
+
     generateChessboard(size: number, startFromZero: boolean){
 
         return range(size).map((item, index) => 
@@ -224,7 +249,6 @@ class Animator {
                 (index + 1) % 2
         })
     }
-
 }
 
 const findFireStartCords = (visitedObject: GameCreator) => {
