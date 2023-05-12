@@ -126,6 +126,8 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
         
     }
 
+    passMessageCarOvertaken(){}
+
     clean(visitedObject: GameCreator) {
 
     }
@@ -145,7 +147,7 @@ class RaceVisitor extends NextStateCalculator implements GameCreatorInterface{
         this.animator.tick();
         if (this.isGameFrozen(visitedObject)) return;
         this.accelerator?.moveTrack();
-        this.accelerator!.isNosOn = false;
+        // this.accelerator!.isNosOn = false;
         if (this.isAccelerating) this.accelerator?.accelerate();
         this.handleAccident(visitedObject);
     }
@@ -232,7 +234,6 @@ const findFireStartCords = (visitedObject: GameCreator) => {
 const SLOW_CAR_FACTOR = 3;
 
 class Accelerator {
-    isNosOn = false;
     visitedObject: GameCreator;
     trackGenerator: TrackGenerator;
     accelerationCounter: number = 0;
@@ -241,15 +242,14 @@ class Accelerator {
         this.trackGenerator = trackGenerator;
     }
     moveCar(){
-        if (!this.isNosOn && !this.visitedObject.isPaused) this.visitedObject.background = this.trackGenerator!.next();
+        if (!this.visitedObject.isPaused) this.visitedObject.background = this.trackGenerator!.next();
     }
     moveTrack() {
-        if (!this.isNosOn && !this.visitedObject.isPaused) this.visitedObject.background = this.trackGenerator?.moveTrack();
+        if (!this.visitedObject.isPaused) this.visitedObject.background = this.trackGenerator?.moveTrack();
     }
     accelerate() {
         this.accelerationCounter++;
         if (this.visitedObject.isPaused) return;
-        this.isNosOn = true;
         if (this.accelerationCounter % SLOW_CAR_FACTOR === 0) this.visitedObject.background = this.trackGenerator!.next();
         this.visitedObject.background = this.trackGenerator?.moveTrack({acceleration: true});
     }

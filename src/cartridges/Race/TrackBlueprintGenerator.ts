@@ -2,6 +2,7 @@ import { getRandom } from "../../functions/getRandom";
 import { GameCreator } from "../GameCreator";
 import { CAR_PERIOD, INITIAL_PROBABILITY_LEVEL_CHANGES } from "./constants";
 import { renderTrack } from "./TrackRenderer";
+import { gameEvents } from "./Judge"
 
 export enum Sites {LEFT, RIGHT}
 
@@ -40,12 +41,28 @@ export class TrackGenerator{
     get headTail() { return this.testRandomValue !== undefined ? this.testRandomValue : getRandom(0, 1)}
     set headTail(val: number|undefined) { this.testRandomValue = val}
 
+    shouldCountPoints() {
+        const NO_CARS_START_AREA_LENGTH = 20
+        const CAR_LENGTH = 4;
+        const BLAK_LENGHT = NO_CARS_START_AREA_LENGTH + CAR_LENGTH
+        const offesetGamePhase = (this.gamePhase - BLAK_LENGHT)
+        const isCarPassed = offesetGamePhase % 10 === 0 && offesetGamePhase >= 0;
+        return isCarPassed;
+    }
+
     updateTrackIfNeeded() {
         const shouldUpdate = this.gamePhase % CAR_PERIOD === 0 && this.gamePhase !== 0;
+        const [, middle, last] = this.lastBlueprint;
+        if (this.shouldCountPoints()) this.informCarOvertaken(middle)
         if (!shouldUpdate) return;
         const nextTrackBit = this.getNextBlueprintBit();
-        const [, middle, last] = this.lastBlueprint;
+        
         this.lastBlueprint = [middle, last, nextTrackBit]
+    }
+
+    informCarOvertaken(nextTrackBit: number[]){
+        const isCarOvertaken = nextTrackBit.some((bit: number) => bit === 1)
+        if (isCarOvertaken) this.visitedObject.judge.inform(this.visitedObject, gameEvents.TAKE_OVER)
     }
 
     shouldSiteChange() {
