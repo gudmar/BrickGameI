@@ -4,6 +4,7 @@ import { GameCreator } from "../GameCreator";
 import { GamesIntro } from "../GamesIntro/GamesIntro"
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { Judge } from "../Tanks/judge";
+import { levels } from "./levels";
 
 const INTRO_BACKGROUND = [
     [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
@@ -52,7 +53,7 @@ export class TennisDecorator {
 export class TennisVisitor extends NextStateCalculator implements GameCreatorInterface {
 
     initiate(visitedObject: any): void {
-        
+        this.setInitialLevel(visitedObject);
     }   
     
     passCode(visitedObject: GameCreator, code: string): void {
@@ -67,8 +68,14 @@ export class TennisVisitor extends NextStateCalculator implements GameCreatorInt
         
     }
 
+    setInitialLevel(visitedObject: GameCreator): void {
+        // visitedObject.level = 1;
+        visitedObject.background = levels[visitedObject.level - 1];
+    } 
+
     setLevel(visitedObject: GameCreator): void {
-        
+        visitedObject.level++;
+        visitedObject.background = levels[visitedObject.level - 1];
     }
 
     clean(visitedObject: GameCreator){
