@@ -13,6 +13,8 @@ export const DONT_BUMP = 'lagiewka'
 export const BUMP = 'hit'
 export const SHORT_SNAKE = 'cut'
 export const GHOST = 'wraith'
+export const IMMORTALITY = 'iddqd'
+export const JUGGERNAUT = 'juggernaut'
 
 const GET_POINTS_TEXT = 'Get extra 5000 and cheater label';
 const START_TIMER_TEXT = 'Start timer';
@@ -28,9 +30,25 @@ export const gameCodes = [
     BUMP,
     SHORT_SNAKE,
     GHOST,
+    IMMORTALITY,
+    JUGGERNAUT,
 ]
 
 export const codesDescription = {
+    [cartridges.TENNIS]:[
+        {
+            code: IMMORTALITY,
+            description: 'Infinite nr of lifes',
+        },
+        {
+            code: ADD_POINTS,
+            description: 'Adds extra 5000 points'
+        },
+        {
+            code: JUGGERNAUT,
+            description: 'More then one brick are destroyed at one hit'
+        }
+    ],
     [cartridges.RACE]:[
         {
             code: ADD_POINTS,
