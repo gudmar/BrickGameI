@@ -9,6 +9,15 @@ export type Speed = OneToTen;
 
 export type Level = OneToTen;
 
+export enum ObstacleLocations {
+    above, below, left, right, noTouch, bottomLeft, bottomRight, topLeft, topRight, gameLost,
+}
+
+export enum BallDirections {
+    upLeft, upRight, downRight, downLeft,
+}
+
+
 // export type NextFigurePreview = number[][]
 export type NextFigurePreview = number[][]
 
