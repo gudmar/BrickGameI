@@ -53,7 +53,7 @@ export const getObstacleCords = ({
     if (col === 0 && isMoveLeft(currentDirection)) return [{row, col: col - 1}]
     if (col === getMaxColIndex(background) && isMoveRight(currentDirection)) return [{row, col: col + 1}]
     const possibleObctacleCords = getPossibleObstacleCordsForDirection(currentDirection, ballCords)
-    const obstacleCords = possibleObctacleCords.filter((cord) => isObstacleUnderCords(cord, background))
+    const obstacleCords = possibleObctacleCords!.filter((cord) => isObstacleUnderCords(cord, background))
     return(obstacleCords)
 }
 
@@ -63,9 +63,9 @@ export const getObstacleLocations = ({
     currentDirection,
     playerPosition,
 }: NextBallDirectionCalculatorInterface) => {
-    const {row, col} = ballCords;
     const obstacleCords = getObstacleCords({ background, ballCords, currentDirection, playerPosition });
-    
+    const obstacleLocations = calculateObstacleLocations(obstacleCords, ballCords);
+    return obstacleLocations;
 }
 
 const cordsToDirectionsMapper = (ballCords: PawnCords, cordsToCheck: PawnCords) => {

@@ -14,7 +14,7 @@ export enum ObstacleLocations {
 }
 
 export enum BallDirections {
-    upLeft, upRight, downRight, downLeft,
+    upLeft, upRight, downRight, downLeft, gameLost,
 }
 
 
