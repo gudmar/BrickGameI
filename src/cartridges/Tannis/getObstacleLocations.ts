@@ -1,4 +1,4 @@
-import { BallDirections, directions } from "../../types/types";
+import { BallDirections, directions, ObstacleLocations } from "../../types/types";
 import { PawnCords } from "../GameCreator";
 
 export interface NextBallDirectionCalculatorInterface {
@@ -50,10 +50,68 @@ export const getObstacleCords = ({
 }: NextBallDirectionCalculatorInterface) => {
     throwIfGameLoss(ballCords, background)
     const {row, col} = ballCords;
-    const cords: PawnCords[] = [];
     if (col === 0 && isMoveLeft(currentDirection)) return [{row, col: col - 1}]
     if (col === getMaxColIndex(background) && isMoveRight(currentDirection)) return [{row, col: col + 1}]
     const possibleObctacleCords = getPossibleObstacleCordsForDirection(currentDirection, ballCords)
     const obstacleCords = possibleObctacleCords.filter((cord) => isObstacleUnderCords(cord, background))
     return(obstacleCords)
+}
+
+export const getObstacleLocations = ({
+    background,
+    ballCords,
+    currentDirection,
+    playerPosition,
+}: NextBallDirectionCalculatorInterface) => {
+    const {row, col} = ballCords;
+    const obstacleCords = getObstacleCords({ background, ballCords, currentDirection, playerPosition });
+    
+}
+
+const cordsToDirectionsMapper = (ballCords: PawnCords, cordsToCheck: PawnCords) => {
+    const cordsToDirectionsMap = [
+        {
+            direction: ObstacleLocations.above,
+            condition: ballCords.col === cordsToCheck.col && ballCords.row === cordsToCheck.row + 1,
+        },
+        {
+            direction: ObstacleLocations.topLeft,
+            condition: ballCords.col === cordsToCheck.col + 1 && ballCords.row === (cordsToCheck.row + 1),
+        },
+        {
+            direction: ObstacleLocations.left,
+            condition: ballCords.col - 1 === cordsToCheck.col && ballCords.row === cordsToCheck.row,
+        },
+        {
+            direction: ObstacleLocations.bottomLeft,
+            condition: ballCords.col - 1 === cordsToCheck.col && ballCords.row +1 === cordsToCheck.row,
+        },
+        {
+            direction: ObstacleLocations.below,
+            condition: ballCords.col === cordsToCheck.col && ballCords.row + 1 === cordsToCheck.row,
+        },
+        {
+            direction: ObstacleLocations.bottomRight,
+            condition: ballCords.col === cordsToCheck.col - 1 && ballCords.row === cordsToCheck.row - 1,
+        },
+        {
+            direction: ObstacleLocations.right,
+            condition: ballCords.col === cordsToCheck.col - 1 && ballCords.row === cordsToCheck.row,
+        },
+        {
+            direction: ObstacleLocations.topRight,
+            condition: ballCords.col === cordsToCheck.col -1 && ballCords.row - 1 === cordsToCheck.row,
+        }
+    ]
+    const foundDirectionMap = cordsToDirectionsMap.find(({condition}) => condition);
+    return foundDirectionMap?.direction === undefined ? null : foundDirectionMap.direction;
+}    
+
+export const calculateObstacleLocations = (obstacleCords: PawnCords[], ballCords: PawnCords) => {
+    const directions: ObstacleLocations[] = [];
+    obstacleCords.forEach((cord) => {
+        const direction = cordsToDirectionsMapper(ballCords, cord);
+        if (direction !== null) directions.push(direction)
+    })
+    return directions;
 }

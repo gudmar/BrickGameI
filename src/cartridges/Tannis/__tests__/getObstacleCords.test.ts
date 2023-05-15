@@ -1,4 +1,4 @@
-import { BallDirections, directions } from "../../../types/types";
+import { BallDirections } from "../../../types/types";
 import { getEmptyBoard } from "../../constants";
 import { PawnCords } from "../../GameCreator";
 import { GAME_LOST_ERROR, getObstacleCords } from "../getObstacleLocations";
@@ -75,6 +75,4 @@ describe('Testing getObstacleCords', () => {
         ]
         expect(result).toEqual(expect.arrayContaining(expected));
     })
-
-
 })
