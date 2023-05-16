@@ -6,6 +6,7 @@ import { GameCreator, PawnCords } from "../GameCreator";
 import { GamesIntro } from "../GamesIntro/GamesIntro"
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { Judge } from "../Tanks/judge";
+import { BOARD_WIDTH, INITIAL_PLAYER_POSITION, LOWER_PLAYER_ROW, PLAYER_LENGTH, UPPER_PLAYER_ROW } from "./constants";
 import { levels } from "./levels";
 
 const INTRO_BACKGROUND = [
@@ -51,12 +52,6 @@ export class TennisDecorator {
         return decoreatedClass;
     }
 };
-
-const INITIAL_PLAYER_POSITION = 3;
-const PLAYER_LENGTH = 4;
-const UPPER_PLAYER_ROW = 0;
-const LOWER_PLAYER_ROW = 19;
-const BOARD_WIDTH = getEmptyBoard()[0].length;
 
 export class TennisVisitor extends NextStateCalculator implements GameCreatorInterface {
 
