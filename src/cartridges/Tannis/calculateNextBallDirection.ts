@@ -149,5 +149,4 @@ export const calculateNextBallDirection = ({
     return currentDirection;
 }
 
-
 const getMaxCol = (background: number[][]) => { return background[0].length - 1};
