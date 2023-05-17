@@ -7,10 +7,10 @@
 
 Tennis:
   - Move ball and bounce when hit obstacles
-    - Function calculating next direction with tests
+    + Function calculating next direction with tests
     - Hook above function to game
-  - Smooth player move:
-    - Implement left arrow up and right arrow up mechanism 
+  + Smooth player move:
+    + Implement left arrow up and right arrow up mechanism 
   - Implement mechanism allowing changing direction when player moves and touches ball
     - Flags: when player moves left flag changes to isMovingLeft, on keyUp, delete flag
     - when player has contact with ball and moving, influence nextDirectionCalculator

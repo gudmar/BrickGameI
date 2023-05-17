@@ -1,5 +1,7 @@
 import { range } from "../../functions/range";
 import { GameCreatorInterface } from "../../types/GameCreatorInterface";
+import { calculateNextBallDirection } from "./calculateNextBallDirection";
+import { BallDirections, ObstacleLocations } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { getEmptyBoard } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
@@ -8,6 +10,7 @@ import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { Judge } from "../Tanks/judge";
 import { BOARD_WIDTH, INITIAL_PLAYER_POSITION, LOWER_PLAYER_ROW, PLAYER_LENGTH, UPPER_PLAYER_ROW } from "./constants";
 import { levels } from "./levels";
+import reportWebVitals from "../../reportWebVitals";
 
 const INTRO_BACKGROUND = [
     [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
@@ -58,10 +61,11 @@ export class TennisVisitor extends NextStateCalculator implements GameCreatorInt
     pawnLayerRenderer?: PawnLayerRenderer;
     isPlayerMovingLeft: boolean = false;
     isPlayerMovingRight: boolean = false;
+    isAnimating: boolean = false;
 
     initiate(visitedObject: any): void {
         this.setInitialLevel(visitedObject);
-        this.pawnLayerRenderer = new PawnLayerRenderer(visitedObject);
+        this.pawnLayerRenderer = new PawnLayerRenderer(visitedObject, this);
         this.pawnLayerRenderer.renderPawnLayer(visitedObject);
     }
     
@@ -87,13 +91,22 @@ export class TennisVisitor extends NextStateCalculator implements GameCreatorInt
         visitedObject.background = levels[visitedObject.level - 1];
     }
 
+    isGameFrozen(visitedObject: GameCreator){
+        return (visitedObject.isGameOver || this.isAnimating || !visitedObject.isGameStarted) || visitedObject.isPaused
+    }
+
+
     clean(visitedObject: GameCreator){
 
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number): void {
+        if (this.isGameFrozen(visitedObject)) return;
+        this.pawnLayerRenderer?.moveBall(visitedObject);
+
     }
     setVisitorToNextStateOnTick(visitedObject: any, time: number): void {
+        if (this.isGameFrozen(visitedObject)) return;
         if (time % 2 === 0){
             if (this.isPlayerMovingLeft)
                 this.pawnLayerRenderer!.movePlayerLeft(visitedObject);
@@ -132,9 +145,9 @@ class PawnLayerRenderer {
     private _isGameStarted: boolean = false;
     private ballCordsCalculator: BallCordsCalculator;
 
-    constructor(visitedObject: GameCreator) {
+    constructor(visitedObject: GameCreator, tennisController: TennisVisitor) {
         this._playerPosition = INITIAL_PLAYER_POSITION;
-        this.ballCordsCalculator = new BallCordsCalculator(visitedObject, () => this.isGameStarted, () => this.playerPosition)
+        this.ballCordsCalculator = new BallCordsCalculator(visitedObject, tennisController)
     }
 
     public movePlayerLeft(visitedObject: GameCreator) {
@@ -146,6 +159,11 @@ class PawnLayerRenderer {
     public movePlayerRight(visitedObject: GameCreator) {
         if (this._playerPosition >= this.getMaxPlayerPosition()) return;
         this._playerPosition++;
+        this.renderPawnLayer(visitedObject);
+    }
+
+    public moveBall(visitedObject: GameCreator) {
+        this.ballCordsCalculator.setNextBallPosition(visitedObject);
         this.renderPawnLayer(visitedObject);
     }
 
@@ -183,14 +201,21 @@ class PawnLayerRenderer {
 }
 
 class BallCordsCalculator {
-    getIsGameStarted: () => boolean;
-    getPlayerPosition: () => number
     visitedObject: GameCreator;
+    currentBallDirection: BallDirections = BallDirections.upRight;
+    tennisController: TennisVisitor;
 
-    constructor(visitedObject: GameCreator, getIsGameStarted: () => boolean, getPlayerPosition: () => number) {
+    // constructor(visitedObject: GameCreator, getIsGameStarted: () => boolean, getPlayerPosition: () => number) {
+    constructor(visitedObject: GameCreator, tennisController: TennisVisitor) {
         this.visitedObject = visitedObject;
-        this.getIsGameStarted = getIsGameStarted;
-        this.getPlayerPosition = getPlayerPosition;
+        this.tennisController = tennisController;
+    }
+
+    getIsGameStarted() { return this.visitedObject.isGameStarted }
+    getPlayerPosition() {return this.tennisController.pawnLayerRenderer!.playerPosition;}
+
+    public restart() {
+        this.currentBallDirection = BallDirections.upRight
     }
 
     private getBallCordsGameNotStarted(visitedObject: GameCreator){
@@ -204,4 +229,28 @@ class BallCordsCalculator {
         newLayer[row][col] = 1;
     }
 
+    public setNextBallPosition(visitedObject: GameCreator) {
+        const newDirection = calculateNextBallDirection({
+            currentDirection: this.currentBallDirection,
+            ballCords: visitedObject.pawnCords,
+            background: visitedObject.background,
+            playerPosition: this.getPlayerPosition(),
+            isPlayerMovingLeft: this.tennisController.isPlayerMovingLeft,
+            isPlayerMovingRight: this.tennisController.isPlayerMovingRight,
+        })
+        this.currentBallDirection = newDirection;
+        const nextBallPosition = getNewBallCords(this.currentBallDirection, visitedObject.pawnCords);
+        visitedObject.pawnCords = nextBallPosition;
+    }
+}
+
+const getNewBallCords = (direction: BallDirections, ballCords: PawnCords) => {
+    const {row, col} = ballCords;
+    switch(direction){
+        case BallDirections.downLeft: return {row: row + 1, col: col - 1}
+        case BallDirections.downRight: return {row: row + 1, col: col + 1}
+        case BallDirections.upLeft: return {row: row -1, col: col - 1}
+        case BallDirections.upRight: return {row: row - 1, col: col + 1}
+        default: return ballCords;
+    }
 }
