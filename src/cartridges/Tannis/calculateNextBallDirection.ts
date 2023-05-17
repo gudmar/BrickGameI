@@ -102,10 +102,8 @@ const getDirectionAfterInteractionWithPlayer = (
 export const calculateNextBallDirection = ({
     currentDirection, ballCords, background, playerPosition, isPlayerMovingLeft = false, isPlayerMovingRight = false,
 }: NextBallDirectionCalculatorInterface) => {
-    const {row, col} = ballCords;
     throwIfBothDirections(isPlayerMovingLeft, isPlayerMovingRight);
     if (isGameLost(ballCords, background)) return BallDirections.gameLost
-    // const obstacleLocations = calculateObstacleLocations(ballCords);
     const obstacleLocations = getObstacleLocations({background, ballCords, currentDirection, playerPosition})
 
     if (isInteractionWithPlayer({ballCords, direction: currentDirection, playerPosition, isPlayerMovingLeft, isPlayerMovingRight})) {

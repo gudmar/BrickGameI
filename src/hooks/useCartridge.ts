@@ -109,6 +109,17 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
         setGameState(nextState);
     }
 
+    const handleStopLeft = () => {
+        const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.StopLeft)
+        setGameState(nextState);
+    }
+
+    const handleStopRight = () => {
+        const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.StopRight)
+        setGameState(nextState);
+    }
+
+
     const handleSpaceUp = () => {
         const nextState = cartridgeInstance.getNextStateOnKeyPress(KeyPress.SpaceUp);
         setGameState(nextState);
@@ -151,6 +162,8 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
     useKeyboard({ key: keys.F1, callback: logGameState })
 
     useKeyboard({ key: keys.SPACE, modifier: KEY_UP, callback: handleSpaceUp })
+    useKeyboard({ key: keys.LEFT, modifier: KEY_UP, callback: handleStopLeft })
+    useKeyboard({ key: keys.RIGHT, modifier: KEY_UP, callback: handleStopRight })
 
 
 

@@ -56,6 +56,8 @@ export class TennisDecorator {
 export class TennisVisitor extends NextStateCalculator implements GameCreatorInterface {
 
     pawnLayerRenderer?: PawnLayerRenderer;
+    isPlayerMovingLeft: boolean = false;
+    isPlayerMovingRight: boolean = false;
 
     initiate(visitedObject: any): void {
         this.setInitialLevel(visitedObject);
@@ -90,9 +92,14 @@ export class TennisVisitor extends NextStateCalculator implements GameCreatorInt
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number): void {
-        
     }
     setVisitorToNextStateOnTick(visitedObject: any, time: number): void {
+        if (time % 2 === 0){
+            if (this.isPlayerMovingLeft)
+                this.pawnLayerRenderer!.movePlayerLeft(visitedObject);
+            if (this.isPlayerMovingRight)
+                this.pawnLayerRenderer!.movePlayerRight(visitedObject);
+        }
         
     }
     setGameToNotStarted(visitedObject: GameCreator){
@@ -101,13 +108,21 @@ export class TennisVisitor extends NextStateCalculator implements GameCreatorInt
     move(visitedObject: any, deltaRow: number, deltaCol: number): void {
         console.log(deltaCol, deltaRow)
         if (deltaCol < 0) {
-            this.pawnLayerRenderer!.movePlayerLeft(visitedObject);
+            // this.pawnLayerRenderer!.movePlayerLeft(visitedObject);
+            this.isPlayerMovingLeft = true;
             return;
         }
         if (deltaCol > 0) {
-            this.pawnLayerRenderer!.movePlayerRight(visitedObject);
+            // this.pawnLayerRenderer!.movePlayerRight(visitedObject);
+            this.isPlayerMovingRight = true;
             return;
         }
+    }
+    stopLeft(visitedObject: any): void {
+        this.isPlayerMovingLeft = false;
+    }
+    stopRight(visitedObject: any): void {
+        this.isPlayerMovingRight = false;
     }
 }
 

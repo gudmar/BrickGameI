@@ -78,6 +78,15 @@ export abstract class NextStateCalculator {
         if (keyPresses === KeyPress.Up) this.move(visitedObject, -1, 0);
         if (keyPresses === KeyPress.Left) this.move(visitedObject, 0, -1);
         if (keyPresses === KeyPress.Right) this.move(visitedObject, 0, 1);
+        if (keyPresses === KeyPress.StopLeft) this.stopLeft(visitedObject);
+        if (keyPresses === KeyPress.StopRight) this.stopRight(visitedObject);
+    }
+
+    stopLeft(visitedObject:any) {
+        // This should be overloaded
+    }
+    stopRight(visitedObject:any){
+        // this should be overloaded
     }
 
     restart(visitedObject:any){
