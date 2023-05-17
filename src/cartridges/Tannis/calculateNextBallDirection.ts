@@ -125,8 +125,6 @@ export const calculateNextBallDirection = ({
     if (obstacleLocations.includes(ObstacleLocations.below) && obstacleLocations.includes(ObstacleLocations.left)){
         if (currentDirection === BallDirections.downLeft) return BallDirections.upRight;
     }
-
-
     if (obstacleLocations.includes(ObstacleLocations.above)){
         if (currentDirection === BallDirections.upLeft) return BallDirections.downLeft;
         if (currentDirection === BallDirections.upRight) return BallDirections.downRight;
@@ -142,6 +140,18 @@ export const calculateNextBallDirection = ({
     if (obstacleLocations.includes(ObstacleLocations.below)){
         if (currentDirection === BallDirections.downLeft) return BallDirections.upLeft
         if (currentDirection === BallDirections.downRight) return BallDirections.upRight
+    }
+    if (obstacleLocations.includes(ObstacleLocations.bottomLeft)){
+        if (currentDirection === BallDirections.downLeft) return BallDirections.upRight
+    }
+    if (obstacleLocations.includes(ObstacleLocations.bottomRight)){
+        if (currentDirection === BallDirections.downRight) return BallDirections.upLeft;
+    }
+    if (obstacleLocations.includes(ObstacleLocations.topLeft)){
+        if (currentDirection === BallDirections.upLeft) return BallDirections.downRight;
+    }
+    if (obstacleLocations.includes(ObstacleLocations.topRight)){
+        if (currentDirection === BallDirections.upRight) return BallDirections.downLeft;
     }
 
     return currentDirection;

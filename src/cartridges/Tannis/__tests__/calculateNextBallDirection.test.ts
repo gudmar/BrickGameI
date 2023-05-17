@@ -460,7 +460,6 @@ describe('Testing calculateNextBallDirection for Tennis', () => {
     })
     it('Should change direction from upLfet to downRight if ball was in left up corner and player was in 1 column', () => {
         const bg = getEmptyBoard();
-
         const result = calculateNextBallDirection({
             currentDirection: BallDirections.upLeft,
             ballCords: {row:1, col:0},
@@ -470,6 +469,58 @@ describe('Testing calculateNextBallDirection for Tennis', () => {
             isPlayerMovingRight: false,
         })
         expect(result).toBe(BallDirections.downRight);
+    })
+    it('Should change direction form upLeft to downRight if obstacle is in upper left corner of the ball', () => {
+        const bg = getEmptyBoard();
+        bg[4][4] = 1;
+        const result = calculateNextBallDirection({
+            currentDirection: BallDirections.upLeft,
+            ballCords: {row:5, col:5},
+            background: bg,
+            playerPosition: 1,
+            isPlayerMovingLeft: false,
+            isPlayerMovingRight: false,
+        })
+        expect(result).toBe(BallDirections.downRight);
+    })
+    it('Should change direction from upRight to downLeft if obstacle is in upper right corner of the ball', () => {
+        const bg = getEmptyBoard();
+        bg[4][6] = 1;
+        const result = calculateNextBallDirection({
+            currentDirection: BallDirections.upRight,
+            ballCords: {row:5, col:5},
+            background: bg,
+            playerPosition: 1,
+            isPlayerMovingLeft: false,
+            isPlayerMovingRight: false,
+        })
+        expect(result).toBe(BallDirections.downLeft);
+    })
+    it('Should change direction from downLeft to upRight if obstacle is in lower left corner of the ball', () => {
+        const bg = getEmptyBoard();
+        bg[6][4] = 1;
+        const result = calculateNextBallDirection({
+            currentDirection: BallDirections.downLeft,
+            ballCords: {row:5, col:5},
+            background: bg,
+            playerPosition: 1,
+            isPlayerMovingLeft: false,
+            isPlayerMovingRight: false,
+        })
+        expect(result).toBe(BallDirections.upRight);
+    })
+    it('Should change direction from downRight to upLeft if obstacle is in lower right corner of the ball', () => {
+        const bg = getEmptyBoard();
+        bg[6][6] = 1;
+        const result = calculateNextBallDirection({
+            currentDirection: BallDirections.downRight,
+            ballCords: {row:5, col:5},
+            background: bg,
+            playerPosition: 1,
+            isPlayerMovingLeft: false,
+            isPlayerMovingRight: false,
+        })
+        expect(result).toBe(BallDirections.upLeft);
     })
 
 });
