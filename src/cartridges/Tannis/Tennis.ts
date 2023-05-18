@@ -7,10 +7,13 @@ import { getEmptyBoard } from "../constants";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { GamesIntro } from "../GamesIntro/GamesIntro"
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
-import { Judge } from "../Tanks/judge";
+import { Judge } from "./Judge";
 import { BOARD_WIDTH, INITIAL_PLAYER_POSITION, LOWER_PLAYER_ROW, PLAYER_LENGTH, UPPER_PLAYER_ROW } from "./constants";
 import { levels } from "./levels";
 import reportWebVitals from "../../reportWebVitals";
+import { getObstacleCords } from "./getObstacleLocations";
+import { getMaxColIndex, getMaxRowIndex } from "./utils";
+import { gameEvents } from "./Judge";
 
 const INTRO_BACKGROUND = [
     [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
@@ -67,6 +70,7 @@ export class TennisVisitor extends NextStateCalculator implements GameCreatorInt
         this.setInitialLevel(visitedObject);
         this.pawnLayerRenderer = new PawnLayerRenderer(visitedObject, this);
         this.pawnLayerRenderer.renderPawnLayer(visitedObject);
+        // visitedObject.speed = 1;
     }
     
     passCode(visitedObject: GameCreator, code: string): void {
@@ -223,25 +227,90 @@ class BallCordsCalculator {
     }
 
     public renderBall(visitedObject: GameCreator, newLayer: number[][]){
-        console.log(this.getPlayerPosition())
         if (!this.getIsGameStarted()) visitedObject.pawnCords = this.getBallCordsGameNotStarted(visitedObject);
         const {row, col} = visitedObject.pawnCords;
         newLayer[row][col] = 1;
     }
 
+    private hitAllBricks(visitedObject: GameCreator) {
+        let newDirection = this.currentBallDirection;
+        let bricksToDemolish:PawnCords[] = [];
+        do {
+            newDirection = calculateNextBallDirection({
+                currentDirection: this.currentBallDirection,
+                ballCords: visitedObject.pawnCords,
+                background: visitedObject.background,
+                playerPosition: this.getPlayerPosition(),
+                isPlayerMovingLeft: this.tennisController.isPlayerMovingLeft,
+                isPlayerMovingRight: this.tennisController.isPlayerMovingRight,
+            })
+            const nrBricksToScore = this.demolishBricks(visitedObject);
+            this.score(visitedObject, nrBricksToScore);
+            this.currentBallDirection = newDirection;
+            bricksToDemolish = this.getBricksNominatedToDemolish(visitedObject)
+        } while (bricksToDemolish.length !== 0);
+    }
+
     public setNextBallPosition(visitedObject: GameCreator) {
-        const newDirection = calculateNextBallDirection({
-            currentDirection: this.currentBallDirection,
-            ballCords: visitedObject.pawnCords,
-            background: visitedObject.background,
-            playerPosition: this.getPlayerPosition(),
-            isPlayerMovingLeft: this.tennisController.isPlayerMovingLeft,
-            isPlayerMovingRight: this.tennisController.isPlayerMovingRight,
-        })
-        this.currentBallDirection = newDirection;
+        // const newDirection = calculateNextBallDirection({
+        //     currentDirection: this.currentBallDirection,
+        //     ballCords: visitedObject.pawnCords,
+        //     background: visitedObject.background,
+        //     playerPosition: this.getPlayerPosition(),
+        //     isPlayerMovingLeft: this.tennisController.isPlayerMovingLeft,
+        //     isPlayerMovingRight: this.tennisController.isPlayerMovingRight,
+        // })
+        // const nrBricksToScore = this.demolishBricks(visitedObject);
+        // this.score(visitedObject, nrBricksToScore);
+        this.hitAllBricks(visitedObject);
+        // this.currentBallDirection = newDirection;
         const nextBallPosition = getNewBallCords(this.currentBallDirection, visitedObject.pawnCords);
         visitedObject.pawnCords = nextBallPosition;
     }
+
+    private score(visitedObject: GameCreator, nrBricks: number){
+        console.log(nrBricks)
+        switch(nrBricks){
+            case 0: console.log('ZERO'); break;
+            case 1: console.log('UNO'); visitedObject.judge.inform(visitedObject, gameEvents.HIT_1); break;
+            case 2: console.log('TWO'); visitedObject.judge.inform(visitedObject, gameEvents.HIT_2); break;
+            case 3: console.log('THREE'); visitedObject.judge.inform(visitedObject, gameEvents.HIT_3); break;
+            default: throw new Error('Nr of bricks to demolish > 3, this should not happen');
+        }
+    }
+
+    private getBricksNominatedToDemolish(visitedObject: GameCreator) {
+        const nominatedBricks = getObstacleCords({
+            background: visitedObject.background,
+            ballCords: visitedObject.pawnCords,
+            currentDirection: this.currentBallDirection,
+        });
+        return nominatedBricks;
+    }
+
+    private demolishBricks(visitedObject: GameCreator) {
+        const nominatedBricks = this.getBricksNominatedToDemolish(visitedObject)
+        const bricksToDemolish = filterBricksToDemolish(nominatedBricks);
+        const nrOfBricksToScore = bricksToDemolish.length;
+        bricksToDemolish.forEach(({col, row}) => visitedObject.background[row][col] = 0)
+        return nrOfBricksToScore
+    }
+}
+
+const filterBricksToDemolish = (bricks: PawnCords[]) => {
+    const result = bricks.filter((brick) => shouldBrickBeDemolished(brick));
+    return result;
+}
+
+const shouldBrickBeDemolished = (brick: PawnCords) => {
+    const { row, col } = brick;
+    if (
+        row >= getMaxRowIndex() - 1 ||
+        row <= 1 ||
+        col <0 ||
+        col > getMaxColIndex()
+    ) return false;
+    return true;
 }
 
 const getNewBallCords = (direction: BallDirections, ballCords: PawnCords) => {

@@ -1,11 +1,12 @@
 import { BallDirections, directions, ObstacleLocations } from "../../types/types";
 import { PawnCords } from "../GameCreator";
+import { getMaxColIndex } from "./utils";
 
 export interface NextBallDirectionCalculatorInterface {
     currentDirection: BallDirections,
     ballCords: PawnCords,
     background: number[][],
-    playerPosition: number,
+    playerPosition?: number,
 }
 
 export const GAME_LOST_ERROR = 'Game lost';
@@ -20,9 +21,6 @@ const throwIfGameLoss = (ballCords: PawnCords, background: number[][]) => {
     if (isGameLost(ballCords, background)) throw new Error(GAME_LOST_ERROR)
 }
     
-const getMaxColIndex = (background:number[][]) => background[0].length - 1;
-const getMaxRowIndex = (background:number[][]) => background.length - 1;
-
 const isMoveLeft = (direction: BallDirections) => direction === BallDirections.downLeft || direction === BallDirections.upLeft;
 const isMoveRight = (direction: BallDirections) => direction === BallDirections.downRight || direction === BallDirections.upRight;
 
@@ -44,7 +42,6 @@ const isObstacleUnderCords = (cord: PawnCords, background: number[][]) => {
 
 export const getObstacleCords = ({
     background,
-    playerPosition,
     ballCords,
     currentDirection
 }: NextBallDirectionCalculatorInterface) => {
