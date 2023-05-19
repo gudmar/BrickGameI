@@ -11,15 +11,18 @@ Tennis:
     - Hook above function to game
   + Smooth player move:
     + Implement left arrow up and right arrow up mechanism 
-  - Implement mechanism allowing changing direction when player moves and touches ball
-    - Flags: when player moves left flag changes to isMovingLeft, on keyUp, delete flag
-    - when player has contact with ball and moving, influence nextDirectionCalculator
-  - Implement hit brick destruction mechanism (think of bigger destrcuction with codes)
+  + Implement mechanism allowing changing direction when player moves and touches ball
+    + Flags: when player moves left flag changes to isMovingLeft, on keyUp, delete flag
+    + when player has contact with ball and moving, influence nextDirectionCalculator
+  + Implement hit brick destruction mechanism (think of bigger destrcuction with codes)
   - Implement gameLost when outside rows
   - Implement level switch (not depending on points, but on no bricks in background left)
   - Implement curtain
-  - Implement points
+  + Implement points
   - Implement codes
+
+  GAME LOST bug!!! 
+    - After board and plaerPosition are restarted correctly, player layer is correctly rendered, setVisitorToNextStateOnSpeedTick is launched with some old visitedObject and causes playerPosition to degrade to the position before game was started
   
 
 

@@ -9,16 +9,10 @@ export interface NextBallDirectionCalculatorInterface {
     playerPosition?: number,
 }
 
-export const GAME_LOST_ERROR = 'Game lost';
-
 const isGameLost = (ballCords: PawnCords, background: number[][]) => {
     const {row } = ballCords;
     const maxRowIndex = background.length - 1;
     return (row === 0 || row === maxRowIndex)
-}
-
-const throwIfGameLoss = (ballCords: PawnCords, background: number[][]) => {
-    if (isGameLost(ballCords, background)) throw new Error(GAME_LOST_ERROR)
 }
     
 const isMoveLeft = (direction: BallDirections) => direction === BallDirections.downLeft || direction === BallDirections.upLeft;
@@ -26,11 +20,13 @@ const isMoveRight = (direction: BallDirections) => direction === BallDirections.
 
 const getPossibleObstacleCordsForDirection = (direction: BallDirections, cords: PawnCords) => {
     const {row, col} = cords;
+    console.log(direction)
     switch(direction){
         case BallDirections.upRight: return [{row: row - 1, col: col + 1}, {row: row - 1, col}, {row, col: col + 1}];
         case BallDirections.upLeft: return [{row: row - 1, col: col - 1}, {row: row - 1, col}, {row, col: col  - 1}];
         case BallDirections.downLeft: return [{row: row + 1, col: col - 1}, {row: row + 1, col}, {row, col: col  - 1}];
         case BallDirections.downRight: return [{row: row + 1, col: col + 1}, {row: row + 1, col}, {row, col: col + 1}];
+        default: console.error('Direction not allowed', direction);
     }
 }
 
@@ -45,7 +41,7 @@ export const getObstacleCords = ({
     ballCords,
     currentDirection
 }: NextBallDirectionCalculatorInterface) => {
-    throwIfGameLoss(ballCords, background)
+    if (isGameLost(ballCords, background)) return[]
     const {row, col} = ballCords;
     if (col === 0 && isMoveLeft(currentDirection)) return [{row, col: col - 1}]
     if (col === getMaxColIndex(background) && isMoveRight(currentDirection)) return [{row, col: col + 1}]

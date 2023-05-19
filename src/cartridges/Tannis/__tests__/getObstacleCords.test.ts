@@ -1,7 +1,7 @@
 import { BallDirections } from "../../../types/types";
 import { getEmptyBoard } from "../../constants";
 import { PawnCords } from "../../GameCreator";
-import { GAME_LOST_ERROR, getObstacleCords } from "../getObstacleLocations";
+import { getObstacleCords } from "../getObstacleLocations";
 
 const STANDARD_BALL = {
     background: getEmptyBoard(),
@@ -28,15 +28,15 @@ const surroundBallWighObstacles = (cords: PawnCords) => {
 }
 
 describe('Testing getObstacleCords', () => {
-    it('Should throw GAME_LOSS_ERROR in case row 0 or last row', () => {
-        const throwingFunctionStart = () => getObstacleCords(
+    it('Should return empty array in case row 0 or last row', () => {
+        const resultStart = getObstacleCords(
             {...STANDARD_BALL, ballCords: {row: 0, col: 5}}
         )
-        const throwingFunctionEnd = () => getObstacleCords(
+        const resultEnd = getObstacleCords(
             {...STANDARD_BALL, ballCords: {row: 19, col: 5}}
         )
-        expect(throwingFunctionStart).toThrow(GAME_LOST_ERROR)
-        expect(throwingFunctionEnd).toThrow(GAME_LOST_ERROR)
+        expect(resultStart).toEqual([])
+        expect(resultEnd).toEqual([])
     })
     it('Should return empty array in case no obstacle in neighbourhood', () => {
         const result = getObstacleCords({...STANDARD_BALL})
