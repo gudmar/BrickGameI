@@ -1,0 +1,42 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+.hidden {
+    color: var(--colorGameOff);
+}
+
+.visible {
+    color: var(--colorGameOn);
+}
+
+.gameAttributeLabel {
+    text-transform: uppercase;
+    color: var(--colorGameOn);
+    font-weight: bold;
+}
+
+.gameAttributeValue {
+    color: var(--colorGameOn);
+    margin-left: 0.25rem;
+}
+.gameAttributeContainer {
+    margin-left: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.band {
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: bold;
+}
+
+.space {
+    position: relative;
+    height: 0.25rem;
+}

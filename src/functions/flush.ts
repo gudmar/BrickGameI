@@ -1,0 +1,1 @@
+export const flush = (variable: any) => variable;

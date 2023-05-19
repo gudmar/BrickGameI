@@ -1,0 +1,69 @@
+.table{
+    display: flex;
+    width: 100vw;
+    height: calc(100vh - 3rem);
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    overflow: auto;
+}
+
+.housing{
+    width: var(--consoleHoudingWidth);
+    height: var(--consoleHousingHeight);
+    border-radius: 20px;
+    border: thin solid black;
+    display: grid;
+    grid-template-areas: 
+        "topBar topBar topBar"
+        "leftSideBar display rightSideBar"
+        "bottomBar bottomBar bottomBar"
+        "leftKeypadBar keypad rightKeypadBar"
+        "margin margin margin";
+    /* grid-template-columns: 2fr 7fr 2fr; */
+    grid-template-columns: 3fr 6fr 3fr;
+    grid-template-rows: 1fr 5fr 1fr 4fr 2fr;
+    
+}
+
+.stickerLabel {
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+}
+
+.topBar { 
+    grid-area: topBar; 
+    justify-self: center;
+    align-self: center;
+}
+.leftSideBar {
+    grid-area: leftSideBar;
+    justify-self: center;
+    align-self: center;
+}
+.rightSideBar {
+    grid-area: rightSideBar;
+    justify-self: center;
+    align-self: center;
+}
+.display { 
+    grid-area: display;
+    border: solid thin black;
+    width: var(--displayWidth);
+    height: var(--displayHeight);
+}
+.bottomBar { grid-area: bottomBar; }
+.leftKeypadBar { grid-area: leftKeypadBar; }
+.rightKeypadBar { grid-area: rightKeypadBar; }
+.keypad { 
+    grid-area: keypad; 
+    /* border: solid thin #555; */
+}
+.margin { grid-area: margin; }
+
+.grayTheme{
+    background-color: #888;
+    color: black;
+}

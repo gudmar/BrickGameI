@@ -1,3 +1,5 @@
+@import-normalize;
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,6 +7,38 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --displayBackgroundColor: #98a37f;
+  --consoleHousingHeight: 900px;
+  --consoleHousingWidth : 500px;
+
+  --colorGameOn: #32391b;
+  --colorGameOff: #92997b;
+
+  /* ===== CALCULATING DISPLAY SIZE ===== */
+  /* display size is:
+
+nrOfFractions for ENTERPRISE-mode 
+12 and 13 are number of grids
+displayWidthInFractions = 6fr;
+displayHeightInFractions = 5fr;
+consoleHousingWidth = 500px;
+consoleHousingHeight = 900px;
+width: (500px * 6) / 12 = 250px
+height: (900px * 5) / 13 = 346.15px */
+
+/* screan division:
+screanWidth = displayHeight / 2 = 173px;
+screanHeight = displayHeight = 346px; */
+
+/* display size should be fixed  */
+/* If housing size is changed, display dimention should be preserved */
+  --displayWidth: 250px;
+  --displayHeight: 346.15px;
+  --dojoWidth: 170px;
+  --dojoHeight: 340px;
+  --scoreBarWidth: calc( var(--displayWidth) - var(--dojoWidth));
+
 }
 
 code {
