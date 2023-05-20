@@ -20,7 +20,6 @@ const isMoveRight = (direction: BallDirections) => direction === BallDirections.
 
 const getPossibleObstacleCordsForDirection = (direction: BallDirections, cords: PawnCords) => {
     const {row, col} = cords;
-    console.log(direction)
     switch(direction){
         case BallDirections.upRight: return [{row: row - 1, col: col + 1}, {row: row - 1, col}, {row, col: col + 1}];
         case BallDirections.upLeft: return [{row: row - 1, col: col - 1}, {row: row - 1, col}, {row, col: col  - 1}];

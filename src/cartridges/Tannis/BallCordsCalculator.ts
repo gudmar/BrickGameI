@@ -2,7 +2,7 @@ import { BallDirections } from "../../types/types";
 import { setLifesToNextFigure } from "../Functions/setLifesToNextFigure";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { calculateNextBallDirection } from "./calculateNextBallDirection";
-import { LOWER_PLAYER_ROW } from "./constants";
+import { LOWER_PLAYER_ROW, PLAYER_LENGTH } from "./constants";
 import { getObstacleCords } from "./getObstacleLocations";
 import { gameEvents } from "./Judge";
 import { TennisVisitor } from "./Tennis";
@@ -13,7 +13,6 @@ export class BallCordsCalculator {
     currentBallDirection: BallDirections;
     tennisController: TennisVisitor;
 
-    // constructor(visitedObject: GameCreator, getIsGameStarted: () => boolean, getPlayerPosition: () => number) {
     constructor(visitedObject: GameCreator, tennisController: TennisVisitor) {
         this.currentBallDirection = BallDirections.upRight;
         this.visitedObject = visitedObject;
@@ -24,12 +23,24 @@ export class BallCordsCalculator {
     getPlayerPosition() {return this.tennisController.pawnLayerRenderer!.playerPosition;}
 
     public restart() {
-        console.log('RESTARING BALl')
         this.currentBallDirection = BallDirections.upRight
     }
 
     private getBallCordsGameNotStarted(visitedObject: GameCreator){
         return {row: LOWER_PLAYER_ROW - 1, col: this.getPlayerPosition() + 1} 
+    }
+
+    public moveBallIfTouchesPlayer(offset:number) {
+        if (this.tennisController.shouldMoveBallWithPlayer === false) return;
+        const {col, row} = this.visitedObject.pawnCords;
+        const playerPosition = this.tennisController.pawnLayerRenderer!.playerPosition;
+        const isBallInRow = row === 1 || row === getMaxRowIndex() - 1;
+        const isPlayerBallContact = (
+            isBallInRow &&
+            col >= playerPosition &&
+            col < playerPosition + PLAYER_LENGTH
+        )
+        if (isPlayerBallContact) this.visitedObject.pawnCords.col += offset;
     }
 
     public renderBall(visitedObject: GameCreator, newLayer: number[][]){
@@ -73,10 +84,10 @@ export class BallCordsCalculator {
 
     private score(visitedObject: GameCreator, nrBricks: number){
         switch(nrBricks){
-            case 0: console.log('ZERO'); break;
-            case 1: console.log('UNO'); visitedObject.judge.inform(visitedObject, gameEvents.HIT_1); break;
-            case 2: console.log('TWO'); visitedObject.judge.inform(visitedObject, gameEvents.HIT_2); break;
-            case 3: console.log('THREE'); visitedObject.judge.inform(visitedObject, gameEvents.HIT_3); break;
+            case 0: break;
+            case 1: visitedObject.judge.inform(visitedObject, gameEvents.HIT_1); break;
+            case 2: visitedObject.judge.inform(visitedObject, gameEvents.HIT_2); break;
+            case 3: visitedObject.judge.inform(visitedObject, gameEvents.HIT_3); break;
             default: throw new Error('Nr of bricks to demolish > 3, this should not happen');
         }
     }
@@ -107,15 +118,12 @@ export class BallCordsCalculator {
                 visitedObject.isGameOver = true;
                 visitedObject.gameLost();
             } else {
-                // this.tennisController.setGameToNotStarted(visitedObject);
                 this.tennisController.restart(visitedObject);
             }    
         }
     }
 
     private endGameIfLost(visitedObject: GameCreator) {
-        // const {row} = visitedObject.pawnCords;
-        // if (row <= 0 || row >= getMaxRowIndex(visitedObject.background)) {
         if (this.tennisController.lifes === 0) {
             visitedObject.isGameOver = true;
         }

@@ -1,8 +1,7 @@
-import { updateExpressionWithTypeArguments } from "typescript";
-import { BallDirections, directions, ObstacleLocations } from "../../types/types";
+import { BallDirections, ObstacleLocations } from "../../types/types";
 import { PawnCords } from "../GameCreator"
 import { LAST_COL, LAST_ROW, PLAYER_LENGTH } from "./constants";
-import { calculateObstacleLocations, getObstacleLocations } from "./getObstacleLocations";
+import { getObstacleLocations } from "./getObstacleLocations";
 
 
 export interface NextBallDirectionCalculatorInterface {
@@ -13,9 +12,6 @@ export interface NextBallDirectionCalculatorInterface {
     isPlayerMovingLeft?: boolean,
     isPlayerMovingRight?: boolean,
 }
-const OBSTACLE_LOCATIONS = [
-    ObstacleLocations.above, ObstacleLocations.below, ObstacleLocations.bottomLeft, ObstacleLocations.bottomRight, ObstacleLocations.gameLost, ObstacleLocations.left, ObstacleLocations.noTouch, ObstacleLocations.right, ObstacleLocations.topLeft, ObstacleLocations.topRight
-]
 
 const isGameLost = (ballCords: PawnCords, background: number[][]) => {
     const {row } = ballCords;
@@ -156,5 +152,3 @@ export const calculateNextBallDirection = ({
 
     return currentDirection;
 }
-
-const getMaxCol = (background: number[][]) => { return background[0].length - 1};

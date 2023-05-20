@@ -1,5 +1,5 @@
 import { KeyPress } from "../types/KeyPress";
-import { PawnCords } from "./GameCreator";
+import { GameCreator, PawnCords } from "./GameCreator";
 import { gameEvents } from "./snake/Judge";
 
 export abstract class NextStateCalculator {
@@ -14,7 +14,7 @@ export abstract class NextStateCalculator {
         throw new Error('NextStateCalculator: setVisitorToBextStateOnTick should be overwritten')
     }
 
-    setVisitorToNextStateOnKeyPress(visitedObject:any, keyPresses: KeyPress){
+    setVisitorToNextStateOnKeyPress(visitedObject:GameCreator, keyPresses: KeyPress){
         if (keyPresses === KeyPress.Log) { 
             visitedObject.isPaused = true;
         }
