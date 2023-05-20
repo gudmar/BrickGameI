@@ -16,6 +16,7 @@ import { getMaxColIndex, getMaxRowIndex } from "./utils";
 import { gameEvents } from "./Judge";
 import { PawnLayerRenderer } from "./PawnLayerRenderer";
 import { setLifesToNextFigure } from "../Functions/setLifesToNextFigure";
+import { ADD_POINTS, IMMORTALITY } from "../../constants/gameCodes";
 
 const INTRO_BACKGROUND = [
     [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
@@ -69,8 +70,10 @@ export class TennisVisitor extends NextStateCalculator implements GameCreatorInt
     isAnimating: boolean = false;
     lifes: number = 4;
     shouldMoveBallWithPlayer = false;
+    isImmortal = false;
 
     initiate(visitedObject: any): void {
+        this.isImmortal = false;
         this.setInitialLevel(visitedObject);
         visitedObject.isGameLost = false;
         visitedObject.isGameOver = false;
@@ -88,7 +91,11 @@ export class TennisVisitor extends NextStateCalculator implements GameCreatorInt
     }
     
     passCode(visitedObject: GameCreator, code: string): void {
-        
+        switch(code) {
+            case IMMORTALITY: this.isImmortal = true; visitedObject.isCheater = true; break;
+            case ADD_POINTS: visitedObject.judge.inform(visitedObject, gameEvents.CHEATER_MONEY); visitedObject.isCheater = true;
+
+        }
     }
 
     rotate(visitedObject: any): void {
@@ -125,12 +132,19 @@ export class TennisVisitor extends NextStateCalculator implements GameCreatorInt
         this.reinitialize(visitedObject)
     }
 
+    checkIfLevelAccomplished(visitedObject: GameCreator) {
+        const checkIfRowEmpty = (row: number[]) => row.every((item:number) => item === 0)
+        const isLevelDone = visitedObject.background.every(checkIfRowEmpty);
+        return isLevelDone;
+    }
+
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number): void {
         if (this.isGameFrozen(visitedObject)) return;
         this.pawnLayerRenderer?.moveBall(visitedObject);
-
+        if (this.checkIfLevelAccomplished(visitedObject)) this.setLevel(visitedObject);
     }
     setVisitorToNextStateOnTick(visitedObject: any, time: number): void {
+        if (this.isImmortal) this.lifes = 4;
         if (this.isGameFrozen(visitedObject)) return;
         if (time % 4 === 0){
             if (this.isPlayerMovingLeft)
