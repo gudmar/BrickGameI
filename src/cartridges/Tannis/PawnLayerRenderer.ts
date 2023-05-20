@@ -12,30 +12,28 @@ export class PawnLayerRenderer {
     private ballCordsCalculator: BallCordsCalculator;
 
     constructor(visitedObject: GameCreator, tennisController: TennisVisitor) {
-        console.log('CONSTRUCTING PAwnLayerRenderer', INITIAL_PLAYER_POSITION)
         this._playerPosition = INITIAL_PLAYER_POSITION;
         this.ballCordsCalculator = new BallCordsCalculator(visitedObject, tennisController)
         this.ballCordsCalculator.restart();
     }
 
     public restart(visitedObject: GameCreator) {
-        console.log('RESTAT Pawn layer')
         this._playerPosition = INITIAL_PLAYER_POSITION;
         this.ballCordsCalculator.restart();
         this.renderPawnLayer(visitedObject)
     }
 
     public movePlayerLeft(visitedObject: GameCreator) {
-        console.log('MOVE left')
         if (this._playerPosition === 0) return;
         this._playerPosition--;
+        this.ballCordsCalculator.moveBallIfTouchesPlayer(-1);
         this.renderPawnLayer(visitedObject);
     }
 
     public movePlayerRight(visitedObject: GameCreator) {
-        console.log('Move right')
         if (this._playerPosition >= this.getMaxPlayerPosition()) return;
         this._playerPosition++;
+        this.ballCordsCalculator.moveBallIfTouchesPlayer(+1);
         this.renderPawnLayer(visitedObject);
     }
 
@@ -46,12 +44,10 @@ export class PawnLayerRenderer {
 
     public renderPawnLayer(visitedObject: GameCreator){
         if(visitedObject.isGameOver) return;
-        console.trace('RENDER')
         const newLayer = getEmptyBoard();
         this.renderLowerPlayer(newLayer);
         this.renderUpperPlayer(newLayer);
         this.ballCordsCalculator.renderBall(visitedObject, newLayer);
-        console.log(newLayer)
         visitedObject.pawnLayer = newLayer;
     }
 

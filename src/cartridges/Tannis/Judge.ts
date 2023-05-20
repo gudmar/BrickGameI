@@ -12,7 +12,6 @@ export const gameEvents = {
 export class Judge extends AbstractJudge {
     
     inform(visitedObject: GameCreator, information: string) {
-        console.log('Judge info', information)
         switch(information){
             case gameEvents.HIT_1: visitedObject.score += 50; return;
             case gameEvents.HIT_2: visitedObject.score += 150; return;
