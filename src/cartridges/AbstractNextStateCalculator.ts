@@ -1,8 +1,11 @@
 import { KeyPress } from "../types/KeyPress";
+import { AnimationTypes } from "./Functions/Animator";
 import { GameCreator, PawnCords } from "./GameCreator";
 import { gameEvents } from "./snake/Judge";
 
 export abstract class NextStateCalculator {
+    isAnimating?:boolean;
+    animationType?: AnimationTypes;
     initiate(visitedObject:any){
         visitedObject.name = 'Overwrite name';
         visitedObject.pawnCords  = { col: 0, row: 0 }

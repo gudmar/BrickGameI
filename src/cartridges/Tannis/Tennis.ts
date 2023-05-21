@@ -1,22 +1,16 @@
-import { range } from "../../functions/range";
 import { GameCreatorInterface } from "../../types/GameCreatorInterface";
-import { calculateNextBallDirection } from "./calculateNextBallDirection";
-import { BallDirections, ObstacleLocations } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
-import { getEmptyBoard } from "../constants";
-import { GameCreator, PawnCords } from "../GameCreator";
+import { GameCreator } from "../GameCreator";
 import { GamesIntro } from "../GamesIntro/GamesIntro"
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { Judge } from "./Judge";
-import { BOARD_WIDTH, INITIAL_PLAYER_POSITION, LOWER_PLAYER_ROW, PLAYER_LENGTH, UPPER_PLAYER_ROW } from "./constants";
-import { getLevels, levels } from "./levels";
-import reportWebVitals from "../../reportWebVitals";
-import { getObstacleCords } from "./getObstacleLocations";
-import { getMaxColIndex, getMaxRowIndex } from "./utils";
+import { getLevels } from "./levels";
 import { gameEvents } from "./Judge";
 import { PawnLayerRenderer } from "./PawnLayerRenderer";
 import { setLifesToNextFigure } from "../Functions/setLifesToNextFigure";
 import { ADD_POINTS, IMMORTALITY } from "../../constants/gameCodes";
+import { Animator } from "../Functions/Animator";
+import { CurtainClearAnimation } from "../../functions/Curtain";
 
 const INTRO_BACKGROUND = [
     [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
@@ -71,8 +65,10 @@ export class TennisVisitor extends NextStateCalculator implements GameCreatorInt
     lifes: number = 4;
     shouldMoveBallWithPlayer = false;
     isImmortal = false;
+    animator?: Animator;
 
     initiate(visitedObject: any): void {
+        this.animator = new Animator(this, visitedObject);
         this.isImmortal = false;
         this.setInitialLevel(visitedObject);
         visitedObject.isGameLost = false;
@@ -114,8 +110,9 @@ export class TennisVisitor extends NextStateCalculator implements GameCreatorInt
     } 
 
     setLevel(visitedObject: GameCreator): void {
-        visitedObject.level++;
-        visitedObject.background = getLevels()[visitedObject.level - 1];
+        // visitedObject.level++;
+        // visitedObject.background = getLevels()[visitedObject.level - 1];
+        this.isAnimating = true;
     }
 
     isGameFrozen(visitedObject: GameCreator){        
@@ -143,7 +140,18 @@ export class TennisVisitor extends NextStateCalculator implements GameCreatorInt
         this.pawnLayerRenderer?.moveBall(visitedObject);
         if (this.checkIfLevelAccomplished(visitedObject)) this.setLevel(visitedObject);
     }
+
+    setLevelCallback(visitedObject: GameCreator) {
+        visitedObject.level++;
+        visitedObject.background = getLevels()[visitedObject.level - 1];
+        this.restart(visitedObject);
+    }
+
     setVisitorToNextStateOnTick(visitedObject: any, time: number): void {
+        if (this.isAnimating) {
+            this.animator?.tick(CurtainClearAnimation, () => this.setLevelCallback(visitedObject));
+            return;
+        }
         if (this.isImmortal) this.lifes = 4;
         if (this.isGameFrozen(visitedObject)) return;
         if (time % 4 === 0){

@@ -21,8 +21,8 @@ Tennis:
   + Implement points
   - Implement codes
 
-  GAME LOST bug!!! 
-    - After board and plaerPosition are restarted correctly, player layer is correctly rendered, setVisitorToNextStateOnSpeedTick is launched with some old visitedObject and causes playerPosition to degrade to the position before game was started
+- Implement juggernaut code
+- implement animation when level done
   
 
 
