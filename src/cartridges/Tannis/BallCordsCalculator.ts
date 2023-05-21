@@ -1,3 +1,4 @@
+import { reduceEachLeadingCommentRange } from "typescript";
 import { BallDirections } from "../../types/types";
 import { setLifesToNextFigure } from "../Functions/setLifesToNextFigure";
 import { GameCreator, PawnCords } from "../GameCreator";
@@ -61,7 +62,7 @@ export class BallCordsCalculator {
                 isPlayerMovingLeft: this.tennisController.isPlayerMovingLeft,
                 isPlayerMovingRight: this.tennisController.isPlayerMovingRight,
             })
-            const nrBricksToScore = this.demolishBricks(visitedObject);
+            const nrBricksToScore = newDirection !== this.currentBallDirection ? this.demolishBricks(visitedObject) : 0;
             this.score(visitedObject, nrBricksToScore);
             this.currentBallDirection = newDirection;
             bricksToDemolish = this.getBricksNominatedToDemolish(visitedObject)
@@ -83,6 +84,10 @@ export class BallCordsCalculator {
     }
 
     private score(visitedObject: GameCreator, nrBricks: number){
+        if (visitedObject.nextStateCalculator.isJuggernaut) {
+            visitedObject.judge.inform(visitedObject, gameEvents.HIT_MANY_CHEAT);
+            return;
+        }
         switch(nrBricks){
             case 0: break;
             case 1: visitedObject.judge.inform(visitedObject, gameEvents.HIT_1); break;
@@ -101,12 +106,37 @@ export class BallCordsCalculator {
         return nominatedBricks;
     }
 
+    private getBricksToDemolishIfCheat(visitedObject: GameCreator) {
+        const DEMOLITION_POWER = 2;
+        const {row, col} = visitedObject.pawnCords;
+        const bricksToDemolis = visitedObject.background.reduce((acc: PawnCords[], bgRow: number[], rowIndex: number) => {
+            bgRow.forEach(((bgCol: number, colIndex) => {
+                if (
+                    rowIndex >= row - DEMOLITION_POWER && 
+                    rowIndex <= row+ DEMOLITION_POWER &&
+                    colIndex >= col - DEMOLITION_POWER &&
+                    colIndex <= col + DEMOLITION_POWER
+                ) acc.push({row: rowIndex, col: colIndex});
+            }))
+            return acc
+        }, [])
+        return bricksToDemolis;
+    }
+
     private demolishBricks(visitedObject: GameCreator) {
-        const nominatedBricks = this.getBricksNominatedToDemolish(visitedObject)
-        const bricksToDemolish = filterBricksToDemolish(nominatedBricks);
+        const isJuggernaut = visitedObject.nextStateCalculator.isJuggernaut;
+        const bricksToDemolish = isJuggernaut ? this.getBricksToDemolishIfCheat(visitedObject) :
+            filterBricksToDemolish(this.getBricksNominatedToDemolish(visitedObject));
+        // if (isJuggernaut){
+
+        // } else {
+        //     const nominatedBricks = this.getBricksNominatedToDemolish(visitedObject)
+        //     const bricksToDemolish = filterBricksToDemolish(nominatedBricks);
+        //     const nrOfBricksToScore = bricksToDemolish.length;
+        // }
         const nrOfBricksToScore = bricksToDemolish.length;
         bricksToDemolish.forEach(({col, row}) => visitedObject.background[row][col] = 0)
-        return nrOfBricksToScore
+        return nrOfBricksToScore    
     }
 
     private gemLost(visitedObject: GameCreator) {

@@ -8,7 +8,7 @@ import { getLevels } from "./levels";
 import { gameEvents } from "./Judge";
 import { PawnLayerRenderer } from "./PawnLayerRenderer";
 import { setLifesToNextFigure } from "../Functions/setLifesToNextFigure";
-import { ADD_POINTS, IMMORTALITY } from "../../constants/gameCodes";
+import { ADD_POINTS, IMMORTALITY, JUGGERNAUT } from "../../constants/gameCodes";
 import { Animator } from "../Functions/Animator";
 import { CurtainClearAnimation } from "../../functions/Curtain";
 
@@ -65,6 +65,7 @@ export class TennisVisitor extends NextStateCalculator implements GameCreatorInt
     lifes: number = 4;
     shouldMoveBallWithPlayer = false;
     isImmortal = false;
+    isJuggernaut = false;
     animator?: Animator;
 
     initiate(visitedObject: any): void {
@@ -89,8 +90,8 @@ export class TennisVisitor extends NextStateCalculator implements GameCreatorInt
     passCode(visitedObject: GameCreator, code: string): void {
         switch(code) {
             case IMMORTALITY: this.isImmortal = true; visitedObject.isCheater = true; break;
-            case ADD_POINTS: visitedObject.judge.inform(visitedObject, gameEvents.CHEATER_MONEY); visitedObject.isCheater = true;
-
+            case ADD_POINTS: visitedObject.judge.inform(visitedObject, gameEvents.CHEATER_MONEY); visitedObject.isCheater = true; break;
+            case JUGGERNAUT: this.isJuggernaut = true; visitedObject.isCheater = true; break;
         }
     }
 
