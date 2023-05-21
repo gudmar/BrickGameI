@@ -28,7 +28,7 @@ export class CurtainClearAnimation {
             return
         }
         if (this.stage === Stage.down) this.count++;
-        if (this.stage === Stage.down && this.count >= this.maxRow){
+        if (this.stage === Stage.down && this.count > this.maxRow){
             this.done = true;
         }
     }

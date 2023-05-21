@@ -118,6 +118,7 @@ export class BallCordsCalculator {
                 visitedObject.isGameOver = true;
                 visitedObject.gameLost();
             } else {
+                // this.tennisController.isAnimating = true;
                 this.tennisController.restart(visitedObject);
             }    
         }
