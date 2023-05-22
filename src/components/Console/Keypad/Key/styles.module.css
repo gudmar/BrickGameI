@@ -25,6 +25,12 @@
     display: block;
     border: yellow solid thin;
 }
+.edge:hover{
+    background-color: #dd0;
+}
+.edge:active{
+    background-color: orange;
+}
 
 .small{
     width: var(--small);

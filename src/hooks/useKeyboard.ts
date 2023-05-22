@@ -1,5 +1,6 @@
 import { useEffect, useId, useState } from "react";
-import { keyCodes, KeyReader } from "../functions/KeyReader"
+import { keyCodes } from "../constants/keys";
+import { KeyReader } from "../functions/KeyReader"
 
 export interface useKeyboardProps {
     key: string,
