@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useId, useMemo, useState } from "react";
-import { EVERY_KEY, keyCodes, KeyReader } from "../functions/KeyReader";
+import { useEffect, useId, useMemo, useState } from "react";
+import { keyCodes } from "../constants/keys";
+import { EVERY_KEY, KeyReader } from "../functions/KeyReader";
 import { StringPatternMatcher } from "../functions/StringPatternsMatcher";
 
 export const useGameCodes = (listOfCodes:string[]) => {

@@ -5,7 +5,7 @@
 
 * Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
 
-- Correct order of games,
++ Correct order of games,
 - implement some menu outside tetris to switch games
 - Hit key - button should animate,
 - bar above should be hooked to game state

@@ -2,6 +2,9 @@ export enum KeySize { small, medium, big }
 
 export interface KeyProps {
   label: String
-  onClick: (e: React.MouseEvent<HTMLElement>) => void;
+  onMouseDown: (e: React.MouseEvent<HTMLElement>) => void,
+  onMouseUp: (e: React.MouseEvent<HTMLElement>) => void,
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+  activator: string,
   size: KeySize;
 }

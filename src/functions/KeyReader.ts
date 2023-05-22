@@ -1,8 +1,6 @@
 import { findAllByAltText } from "@testing-library/react";
+import { keyCodes, KEYDOWN, KEYUP } from "../constants/keys";
 /* eslint @typescript-eslint/consistent-type-assertions: "off" */
-
-const KEYDOWN = 'keydown';
-const KEYUP = 'keyup';
 
 export const EVERY_KEY = 'Every key';
 
@@ -16,88 +14,6 @@ interface Subscribtion {
 
 interface Unsubscribtion {
     id: string, eventType: string, typeModifier?: string
-}
-
-export const keyCodes = {
-    UP: 'ArrowUp',
-    DOWN: 'ArrowDown',
-    LEFT: 'ArrowLeft',
-    RIGHT: 'ArrowRight',
-    SPACE: ' ',
-    ENTER: 'Enter',
-    SHIFT: 'Shift',
-    TAB: 'Tab',
-    CTRL: 'Control',
-    ALT: 'Alt',
-    CAPS: 'Capslock',
-    NUMLOCK: 'Numlock',
-    F1: 'F1',
-    F2: 'F2',
-    F3: 'F3',
-    F4: 'F4',
-    F5: 'F5',
-    F6: 'F6',
-    F7: 'F7',
-    F8: 'F8',
-    F9: 'F9',
-    F10: 'F10',
-    F11: 'F11',
-    F12: 'F12',
-    COLN: ':',
-    SEMICOLN: ';',
-    META: 'Meta', // Windows key
-    DOT: '.',
-    A: 'a',
-    _A: 'A',
-    B: 'b',
-    _B:'B',
-    C:'c',
-    D: 'd',
-    E: 'e',
-    F: 'f',
-    G: 'g',
-    H: 'h',
-    I: 'i',
-    J: 'j',
-    K: 'k',
-    L: 'l',
-    M: 'm',
-    N: 'n',
-    O: 'o',
-    P: 'p',
-    R: 'r',
-    S: 's',
-    T: 't',
-    U: 'u',
-    W: 'w',
-    X: 'x',
-    Y: 'y',
-    Z: 'z',
-    Q: 'q',
-    _C:'C',
-    _D: 'D',
-    _E: 'E',
-    _F: 'F',
-    _G: 'G',
-    _H: 'H',
-    _I: 'I',
-    _J: 'J',
-    _K: 'K',
-    _L: 'L',
-    _M: 'M',
-    _N: 'N',
-    _O: 'O',
-    _P: 'P',
-    _R: 'R',
-    _S: 'S',
-    _T: 'T',
-    _U: 'U',
-    _W: 'W',
-    _X: 'X',
-    _Y: 'Y',
-    _Z: 'Z',
-    _Q: 'Q',
-    // Can add more if needed
 }
 
 export const errors = {
