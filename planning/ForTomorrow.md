@@ -5,26 +5,16 @@
 
 * Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
 
-Tennis:
-  - Move ball and bounce when hit obstacles
-    + Function calculating next direction with tests
-    - Hook above function to game
-  + Smooth player move:
-    + Implement left arrow up and right arrow up mechanism 
-  + Implement mechanism allowing changing direction when player moves and touches ball
-    + Flags: when player moves left flag changes to isMovingLeft, on keyUp, delete flag
-    + when player has contact with ball and moving, influence nextDirectionCalculator
-  + Implement hit brick destruction mechanism (think of bigger destrcuction with codes)
-  - Implement gameLost when outside rows
-  - Implement level switch (not depending on points, but on no bricks in background left)
-  - Implement curtain
-  + Implement points
-  - Implement codes
+- Correct order of games,
+- implement some menu outside tetris to switch games
+- Hit key - button should animate,
+- bar above should be hooked to game state
+- Game codes shown in better way
+- About content
+- css improved to make console more realistic
+- Some different skin
 
-- Implement juggernaut code
-- implement animation when level done
-  
-
+- Anti-tetris
 
 
 ************
