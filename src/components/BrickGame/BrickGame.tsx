@@ -5,7 +5,7 @@ import Console from '../Console/Console';
 import { OneToTen } from '../../types/types'
 import { codesDescription } from '../../constants/gameCodes';
 import { keys, useKeyboard } from '../../hooks/useKeyboard';
-import { CARTRIDGE_ORDER } from '../../constants/cartridgeLibrary';
+import { useSetCartridge } from './useSetCartridge';
 
 
 function CodeDescriptions({currentGame}: {currentGame: string}) {
@@ -25,25 +25,20 @@ function CodeDescriptions({currentGame}: {currentGame: string}) {
   )
 }
 
+
 function BrickGame() {
-  const [currentGame, setCurrentGame] = useState(CARTRIDGE_ORDER[1]);
   const [speed, setSpeed]: [OneToTen, any] = useState(1);
   const [level, setLevel]: [OneToTen, any] = useState(1);
-  const [isGameSelectionAllowed, setIsGameSelectionAllowed]: [boolean, (val:boolean)=>void] = useState(false);
-
-  const cartridgeUp = () => {
-    if (!isGameSelectionAllowed) return{};
-    const findCurrentCartridgeIndex = () => CARTRIDGE_ORDER.findIndex((storedCartridge) => storedCartridge === currentGame)
-    const setNextCartridge = () => {
-      const currentIndex = findCurrentCartridgeIndex();
-      const nextIndex =  currentIndex + 1 >= CARTRIDGE_ORDER.length ? 0 : currentIndex + 1;
-      setCurrentGame(CARTRIDGE_ORDER[nextIndex])
-    }
-    setNextCartridge()    
-  }
+  const {
+    cartridgeDown,
+    cartridgeUp,
+    currentGame,
+    isGameSelectionAllowed,
+    setIsGameSelectionAllowed,
+  } = useSetCartridge();
   
   useKeyboard({ key: keys.UP, callback: cartridgeUp })
-  useKeyboard({ key: keys.DOWN, callback: cartridgeUp })
+  useKeyboard({ key: keys.DOWN, callback: cartridgeDown })
 
     return (
         <div className="root">
