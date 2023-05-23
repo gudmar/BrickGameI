@@ -31,3 +31,11 @@ export const useSetCartridge = () => {
         setIsGameSelectionAllowed,
     })
 }
+
+export interface CartridgeProviderType {
+  cartridgeDown: () => void,
+  cartridgeUp: () => void,
+  currentGame: string,
+  isGameSelectionAllowed: boolean,
+  setIsGameSelectionAllowed: () => void,
+}

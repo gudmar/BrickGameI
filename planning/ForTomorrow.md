@@ -7,7 +7,7 @@
 
 + Correct order of games,
 - implement some menu outside tetris to switch games
-- Hit key - button should animate,
++ Hit key - button should animate,
 - bar above should be hooked to game state
 - Game codes shown in better way
 - About content

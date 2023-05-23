@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTimer } from './useClock'
-import { GameState } from '../types/types';
-import { getNextFigureOfSymbols, getDojoOfSymbols } from '../cartridges/AbstractGameLogic';
+import { OneToTen } from '../types/types';
 import { keys, useKeyboard } from './useKeyboard';
 import { gameCodes } from '../constants/gameCodes';
 import { useGameCodes } from './useGameCodes';
@@ -9,31 +8,15 @@ import { KeyPress } from '../types/KeyPress';
 import { cartridgeLibrary } from '../constants/cartridgeLibrary';
 import { flush } from '../functions/flush';
 import { KEY_UP } from '../functions/KeyReader';
+import { getInitialGameState } from '../constants/initialGameState';
 
 
 
 
 const getInitialCartridgeInstance = (cartridgeToUseDescription: string) => {
-    // const constructor = findInitialCartridge(cartridgeToUseDescription)!.logicHandler
     const constructor = NullishGameCreator;
     return (new (constructor)()) 
 }
-
-const initialGameState: GameState = {
-    brickMap: getDojoOfSymbols(0),
-    nextFigure: getNextFigureOfSymbols(0),
-    level: 1,
-    speed: 1,
-    score: 0,
-    isPaused: false,
-    isAnimating: false,
-    isGameOver: false,
-}
-
-// const findInitialCartridge = (cartridgeDescription: string) => 
-//     Object.values(cartridgeLibrary).find(
-//         ({ description }) => description === cartridgeDescription
-//     );
 
 class NullishGameCreator{
     passCode(matchedCode:string){
@@ -41,15 +24,15 @@ class NullishGameCreator{
     }
     getNextStateOnKeyPress(key: KeyPress){
         flush(key);
-        return initialGameState;
+        return getInitialGameState();
     }
     getNextStateOnTick(timeEveryTick:number){
         flush(timeEveryTick);
-        return initialGameState;
+        return getInitialGameState();
     }
     getNextStateOnSpeedTick(timeSpeed:number){
         flush(timeSpeed);
-        return initialGameState;
+        return getInitialGameState();
     }
 }
 
@@ -76,9 +59,9 @@ export const useCartridge = (cartridgeToUseDescription: string) => {
     const resetConsole = () => setCartridgeInstanceAccordingToDescription(initialCartridgeName, setCartridgeInstance)
 
 
-    const [gameState, setGameState] = useState(initialGameState);
+    const [gameState, setGameState] = useState(getInitialGameState());
     const timeEveryTick = useTimer();
-    const timeSpeed = useTimer(gameState.speed);
+    const timeSpeed = useTimer(gameState.speed as OneToTen);
     const matchedCode = useGameCodes(gameCodes)
 
     useEffect(() => {

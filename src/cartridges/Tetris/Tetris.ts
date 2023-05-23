@@ -85,6 +85,8 @@ export class TetrisVisitor extends NextStateCalculator {
         visitedObject.pawnLayer = getEmptyBoard();
     }
 
+    spaceUp(visitedObject: GameCreator) {}
+
     passCode(visitedObject:any, code:string) {
         console.log(code)
         switch (code){
