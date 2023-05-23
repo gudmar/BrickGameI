@@ -6,6 +6,7 @@ import { OneToTen } from '../../types/types'
 import { codesDescription } from '../../constants/gameCodes';
 import { keys, useKeyboard } from '../../hooks/useKeyboard';
 import { useSetCartridge } from './useSetCartridge';
+import { useCartridgeController } from '../../context/cartridgeProvider';
 
 
 function CodeDescriptions({currentGame}: {currentGame: string}) {
@@ -35,7 +36,8 @@ function BrickGame() {
     currentGame,
     isGameSelectionAllowed,
     setIsGameSelectionAllowed,
-  } = useSetCartridge();
+  } = useCartridgeController();
+  // } = useSetCartridge();
   
   useKeyboard({ key: keys.UP, callback: cartridgeUp })
   useKeyboard({ key: keys.DOWN, callback: cartridgeDown })

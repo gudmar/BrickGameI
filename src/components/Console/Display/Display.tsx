@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
+import { useGameState } from '../../../context/gameStateContext';
 import { useCartridge } from '../../../hooks/useCartridge';
+import { OneToTen } from '../../../types/types';
 import { DisplayProps } from '../brickInterfaces';
 import Dojo from './Dojo/Dojo';
 import ScoreBar from './ScoreBar/__test__/ScoreBar';
@@ -27,13 +29,12 @@ function Display(
     isGameStarted,
     isGameSelectionAllowed,
     isCheater,
-   } = useCartridge(currentGameDescription);
+  } = useGameState();
+  //  } = useCartridge(currentGameDescription);
    useEffect(() => {
       setIsGameSelectionAllowed(isGameSelectionAllowed || false);
    }, [setIsGameSelectionAllowed, isGameSelectionAllowed])
-   useEffect(()=> console.log('Initiate display', []),[])
-  // useEffect(()=> console.log('BRICK map chaned', [brickMap]))
-  // useEffect(()=> console.log('LEVEL map chaned', [level]))
+
     return (
         <div className={styles.display}>
           <div className={styles.dojoSection}>
@@ -41,9 +42,9 @@ function Display(
           </div>
           <div className={styles.scoreSection}>
             <ScoreBar
-              level={level}
+              level={level as OneToTen}
               score={score}
-              speed={speed}
+              speed={speed as OneToTen}
               isGameOver={isGameOver}
               isGameWon={isGameWon}
               isPaused={isPaused}

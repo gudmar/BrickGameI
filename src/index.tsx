@@ -4,6 +4,8 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import BrickGame from './components/BrickGame/BrickGame';
 import { KeyReader } from './functions/KeyReader';
+import { CartridgeContextProvider } from './context/cartridgeProvider';
+import { GameStateProvider } from './context/gameStateContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -11,7 +13,11 @@ const root = ReactDOM.createRoot(
 // new KeyReader();
 root.render(
   <React.StrictMode>
-    <BrickGame />
+    <CartridgeContextProvider>
+      <GameStateProvider>
+        <BrickGame />
+      </GameStateProvider>
+    </CartridgeContextProvider>
   </React.StrictMode>
 );
 
