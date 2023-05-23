@@ -7,12 +7,19 @@
 
 + Correct order of games,
 - implement some menu outside tetris to switch games
+- All games should react to key up with the same manner, no delay.
 + Hit key - button should animate,
 - bar above should be hooked to game state
 - Game codes shown in better way
 - About content
 - css improved to make console more realistic
 - Some different skin
+
+BUG tetris:
+- After demolition, when arrow down is pressed all the time sometimes it does not clear isAccelerating flag
+- Source of problem is somewhere in setVisitorToNextStateOnTick and tryMovingOnTick,
+If attempt to divide acceleration probliem occures, if no acceleration, no occures
+- UPDATE: Problem occures both: with division and witout
 
 - Anti-tetris
 

@@ -9,8 +9,16 @@ export class Juggernaut {
         this.controlledObject = controlledObject;
     }
 
+    stopMovement(){
+        this.controlledObject.isMovingLeft = false;
+        this.controlledObject.isMovingRight = false;
+        this.controlledObject.isAccelerated = false;
+    }
+
     tick(){
-        if (this.controlledObject.isAnimating) this.nrOfTicksSinceStartedAnimation++;
+        if (this.controlledObject.isAnimating) {
+            this.nrOfTicksSinceStartedAnimation++;
+        }
         this.runQueue();
     }
 
@@ -33,6 +41,7 @@ export class Juggernaut {
         const indexesForDemolition = this.findRowIndexesForDemolition(this.controlledObject);
         this.informJudge(indexesForDemolition);
         if (indexesForDemolition.length > 0) {
+            this.stopMovement();
             this.queueAllDevastations(indexesForDemolition)
         }
     }
