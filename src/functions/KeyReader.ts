@@ -140,7 +140,6 @@ export class KeyReader {
         if (!this.notPrevented.includes(key)){
             event.preventDefault();
         }
-        console.log('Key pressed: ', key)
         this.runCallbacksForAll({key, shiftKey, ctrlKey, altKey});
         if(altKey){throw new Error(errors.NOT_IMPLEMENTED)}
         if(shiftKey){throw new Error(errors.NOT_IMPLEMENTED)}

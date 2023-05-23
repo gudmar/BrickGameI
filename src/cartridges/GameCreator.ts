@@ -175,6 +175,18 @@ export class GameCreator extends GameLogic {
     public spaceUp() {
         this.nextStateCalculator?.spaceUp(this);
     }
+    public stopLeft() { 
+        if(this.nextStateCalculator?.stopLeft) this.nextStateCalculator.stopLeft();
+    }
+    public stopRight() {
+        if (this.nextStateCalculator?.stopRight) this.nextStateCalculator.stopRight();
+    }
+    public stopUp() {
+        if (this.nextStateCalculator?.stopUp) this.nextStateCalculator.stopUp();
+    }
+    public stopDown() {
+        if (this.nextStateCalculator?.stopDown) this.nextStateCalculator.stopDown();
+    }
     public increaseSpeed() { this.speed > 9 ? this.speed = 1 : this.speed++; }
 
     public increaseLevel() { 

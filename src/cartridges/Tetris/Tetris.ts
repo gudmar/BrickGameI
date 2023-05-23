@@ -64,8 +64,22 @@ export class TetrisVisitor extends NextStateCalculator {
     private juggernaut: Juggernaut | null = null;
     private upLock: boolean = true;
     private cheatStopTimer: boolean = false;
+    private isMovingLeft: boolean = false;
+    private isMovingRight: boolean = false;
+    _isAccelerated = false;
+    get isAccelerated(){
+        return this._isAccelerated
+    }
+    set isAccelerated(v) {
+        console.log('Setting ', v)
+        this._isAccelerated = v;
+    }
+    // private isAccelerated: boolean = false;
 
     initiate(visitedObject: any){
+        this.isAccelerated = false;
+        this.isMovingLeft = false;
+        this.isMovingRight = false;
         visitedObject.name = 'Tetris'
         visitedObject.background = getEmptyBoard();
         this.juggernaut = new Juggernaut(visitedObject);
@@ -84,6 +98,19 @@ export class TetrisVisitor extends NextStateCalculator {
         visitedObject.background = getEmptyBoard();
         visitedObject.pawnLayer = getEmptyBoard();
     }
+
+    startDown(visitedObject: any): void {
+        console.log('START down')
+        this.isAccelerated = true;
+    }
+    stopDown(visitedObject: any): void {
+        console.log('STOP down')
+        this.isAccelerated = false;
+    }
+    startLeft(visitedObject: any): void {this.isMovingLeft = true;}
+    stopLeft(visitedObject:any): void {this.isMovingLeft = false}
+    startRight(visitedObject:any): void {this.isMovingRight = true}
+    stopRight(visitedObject:any): void {this.isMovingRight = false;}
 
     spaceUp(visitedObject: GameCreator) {}
 
@@ -123,8 +150,30 @@ export class TetrisVisitor extends NextStateCalculator {
         }
     }
 
-    setVisitorToNextStateOnTick(visitedObject:any){
-            this.juggernaut!.tick();
+    tryMovingOnTick(visitedObject:GameCreator, shouldMove: boolean){
+        if (this.isAccelerated === true) { this.move(visitedObject, 1, 0);}
+        if (!shouldMove) return;
+        if (this.isMovingLeft) this.move(visitedObject, 0, -1);
+        if (this.isMovingRight) this.move(visitedObject, 0, 1);
+    
+    }
+    clearMoveFlags(){
+        if (this.isAnimating) {
+            this.isMovingLeft = false;
+            this.isMovingRight = false;
+            this.isAccelerated = false;
+        }
+    }
+
+    setVisitorToNextStateOnTick(visitedObject:any, time: number){
+        this.clearMoveFlags();
+        this.juggernaut!.tick();
+        // if (time % 2 === 1) return;
+        const shouldMove = (time % 5 === 0);
+        // if (time % 2 === 0) {
+            this.tryMovingOnTick(visitedObject, shouldMove);
+        // }
+        
     }
 
     setLevel(visitedObject: any) {

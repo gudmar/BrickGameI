@@ -32,8 +32,11 @@ export abstract class NextStateCalculator {
         if (visitedObject.isGameOver) return;
         if (keyPresses === KeyPress.Rotate) { visitedObject.rotate() }
         if (keyPresses === KeyPress.SpaceUp) { visitedObject.spaceUp() }
+        // if (keyPresses === KeyPress.StopDown) {visitedObject.stopDown();}
+        // if (keyPresses === KeyPress.StopUp) {visitedObject.stopUp();}
+        // if (keyPresses === KeyPress.StopLeft) {visitedObject.stopLeft();}
+        // if (keyPresses === KeyPress.StopRight) {visitedObject.stopRight()}
         if (keyPresses === KeyPress.Pause) {visitedObject.pauseGame()}
-        
         if (!visitedObject.checkIfGameLocked()) {
             this.tryMoving(visitedObject, keyPresses);
         }
@@ -77,18 +80,32 @@ export abstract class NextStateCalculator {
     tryMoving( visitedObject: any, keyPresses: KeyPress ) {
         const gameLocked = visitedObject.checkIfGameLocked.call(visitedObject);
         if (gameLocked) return;
-        if (keyPresses === KeyPress.Down) this.move(visitedObject, 1, 0);
-        if (keyPresses === KeyPress.Up) this.move(visitedObject, -1, 0);
-        if (keyPresses === KeyPress.Left) this.move(visitedObject, 0, -1);
-        if (keyPresses === KeyPress.Right) this.move(visitedObject, 0, 1);
+        if (keyPresses === KeyPress.Down) this.startDown(visitedObject);
+        if (keyPresses === KeyPress.Up) this.startUp(visitedObject);
+        if (keyPresses === KeyPress.Left) this.startLeft(visitedObject);
+        if (keyPresses === KeyPress.Right) this.startRight(visitedObject);
         if (keyPresses === KeyPress.StopLeft) this.stopLeft(visitedObject);
         if (keyPresses === KeyPress.StopRight) this.stopRight(visitedObject);
+        if (keyPresses === KeyPress.StopUp) this.stopUp(visitedObject);
+        if (keyPresses === KeyPress.StopDown) this.stopDown(visitedObject);
+
     }
+
+    startLeft(visitedObject:any) {this.move(visitedObject, 0, -1);}
+    startRight(visitedObject:any) {this.move(visitedObject, 0, 1);}
+    startUp(visitedObject:any) {this.move(visitedObject, -1, 0);}
+    startDown(visitedObject:any) {this.move(visitedObject, 1, 0);}
 
     stopLeft(visitedObject:any) {
         // This should be overloaded
     }
     stopRight(visitedObject:any){
+        // this should be overloaded
+    }
+    stopUp(visitedObject:any){
+        // this should be overloaded
+    }
+    stopDown(visitedObject:any){
         // this should be overloaded
     }
 
