@@ -46,18 +46,8 @@ export class TankPlacePositionProvider {
     
 }
 
-function* TankPlaceCords() {
-    yield {col: 1, row: 1};
-    yield {col: 8, row: 1};
-    yield {col: 1, row: 18};
-    yield {col: 8, row: 18};
-    yield {col: 8, row: 8};
-    return {col: 1, row: 8};
-}
-
 const ROTATE_LEFT = 'ROTATE_LEFT';
 const ROTATE_RIGHT = 'ROTATE_RIGHT';
-const SHOT = 'SHOT';
 const FORWARD = 'FORWARD';
 
 interface TankCommands {
@@ -139,11 +129,6 @@ export class TankCommander {
             this.controlledTank.tryPlacing();
             if (this.controlledTank.isPlacedOnBoard) return;
         }
-        // for (let cord of possibleCords) {
-        //     this.controlledTank.cords = cord;
-        //     this.controlledTank.tryPlacing();
-        //     if (this.controlledTank.isPlacedOnBoard) return;
-        // }
     }
     makeMove() {
         if (!this.controlledTank.isPlacedOnBoard) {
