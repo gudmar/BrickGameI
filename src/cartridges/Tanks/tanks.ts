@@ -1,8 +1,8 @@
 import { ADD_POINTS, STOP_TIMER } from "../../constants/gameCodes";
 import { GameCreatorInterface } from "../../types/GameCreatorInterface";
 import { directions, Variants } from "../../types/types";
-import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { getEmptyBoard } from "../constants";
+import { ContinuousMovementNestStateCalculator } from "../ContinuousMovementNextStateCalculator";
 import { setLifesToNextFigure } from "../Functions/setLifesToNextFigure";
 import { GameCreator } from "../GameCreator";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
@@ -33,7 +33,7 @@ export class TankDecorator {
 
 const INITIAL_PLAYER_TANK_CORDS = {col: 4, row: 13}
 
-export class TankVisitor extends NextStateCalculator implements GameCreatorInterface{
+export class TankVisitor extends ContinuousMovementNestStateCalculator implements GameCreatorInterface{
     MAX_ENEMY_TANKS_NUMBER = 3;
     playerTank: Tank | undefined;
     enemyTanksLayer = getEmptyBoard();
@@ -57,8 +57,6 @@ export class TankVisitor extends NextStateCalculator implements GameCreatorInter
     }
 
     initiate(visitedObject: GameCreator) {
-        // visitedObject.lifes = this.lifes;
-        // visitedObject.reInitilateGame = this.reInitiateGame;
         this.animatorOfDestruction = new AnimatorOfDestruction(visitedObject, this);
         this.clean(visitedObject);
         this.playerTank = new Tank(Variants.PLAYER, INITIAL_PLAYER_TANK_CORDS, this);
@@ -77,24 +75,6 @@ export class TankVisitor extends NextStateCalculator implements GameCreatorInter
         if (deltaCol > 0) return directions.RIGHT;
         if (deltaCol < 0) return directions.LEFT;
         return directions.STALE;
-    }
-
-    startLeft(visitedObject: any): void {this.isMoveLeft = true}
-    stopLeft(visitedObject: any): void {this.isMoveLeft = false}
-    startRight(visitedObject: any): void {this.isMoveRight = true;}
-    stopRight(visitedObject: any): void {this.isMoveRight = false;}
-    startUp(visitedObject: any): void {this.isMoveUp = true;}
-    stopUp(visitedObject: any): void {this.isMoveUp = false;}
-    startDown(visitedObject: any): void {this.isMoveDown = true;}
-    stopDown(visitedObject: any): void {this.isMoveDown = false;}
-
-    moveOnTick(visitedObject: GameCreator, time: number) {
-        const MOVE_TIME_DIVIDER = 4;
-        const shouldMove = time % MOVE_TIME_DIVIDER === 0;
-        if (this.isMoveDown && shouldMove) this.move(visitedObject, 1, 0);
-        if (this.isMoveLeft && shouldMove) this.move(visitedObject, 0, -1);
-        if (this.isMoveRight && shouldMove) this.move(visitedObject, 0, 1);
-        if (this.isMoveUp && shouldMove) this.move(visitedObject, -1, 0);
     }
 
     restartSpecificAttributes(visitedObject:any){
