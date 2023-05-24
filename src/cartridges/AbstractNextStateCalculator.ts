@@ -32,14 +32,11 @@ export abstract class NextStateCalculator {
         if (visitedObject.isGameOver) return;
         if (keyPresses === KeyPress.Rotate) { visitedObject.rotate() }
         if (keyPresses === KeyPress.SpaceUp) { visitedObject.spaceUp() }
-        // if (keyPresses === KeyPress.StopDown) {visitedObject.stopDown();}
-        // if (keyPresses === KeyPress.StopUp) {visitedObject.stopUp();}
-        // if (keyPresses === KeyPress.StopLeft) {visitedObject.stopLeft();}
-        // if (keyPresses === KeyPress.StopRight) {visitedObject.stopRight()}
         if (keyPresses === KeyPress.Pause) {visitedObject.pauseGame()}
         if (!visitedObject.checkIfGameLocked()) {
             this.tryMoving(visitedObject, keyPresses);
         }
+        this.stopFunctions(visitedObject, keyPresses);
     }
 
     rotate(visitedObject:any){throw new Error('NextStateCalculator: rotate not implemented')}
@@ -84,11 +81,13 @@ export abstract class NextStateCalculator {
         if (keyPresses === KeyPress.Up) this.startUp(visitedObject);
         if (keyPresses === KeyPress.Left) this.startLeft(visitedObject);
         if (keyPresses === KeyPress.Right) this.startRight(visitedObject);
+    }
+
+    stopFunctions(visitedObject: GameCreator, keyPresses: KeyPress) {
         if (keyPresses === KeyPress.StopLeft) this.stopLeft(visitedObject);
         if (keyPresses === KeyPress.StopRight) this.stopRight(visitedObject);
         if (keyPresses === KeyPress.StopUp) this.stopUp(visitedObject);
         if (keyPresses === KeyPress.StopDown) this.stopDown(visitedObject);
-
     }
 
     startLeft(visitedObject:any) {this.move(visitedObject, 0, -1);}

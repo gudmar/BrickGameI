@@ -66,15 +66,7 @@ export class TetrisVisitor extends NextStateCalculator {
     private cheatStopTimer: boolean = false;
     private isMovingLeft: boolean = false;
     private isMovingRight: boolean = false;
-    _isAccelerated = false;
-    get isAccelerated(){
-        return this._isAccelerated
-    }
-    set isAccelerated(v) {
-        console.log('Setting ', v)
-        this._isAccelerated = v;
-    }
-    // private isAccelerated: boolean = false;
+    private isAccelerated: boolean = false;
 
     initiate(visitedObject: any){
         this.isAccelerated = false;
@@ -100,11 +92,9 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     startDown(visitedObject: any): void {
-        console.log('START down')
         this.isAccelerated = true;
     }
     stopDown(visitedObject: any): void {
-        console.log('STOP down')
         this.isAccelerated = false;
     }
     startLeft(visitedObject: any): void {this.isMovingLeft = true;}
@@ -150,11 +140,10 @@ export class TetrisVisitor extends NextStateCalculator {
         }
     }
 
-    tryMovingOnTick(visitedObject:GameCreator, shouldMove: boolean){
-        if (this.isAccelerated === true) { this.move(visitedObject, 1, 0);}
-        if (!shouldMove) return;
-        if (this.isMovingLeft) this.move(visitedObject, 0, -1);
-        if (this.isMovingRight) this.move(visitedObject, 0, 1);
+    tryMovingOnTick(visitedObject:GameCreator, time:number){
+        if (time % 3 === 0 && this.isAccelerated === true) { this.move(visitedObject, 1, 0);}
+        if (time % 4 === 0 && this.isMovingLeft) this.move(visitedObject, 0, -1);
+        if (time % 4 === 0 && this.isMovingRight) this.move(visitedObject, 0, 1);
     
     }
     clearMoveFlags(){
@@ -168,11 +157,7 @@ export class TetrisVisitor extends NextStateCalculator {
     setVisitorToNextStateOnTick(visitedObject:any, time: number){
         this.clearMoveFlags();
         this.juggernaut!.tick();
-        // if (time % 2 === 1) return;
-        const shouldMove = (time % 5 === 0);
-        // if (time % 2 === 0) {
-            this.tryMovingOnTick(visitedObject, shouldMove);
-        // }
+        this.tryMovingOnTick(visitedObject, time);
         
     }
 
@@ -273,7 +258,7 @@ export class TetrisVisitor extends NextStateCalculator {
     }
 
     setVisitorToNextStateOnSpeedTick(visitedObject: any, time: number){
-        if (!this.cheatStopTimer){
+        if (!this.cheatStopTimer && !this.isAccelerated){
             this.move(visitedObject, 1, 0);
         }
     }
