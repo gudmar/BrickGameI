@@ -146,5 +146,4 @@ export abstract class NextStateCalculator {
         const merged = l1.map((row, index) => mergeRows(row, l2[index]));
         return merged;
     }
-
 }

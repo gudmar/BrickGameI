@@ -4,7 +4,7 @@ import { directions, Variants } from "../../types/types";
 import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { getEmptyBoard } from "../constants";
 import { setLifesToNextFigure } from "../Functions/setLifesToNextFigure";
-import { GameCreator, PawnCords } from "../GameCreator";
+import { GameCreator } from "../GameCreator";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
 import { AnimatorOfDestruction } from "./animatorOfDestruction";
 import { Bullet } from "./bullet";
