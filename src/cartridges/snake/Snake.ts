@@ -1,8 +1,8 @@
 import { ADD_POINTS, BUMP, DONT_BUMP, SHORT_SNAKE, START_TIMER, STOP_TIMER, UP_LOCK } from "../../constants/gameCodes";
 import { GameCreatorInterface } from "../../types/GameCreatorInterface";
 import { directions } from "../../types/types";
-import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { getEmptyBoard } from "../constants";
+import { ContinuousMovementNestStateCalculator } from "../ContinuousMovementNextStateCalculator";
 import { setLifesToNextFigure } from "../Functions/setLifesToNextFigure";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
@@ -28,7 +28,7 @@ export class SnakeDecorator {
     }
 }
 
-class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
+class SnakeVisitor extends ContinuousMovementNestStateCalculator implements GameCreatorInterface{
     bumpLock: boolean = false;
     lifes: number = 4;
     direction: directions = directions.RIGHT;
@@ -39,6 +39,11 @@ class SnakeVisitor extends NextStateCalculator implements GameCreatorInterface{
     gameAnimator = new GameAnimator();
     cheatStopTimer = false;
     noBoundries = false;
+
+    isMoveLeft = false;
+    isMoveRight = false;
+    isMoveUp = false;
+    isMoveDown = false;
 
 get foodCords():PawnCords { return this._foodCords as PawnCords; }
 set foodCords(val: PawnCords) {
@@ -105,7 +110,7 @@ set foodCords(val: PawnCords) {
         const oldPawnCords = visitedObject.pawnCords;
         this.replacePawn(visitedObject, newPawnCords, oldPawnCords);
         this.tailHandler.handleTail(this, visitedObject, oldPawnCords);
-    }
+    }    
 
     move(visitedObject: GameCreator, deltaRow:number, deltaCol:number) {
         if (this.isFieldOutsideBoard(visitedObject, deltaRow, deltaCol)) {
@@ -244,6 +249,7 @@ set foodCords(val: PawnCords) {
     pauseGame(visitedObject: GameCreator){}
 
     setVisitorToNextStateOnTick(visitedObject: GameCreator, time: number){
+        this.moveOnTick(visitedObject, time)
         if (!this.gameAnimator.isCurtainAnimationOngoing){
             const blinkingPoints = [visitedObject.pawnCords, this.foodCords]
             if (time % 10 === 0) {

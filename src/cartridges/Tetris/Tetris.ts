@@ -2,8 +2,8 @@
 import { ADD_POINTS, START_TIMER, STOP_TIMER, UP_LOCK, UP_UNLOCK } from "../../constants/gameCodes";
 import { sumArrayElements } from "../../functions/sumArrayElements";
 import { BrickMap, FigureHandlePoint, NextFigure } from "../../types/types";
-import { NextStateCalculator } from "../AbstractNextStateCalculator";
 import { getEmptyBoard } from "../constants";
+import { ContinuousMovementNestStateCalculator } from "../ContinuousMovementNextStateCalculator";
 import { GameCreator, PawnCords } from "../GameCreator";
 import { GamesIntro } from "../GamesIntro/GamesIntro";
 import { AnimationAfterGame } from "../layers/AfterGameAnimation";
@@ -58,7 +58,7 @@ export class TetrisDecorator {
     }
 }
 
-export class TetrisVisitor extends NextStateCalculator {
+export class TetrisVisitor extends ContinuousMovementNestStateCalculator {
 
     private blockMaker: Blocks = new Blocks();
     private juggernaut: Juggernaut | null = null;
@@ -90,17 +90,6 @@ export class TetrisVisitor extends NextStateCalculator {
         visitedObject.background = getEmptyBoard();
         visitedObject.pawnLayer = getEmptyBoard();
     }
-
-    startDown(visitedObject: any): void {
-        this.isAccelerated = true;
-    }
-    stopDown(visitedObject: any): void {
-        this.isAccelerated = false;
-    }
-    startLeft(visitedObject: any): void {this.isMovingLeft = true;}
-    stopLeft(visitedObject:any): void {this.isMovingLeft = false}
-    startRight(visitedObject:any): void {this.isMovingRight = true}
-    stopRight(visitedObject:any): void {this.isMovingRight = false;}
 
     spaceUp(visitedObject: GameCreator) {}
 
@@ -140,12 +129,6 @@ export class TetrisVisitor extends NextStateCalculator {
         }
     }
 
-    tryMovingOnTick(visitedObject:GameCreator, time:number){
-        if (time % 3 === 0 && this.isAccelerated === true) { this.move(visitedObject, 1, 0);}
-        if (time % 4 === 0 && this.isMovingLeft) this.move(visitedObject, 0, -1);
-        if (time % 4 === 0 && this.isMovingRight) this.move(visitedObject, 0, 1);
-    
-    }
     clearMoveFlags(){
         if (this.isAnimating) {
             this.isMovingLeft = false;
@@ -157,7 +140,7 @@ export class TetrisVisitor extends NextStateCalculator {
     setVisitorToNextStateOnTick(visitedObject:any, time: number){
         this.clearMoveFlags();
         this.juggernaut!.tick();
-        this.tryMovingOnTick(visitedObject, time);
+        this.moveOnTick(visitedObject, time)
         
     }
 
