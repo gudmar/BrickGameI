@@ -194,6 +194,14 @@ export class GameCreator extends GameLogic {
         this.nextStateCalculator.setLevel(this);
     }
 
+    public setLevel(newValue: number) {
+        this.level = newValue as OneToTen;
+    }
+    public setSpeed(newValue: number) {
+        this.speed = newValue as OneToTen;
+    }
+
+
     public startGame() {
         const isGameBeingRestarted = this.checkCurrentStateCalculator(StateCalculatorIndex.game) && !this.isGameOver && !this.isGameWon;
         if (!isGameBeingRestarted){
@@ -225,6 +233,8 @@ export class GameCreator extends GameLogic {
             isGameStarted: this.isGameStarted,
             isCheater: this.isCheater,
             isGameSelectionAllowed: this.isGameSelectionAllowed,
+            setLevel: this.setLevel.bind(this),
+            setSpeed: this.setSpeed.bind(this),
         }
     }
 

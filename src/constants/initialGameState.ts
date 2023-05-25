@@ -13,4 +13,6 @@ export const getInitialGameState = () => ({
     isGameStarted: false,
     isGameSelectionAllowed: false,
     isCheater: false,
+    setSpeed: (val:number)=>{},
+    setLevel: (val:number) => {},
 });

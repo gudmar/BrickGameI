@@ -1,3 +1,4 @@
+import React from "react";
 
 export const BUTTON = 'button';
 export const SELECT = 'select';
@@ -10,8 +11,14 @@ export interface WidgetProps {
   }
 
   export interface WidgetItemProps {
-    label: string;
-    onClick: (e: React.MouseEvent<HTMLElement>) => void;
-    items?: String[];
+    label: string,
+    onSelect: (e: React.MouseEvent<HTMLElement>) => void,
+    items?: String[],
+    value: string | number,
+  }
+
+  export interface NavigationButtonInterface {
+    label: string,
+    onClick: (e: React.MouseEvent<HTMLElement>) => void,
   }
 
