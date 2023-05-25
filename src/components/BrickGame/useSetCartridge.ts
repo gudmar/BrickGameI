@@ -19,13 +19,18 @@ export const useSetCartridge = () => {
         const getNextIndex = (currentIndex: number) => currentIndex + 1 >= CARTRIDGE_ORDER.length ? 0 : currentIndex + 1;
         switchCartridgeIndex(getNextIndex)
       }
-      const cartridgeDown = () => {
-        const getNextIndex = (currentIndex: number) => currentIndex - 1 < 0 ? CARTRIDGE_ORDER.length - 1: currentIndex - 1;
-        switchCartridgeIndex(getNextIndex)
-      }
+    const cartridgeDown = () => {
+      const getNextIndex = (currentIndex: number) => currentIndex - 1 < 0 ? CARTRIDGE_ORDER.length - 1: currentIndex - 1;
+      switchCartridgeIndex(getNextIndex)
+    }
+    const setCartridgeByDescription = (description: string) => {
+      const getIndex = () => CARTRIDGE_ORDER.findIndex((item) => item === description);
+      switchCartridgeIndex(getIndex)
+    }
     return ({
         cartridgeDown,
         cartridgeUp,
+        setCartridgeByDescription,
         currentGame,
         isGameSelectionAllowed,
         setIsGameSelectionAllowed,

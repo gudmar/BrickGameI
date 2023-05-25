@@ -15,8 +15,6 @@ import { Tank } from "./tank";
 import { TankCommander } from "./tankCommander";
 import { getLayerWithAllPlacedTanks, getMergedLayerWithTanksAndBullets } from "./tankUtils";
 
-
-
 export class TankDecorator {
     constructor() {
         const decoratedClass = new GameCreator(
