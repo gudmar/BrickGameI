@@ -39,6 +39,31 @@ screanHeight = displayHeight = 346px; */
   --dojoHeight: 340px;
   --scoreBarWidth: calc( var(--displayWidth) - var(--dojoWidth));
 
+
+
+
+/*===================================================*/
+/* SKINS */
+
+/* GRAPHITE */
+  --graphite-button-color: yellow;
+  --graphite-housing-color: #888;
+  --graphite-prints-on-housing-color: white;
+  --graphite-background-color: #aaa;
+
+/* RED */
+  --red-button-color: #eee;
+  --red-housing-color: #e00; 
+  --red-prints-on-housing-color: white;
+  --red-background-color: #f33;/*make background-color to background-image: linear-gradient and Polish flag */
+
+/* BLACK */
+  --dark-button-color: #ee0;
+  --dark-housing-color: #111; 
+  --dark-prints-on-housing-color: #ff0;
+  --dark-background-color: #333;/*make background-color to background-image: linear-gradient and Polish flag */
+
+
 }
 
 code {

@@ -1,12 +1,11 @@
-import { useState } from 'react';
 import './styles.css';
 import Navigation from '../Navigation/Navigation';
 import Console from '../Console/Console';
-import { OneToTen } from '../../types/types'
 import { codesDescription } from '../../constants/gameCodes';
 import { keys, useKeyboard } from '../../hooks/useKeyboard';
-import { useSetCartridge } from './useSetCartridge';
 import { useCartridgeController } from '../../context/cartridgeProvider';
+import { useColorSchemeContext } from '../../context/colorShemeProvider';
+import { useEffect } from 'react';
 
 
 function CodeDescriptions({currentGame}: {currentGame: string}) {
@@ -28,8 +27,6 @@ function CodeDescriptions({currentGame}: {currentGame: string}) {
 
 
 function BrickGame() {
-  const [speed, setSpeed]: [OneToTen, any] = useState(1);
-  const [level, setLevel]: [OneToTen, any] = useState(1);
   const {
     cartridgeDown,
     cartridgeUp,
@@ -37,21 +34,20 @@ function BrickGame() {
     isGameSelectionAllowed,
     setIsGameSelectionAllowed,
   } = useCartridgeController();
-  // } = useSetCartridge();
+
   
   useKeyboard({ key: keys.UP, callback: cartridgeUp })
   useKeyboard({ key: keys.DOWN, callback: cartridgeDown })
+  const {getClassNameForCurrentScheme} = useColorSchemeContext();
+  const currentClass = getClassNameForCurrentScheme('background')
+  useEffect(()=>console.log(currentClass), [currentClass])
 
     return (
-        <div className="root">
+        <div className={`root ${currentClass}`}>
             <Navigation />
             {isGameSelectionAllowed ? 'Game is started' : 'Game is STOPPED'}
             <Console 
                 currentGame={currentGame}
-                speed = {speed}
-                setSpeed = {setSpeed}
-                level = {level}
-                setLevel = {setLevel}
                 setIsGameSelectionAllowed = {setIsGameSelectionAllowed}
             />
             <div>

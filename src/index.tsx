@@ -6,6 +6,7 @@ import BrickGame from './components/BrickGame/BrickGame';
 import { KeyReader } from './functions/KeyReader';
 import { CartridgeContextProvider } from './context/cartridgeProvider';
 import { GameStateProvider } from './context/gameStateContext';
+import { ColorSchemeProvider } from './context/colorShemeProvider';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -15,7 +16,9 @@ root.render(
   <React.StrictMode>
     <CartridgeContextProvider>
       <GameStateProvider>
-        <BrickGame />
+        <ColorSchemeProvider>
+          <BrickGame />
+        </ColorSchemeProvider>
       </GameStateProvider>
     </CartridgeContextProvider>
   </React.StrictMode>

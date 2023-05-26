@@ -5,3 +5,16 @@
     background-color: #aaa;
     flex-direction: column;
 }
+
+.Graphite-background {
+    background-color: var(--graphite-background-color);
+}
+
+.Polishflag-background {
+    /* background-color: var(--red-background-color); */
+    background: linear-gradient(0deg, rgba(253,45,45,1) 44%, rgba(255,255,255,1) 51%);
+}
+
+.Darkscheme-background {
+    background-color: var(--dark-background-color);
+}

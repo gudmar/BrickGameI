@@ -97,10 +97,6 @@ export interface FigureHandlePoint {
 
 export interface ConsoleArgs {
     currentGame: string,
-    speed: OneToTen,
-    level: OneToTen,
-    setSpeed: (val: OneToTen) => void,
-    setLevel: (val: OneToTen) => void,
     setIsGameSelectionAllowed: (val: boolean) => void,
 }
 

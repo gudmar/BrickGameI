@@ -1,11 +1,11 @@
 import React from 'react';
 import styles from './styles.module.css';
-import { WidgetType } from './NavWidget/WidgetPropsInterface';
 import { useGameState } from '../../context/gameStateContext';
 import { useCartridgeController } from '../../context/cartridgeProvider';
 import { CARTRIDGE_ORDER } from '../../constants/cartridgeLibrary';
 import NavSelect from './NavWidget/NavSelect/NavSelect';
 import NavButton from './NavWidget/NavButton/NavButton';
+import { COLOR_SCHEMES, useColorSchemeContext } from '../../context/colorShemeProvider';
 
 const LevelSpeed = ['1', '2', '3', '4' ,'5', '6', '7', '8','9', '10']
 
@@ -14,10 +14,12 @@ function Navigation() {
     level, speed, setLevel, setSpeed
   } = useGameState();
    const {currentGame, setCartridgeByDescription} = useCartridgeController();
+   const {currentColorScheme, setCurrentColorScheme} = useColorSchemeContext();
 
-   const setGameLevel = (event: any) => { console.log(event); setLevel(event.target.textContent) }
-   const setGameSpeed = (event: any) => { console.log(event); setSpeed(event.target.textContent) }
+   const setGameLevel = (event: any) => { setLevel(event.target.textContent) }
+   const setGameSpeed = (event: any) => { setSpeed(event.target.textContent) }
    const setCartridge = (event: any) => { setCartridgeByDescription(event.target.textContent)}
+   const setColorScheme = (event: any) => {setCurrentColorScheme(event.target.textContent)}
 
   
   
@@ -43,26 +45,14 @@ function Navigation() {
           />
           <NavSelect
             label={'Skin'}
-            onSelect={() => {}}
-            items={['Graphite', 'Black', 'Red']}
-            value={'Graphite'}
+            onSelect={setColorScheme}
+            items={COLOR_SCHEMES}
+            value={currentColorScheme}
           />
           <NavButton
             label={'About'}
             onClick={() => {}}
           />
-
-
-
-          {/* {buttons.map(
-              button => <NavWidget
-                label={button.label}
-                onClick={button.onClick}
-                items={button.items}
-                key={button.label}
-              />
-            )
-          } */}
         </div>
   );
 }

@@ -4,16 +4,14 @@ import Keypad from './Keypad/Keypad';
 import styles from './styles.module.css';
 import { StickersVariant } from './brickInterfaces'
 import Display from './Display/Display';
-import { ConsoleArgs } from '../../types/types';
+import { ConsoleArgs, OneToTen } from '../../types/types';
+import { useGameState } from '../../context/gameStateContext';
 
 function Console({ 
   currentGame,
-  speed,
-  setSpeed,
-  level,
-  setLevel,
   setIsGameSelectionAllowed,
 }: ConsoleArgs) {
+  const {speed, level} = useGameState();
     return (
         <div className={styles.table}>
           <div className={`${styles.housing} ${styles.grayTheme}`}>
@@ -27,8 +25,8 @@ function Console({
 
             <div className={styles.display}>
               <Display 
-                speed={speed}
-                level={level}
+                speed={speed as OneToTen}
+                level={level as OneToTen}
                 currentGameDescription={currentGame}
                 setIsGameSelectionAllowed = {setIsGameSelectionAllowed}
               />
