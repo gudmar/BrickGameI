@@ -54,7 +54,14 @@
     width: var(--displayWidth);
     height: var(--displayHeight);
 }
-.bottomBar { grid-area: bottomBar; }
+.bottomBar {
+    grid-area: bottomBar;
+    box-shadow: inset 2px 20px 100px -83px rgba(50, 10, 10, 1),
+    inset 2px -20px 100px -83px rgba(50, 10, 10, 1),
+    inset -1px 29px 10px -24px rgba(255, 250, 250, 1);
+    margin: 0.125rem;
+    border-radius: 1rem;
+}
 .leftKeypadBar { grid-area: leftKeypadBar; }
 .rightKeypadBar { grid-area: rightKeypadBar; }
 .keypad { 
@@ -66,4 +73,19 @@
 .grayTheme{
     background-color: #888;
     color: black;
+}
+
+.Graphite-housing {
+    background-color: var(--graphite-housing-color);
+    box-shadow: var(--housing-shadow), var(--housing-light-reflex)
+}
+
+.Polishflag-housing {
+    background-color: var(--red-housing-color);
+    box-shadow: var(--red-housing-shadow), var(--red-housing-light-reflex)
+}
+
+.Darkscheme-housing {
+    background-color: var(--dark-housing-color);
+    box-shadow: var(--housing-shadow), var(--housing-light-reflex)
 }
