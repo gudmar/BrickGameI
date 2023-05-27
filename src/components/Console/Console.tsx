@@ -4,19 +4,20 @@ import Keypad from './Keypad/Keypad';
 import styles from './styles.module.css';
 import { StickersVariant } from './brickInterfaces'
 import Display from './Display/Display';
-import { ConsoleArgs } from '../../types/types';
+import { ConsoleArgs, OneToTen } from '../../types/types';
+import { useGameState } from '../../context/gameStateContext';
+import { useColorSchemeContext } from '../../context/colorShemeProvider';
 
 function Console({ 
   currentGame,
-  speed,
-  setSpeed,
-  level,
-  setLevel,
   setIsGameSelectionAllowed,
 }: ConsoleArgs) {
+  const {speed, level} = useGameState();
+  const {getClassNameForCurrentScheme} = useColorSchemeContext();
+  const housingClass = getClassNameForCurrentScheme('housing')
     return (
         <div className={styles.table}>
-          <div className={`${styles.housing} ${styles.grayTheme}`}>
+          <div className={`${styles.housing} ${styles[housingClass]} ${styles.housingShadow}`}>
             <div className={styles.topBar}>
               <span className={styles.stickerLabel}> &gt;&gt;&gt; Brick Game &lt;&lt;&lt;</span>
             </div>
@@ -27,8 +28,8 @@ function Console({
 
             <div className={styles.display}>
               <Display 
-                speed={speed}
-                level={level}
+                speed={speed as OneToTen}
+                level={level as OneToTen}
                 currentGameDescription={currentGame}
                 setIsGameSelectionAllowed = {setIsGameSelectionAllowed}
               />

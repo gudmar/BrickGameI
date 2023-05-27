@@ -5,11 +5,12 @@
 
 * Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
 
+- When game started it shuld NOT be possible to change anything in navigation
 + Correct order of games,
-- implement some menu outside tetris to switch games
-- All games should react to key up with the same manner, no delay.
++ implement some menu outside tetris to switch games
++ All games should react to key up with the same manner, no delay.
 + Hit key - button should animate,
-- bar above should be hooked to game state
++ bar above should be hooked to game state
 - Game codes shown in better way
 - About content
 - css improved to make console more realistic

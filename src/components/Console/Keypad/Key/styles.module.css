@@ -1,7 +1,7 @@
 .container {
-    --small: 14px;
-    --medium: 28px;
-    --big: 48px;
+    --small: 24px;
+    --medium: 38px;
+    --big: 60px;
     display: flex;
     flex-direction: column;
     justify-items: center;
@@ -23,13 +23,16 @@
     border-radius: 50%;
     background-color: yellow;
     display: block;
-    border: yellow solid thin;
+    /* border: yellow solid thin; */
 }
 .edge:hover{
     background-color: #dd0;
+    background-image: radial-gradient(circle, rgba(255, 200, 54, 1) 50%, rgba(14, 14, 14, 1) 88%);
+    
 }
 .edge:active{
     background-color: orange;
+    background-image: radial-gradient(circle, var(--key-pressed-color) 50%, rgba(14, 14, 14, 1) 88%);
 }
 
 .small{
@@ -46,3 +49,22 @@
     width: var(--big);
     height: var(--big);
 }
+
+.Graphite-key {
+    box-shadow: inset -1px 30px 10px -20px rgba(255, 230, 230, 1),
+    0px 0px 4px 6px rgba(66, 68, 90, 1);
+    background-image: radial-gradient(circle, rgba(255, 237, 94, 1) 50%, rgba(14, 14, 14, 1) 88%);
+}
+
+.Polishflag-key {
+    box-shadow: inset -1px 30px 10px -20px rgba(255, 230, 230, 1),
+    0px 0px 4px 6px rgba(66, 68, 90, 1);
+    background-image: radial-gradient(circle, rgba(255, 237, 237, 1) 50%, rgba(14, 14, 14, 1) 88%);
+}
+
+.Darkscheme-key {
+    box-shadow: inset -1px 30px 10px -20px rgba(255, 230, 230, 1),
+    0px 0px 4px 6px rgba(66, 68, 90, 1);
+    background-image: radial-gradient(circle, rgba(255, 237, 94, 1) 50%, rgba(14, 14, 14, 1) 88%);
+}
+

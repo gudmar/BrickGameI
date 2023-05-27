@@ -1,3 +1,4 @@
 .edgePressed{
-    background-color: orange!important;
+    /* background-color: orange!important; */
+    background-image: radial-gradient(circle, var(--key-pressed-color) 50%, rgba(14, 14, 14, 1) 88%)!important;
 }
