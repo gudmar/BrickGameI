@@ -31,7 +31,6 @@ function BrickGame() {
     cartridgeDown,
     cartridgeUp,
     currentGame,
-    isGameSelectionAllowed,
     setIsGameSelectionAllowed,
   } = useCartridgeController();
 
@@ -45,7 +44,6 @@ function BrickGame() {
     return (
         <div className={`root ${currentClass}`}>
             <Navigation />
-            {isGameSelectionAllowed ? 'Game is started' : 'Game is STOPPED'}
             <Console 
                 currentGame={currentGame}
                 setIsGameSelectionAllowed = {setIsGameSelectionAllowed}

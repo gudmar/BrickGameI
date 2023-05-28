@@ -14,19 +14,22 @@ function Console({
 }: ConsoleArgs) {
   const {speed, level} = useGameState();
   const {getClassNameForCurrentScheme} = useColorSchemeContext();
-  const housingClass = getClassNameForCurrentScheme('housing')
+  const housingClass = getClassNameForCurrentScheme('housing');
+  const bottomBarClass = getClassNameForCurrentScheme('bottomBar');
+  const displaySkinClass = getClassNameForCurrentScheme('display');
+  const stickerLabelSkin = getClassNameForCurrentScheme('stickerLabel');
     return (
         <div className={styles.table}>
           <div className={`${styles.housing} ${styles[housingClass]} ${styles.housingShadow}`}>
             <div className={styles.topBar}>
-              <span className={styles.stickerLabel}> &gt;&gt;&gt; Brick Game &lt;&lt;&lt;</span>
+              <span className={`${styles.stickerLabel} ${styles[stickerLabelSkin]}`}> &gt;&gt;&gt; Brick Game &lt;&lt;&lt;</span>
             </div>
 
             <div className={styles.leftSideBar}>
               <BrickStickers variant={StickersVariant.L} />
             </div>
 
-            <div className={styles.display}>
+            <div className={`${styles.display} ${styles[displaySkinClass]}`}>
               <Display 
                 speed={speed as OneToTen}
                 level={level as OneToTen}
@@ -38,7 +41,7 @@ function Console({
               <BrickStickers variant={StickersVariant.R} />
             </div>
 
-            <div className={styles.bottomBar}></div>
+            <div className={`${styles.bottomBar} ${styles[bottomBarClass]}`}></div>
 
             <div className={styles.leftKeypadBar}></div>
             <div className={styles.keypad}>

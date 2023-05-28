@@ -6,6 +6,7 @@
     left: 1rem;
     background-color: #333;
     visibility: hidden;
+    z-index: 5;
 }
 .menuItem{
     padding-top: 0.25rem;
@@ -34,18 +35,22 @@
     align-items: center;
 
 }
-.headline:hover {
+
+.container:hover > .headline {
     color: yellow;
     cursor: pointer;
     transition: 0.3s;
     transition-timing-function: jump-start;
     transform: scale(1.2);
 }
-.headline > .icon {
+
+.icon {
     transform: rotateZ(-90deg);
     transition-duration: 0.3s;
 }
-.headline:hover > .icon {
+
+
+.container:hover > .headline > .icon {
     transform: rotateZ(0deg);
     transition-duration: 0.3s;    
 }
