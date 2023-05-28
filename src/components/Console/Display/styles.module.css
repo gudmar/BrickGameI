@@ -6,6 +6,7 @@
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    border-radius: 0.25rem;
 }
 
 .dojoSection {

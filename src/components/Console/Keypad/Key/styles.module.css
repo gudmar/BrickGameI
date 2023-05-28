@@ -58,13 +58,13 @@
 
 .Polishflag-key {
     box-shadow: inset -1px 30px 10px -20px rgba(255, 230, 230, 1),
-    0px 0px 4px 6px rgba(66, 68, 90, 1);
+    0px 0px 4px 6px rgba(180, 0, 0, 1);
     background-image: radial-gradient(circle, rgba(255, 237, 237, 1) 50%, rgba(14, 14, 14, 1) 88%);
 }
 
 .Darkscheme-key {
     box-shadow: inset -1px 30px 10px -20px rgba(255, 230, 230, 1),
-    0px 0px 4px 6px rgba(66, 68, 90, 1);
+    0px 0px 4px 6px rgba(40, 40, 40, 1);
     background-image: radial-gradient(circle, rgba(255, 237, 94, 1) 50%, rgba(14, 14, 14, 1) 88%);
 }
 

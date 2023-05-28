@@ -42,6 +42,17 @@
     margin: 1px;
     border-radius: 3px;
 }
+.Darkscheme-borderSticker {
+    border: solid yellow thick;
+}
+.Polishflag-borderSticker {
+    border: solid white thick;
+}
+.Graphite-borderSticker {
+    border: solid yellow thick;
+}
+
+
 .borderNoBrick { 
     border: var(--borderNoBrick); 
     width: var(--stickerSize);
@@ -63,9 +74,20 @@
 }
 .insideSticker {
     border: var(--borderSticker);
-    background-color: var(--colorSticker);
+    /* background-color: var(--colorSticker); */
     border-radius: 50%;
 }
+
+.Graphite-insideSticker {
+    border: solid yellow thick;
+}
+.Darkscheme-insideSticker {
+    border: solid yellow thick;
+}
+.Polishflag-insideSticker {
+    border: solid white thick;
+}
+
 .insideNoBrick {
     border: var(--borderNoBrick);
     background-color: var(--colorNoBrick);
