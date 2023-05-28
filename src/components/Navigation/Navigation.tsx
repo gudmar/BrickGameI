@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './styles.module.css';
 import { useGameState } from '../../context/gameStateContext';
 import { useCartridgeController } from '../../context/cartridgeProvider';
@@ -6,6 +6,7 @@ import { CARTRIDGE_ORDER } from '../../constants/cartridgeLibrary';
 import NavSelect from './NavWidget/NavSelect/NavSelect';
 import NavButton from './NavWidget/NavButton/NavButton';
 import { COLOR_SCHEMES, useColorSchemeContext } from '../../context/colorShemeProvider';
+import { About } from '../About/About';
 
 const LevelSpeed = ['1', '2', '3', '4' ,'5', '6', '7', '8','9', '10']
 
@@ -13,6 +14,7 @@ function Navigation() {
   const {
     level, speed, setLevel, setSpeed
   } = useGameState();
+  const [isModelOpen, setIsModalOpen] = useState(false);
    const {currentGame, setCartridgeByDescription} = useCartridgeController();
    const {currentColorScheme, setCurrentColorScheme} = useColorSchemeContext();
 
@@ -25,6 +27,7 @@ function Navigation() {
   
     return (
         <div className={styles.bar}>
+          {isModelOpen && <About isOpen={isModelOpen} closeAbout={()=>setIsModalOpen(false)}/>}
           <NavSelect
             label={'Game'}
             onSelect={setCartridge}
@@ -51,7 +54,7 @@ function Navigation() {
           />
           <NavButton
             label={'About'}
-            onClick={() => {}}
+            onClick={() => {setIsModalOpen(true)}}
           />
         </div>
   );

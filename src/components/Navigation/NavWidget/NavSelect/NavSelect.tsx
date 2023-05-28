@@ -1,4 +1,3 @@
-import React, {useEffect, useState} from 'react';
 import styles from './styles.module.css';
 import ExpandIcon from '../../../Icons/ExpandIcon'
 import { WidgetItemProps } from '../WidgetPropsInterface';
