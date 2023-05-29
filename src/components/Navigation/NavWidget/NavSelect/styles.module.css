@@ -14,7 +14,7 @@
     padding-left: 0.5rem;
 }
 .menuItem:hover{
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     color: #333;
     cursor: pointer;
 }
@@ -49,6 +49,16 @@
     transition: 0.3s;
     transition-timing-function: jump-start;
     transform: scale(1.2);
+}
+
+.selected {
+    background-color: #aa6;
+}
+.selected:after{
+    content: 'x';
+    color: green;
+    position: absolute;
+    right: 1rem;
 }
 
 .icon {
