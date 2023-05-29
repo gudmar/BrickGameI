@@ -1,10 +1,10 @@
-import React from 'react';
 import styles from './styles.module.css';
-import { NavigationButtonInterface, WidgetItemProps } from '../WidgetPropsInterface';
+import { NavigationButtonInterface } from '../WidgetPropsInterface';
 
-function NavButton({ label, onClick }: NavigationButtonInterface) {
+function NavButton({ label, onClick, disabled }: NavigationButtonInterface) {
+  const isNotDisabled = (classIfNotDisabled: string) => disabled ? styles.disabled : classIfNotDisabled;
     return (
-        <div className={styles.container} onClick={onClick}>
+        <div className={isNotDisabled(styles.container)} onClick={() => disabled ? () => {} : onClick}>
           <span className='name'>{label}</span>
         </div>
   );

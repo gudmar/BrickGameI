@@ -2,16 +2,20 @@ import styles from './styles.module.css';
 import ExpandIcon from '../../../Icons/ExpandIcon'
 import { WidgetItemProps } from '../WidgetPropsInterface';
 
-function NavSelect({ label, onSelect, items, value }: WidgetItemProps) {
+function NavSelect({ label, onSelect, items, value, disabled }: WidgetItemProps) {
   const isExpandable = !items ? false : items.length > 0;
+  const isNotDisabled = (classIfNotDisabled: string) => disabled ? styles.disabled : classIfNotDisabled;
+  const isNotDisabledContainer = () => disabled ? styles['disabled-container'] : styles.container;
+  const isNotDisabledHeadline = () => disabled ? styles['headline-disabled'] : styles.headline;
+  const isNotDisabledMenu = (classIfNotDisabled: string) => disabled ? styles['disabled-hide'] : classIfNotDisabled
     return (
-      <div className={styles.container}>
-        <div className={styles.headline}>
-          <>{isExpandable && <div className = {styles.icon}><ExpandIcon variant='white'/></div>}</>
-          <>{isExpandable && <span className={styles.space}></span>}</>
-          <span className='name'>{`${label} :`}</span><span className={styles.value}>{value}</span>
+      <div className={isNotDisabledContainer()}>
+        <div className={isNotDisabledHeadline()}>
+          <>{isExpandable && <div className = { isNotDisabled(styles.icon)}><ExpandIcon variant='white'/></div>}</>
+          <>{isExpandable && <span className={isNotDisabled(styles.space)}></span>}</>
+          <span className='name'>{`${label} :`}</span><span className={isNotDisabled(styles.value)}>{value}</span>
         </div>
-        <div className={styles.menu}>
+        <div className={isNotDisabledMenu(styles.menu)}>
           {
             items!.map((item) => <div className={styles.menuItem} onClick={onSelect}>{item}</div>)
           }
@@ -22,6 +26,7 @@ function NavSelect({ label, onSelect, items, value }: WidgetItemProps) {
 
 NavSelect.defaultProps = {
   items: [],
+  disabled: false,
 }
 
 export default NavSelect;

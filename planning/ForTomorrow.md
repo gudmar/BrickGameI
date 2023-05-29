@@ -12,15 +12,15 @@
 + Hit key - button should animate,
 + bar above should be hooked to game state
 - Game codes shown in better way
-- About content
-- css improved to make console more realistic
-- Some different skin
++ About content
++ css improved to make console more realistic
++ Some different skin
 
 BUG tetris:
-- After demolition, when arrow down is pressed all the time sometimes it does not clear isAccelerating flag
-- Source of problem is somewhere in setVisitorToNextStateOnTick and tryMovingOnTick,
++ After demolition, when arrow down is pressed all the time sometimes it does not clear isAccelerating flag
++ Source of problem is somewhere in setVisitorToNextStateOnTick and tryMovingOnTick,
 If attempt to divide acceleration probliem occures, if no acceleration, no occures
-- UPDATE: Problem occures both: with division and witout
++ UPDATE: Problem occures both: with division and witout
 
 - Anti-tetris
 

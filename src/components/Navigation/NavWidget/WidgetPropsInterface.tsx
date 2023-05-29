@@ -15,10 +15,12 @@ export interface WidgetProps {
     onSelect: (e: React.MouseEvent<HTMLElement>) => void,
     items?: String[],
     value: string | number,
+    disabled?: boolean,
   }
 
   export interface NavigationButtonInterface {
     label: string,
     onClick: (e: React.MouseEvent<HTMLElement>) => void,
+    disabled?: boolean,
   }
 
