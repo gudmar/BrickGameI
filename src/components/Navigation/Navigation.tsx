@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './styles.module.css';
 import { useGameState } from '../../context/gameStateContext';
 import { useCartridgeController } from '../../context/cartridgeProvider';
@@ -7,6 +7,7 @@ import NavSelect from './NavWidget/NavSelect/NavSelect';
 import NavButton from './NavWidget/NavButton/NavButton';
 import { COLOR_SCHEMES, useColorSchemeContext } from '../../context/colorShemeProvider';
 import { About } from '../About/About';
+import { Cheating } from '../Cheating/Cheating';
 
 const LevelSpeed = ['1', '2', '3', '4' ,'5', '6', '7', '8','9', '10']
 
@@ -14,7 +15,8 @@ function Navigation() {
   const {
     level, speed, setLevel, setSpeed, isGameStarted,
   } = useGameState();
-  const [isModelOpen, setIsModalOpen] = useState(false);
+   const [isAboutOpen, setIsAboutOpen] = useState(false);
+   const [isCheatingOpen, setIsCheatingOpen] = useState(false);
    const {currentGame, setCartridgeByDescription} = useCartridgeController();
    const {currentColorScheme, setCurrentColorScheme} = useColorSchemeContext();
 
@@ -23,11 +25,12 @@ function Navigation() {
    const setCartridge = (event: any) => { setCartridgeByDescription(event.target.textContent)}
    const setColorScheme = (event: any) => {setCurrentColorScheme(event.target.textContent)}
 
-  
+  useEffect(() => console.log(isCheatingOpen), [isCheatingOpen])
   
     return (
         <div className={styles.bar}>
-          {isModelOpen && <About isOpen={isModelOpen} closeAbout={()=>setIsModalOpen(false)}/>}
+          {isAboutOpen && <About isOpen={isAboutOpen} closeAbout={()=>setIsAboutOpen(false)}/>}
+          {isCheatingOpen && <Cheating isOpen={isCheatingOpen} closeCheating={()=>setIsCheatingOpen(false)}/>}
           <NavSelect
             label={'Game'}
             onSelect={setCartridge}
@@ -58,8 +61,12 @@ function Navigation() {
           />
           <NavButton
             label={'About'}
-            onClick={() => {setIsModalOpen(true)}}
+            onClick={() => {setIsAboutOpen(true)}}
             disabled={isGameStarted}
+          />
+          <NavButton
+            label={'Cheating'}
+            onClick={() => {setIsCheatingOpen(true)}}
           />
         </div>
   );

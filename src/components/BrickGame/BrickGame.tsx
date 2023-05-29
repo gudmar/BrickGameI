@@ -1,29 +1,11 @@
 import './styles.css';
 import Navigation from '../Navigation/Navigation';
 import Console from '../Console/Console';
-import { codesDescription } from '../../constants/gameCodes';
 import { keys, useKeyboard } from '../../hooks/useKeyboard';
 import { useCartridgeController } from '../../context/cartridgeProvider';
 import { useColorSchemeContext } from '../../context/colorShemeProvider';
 import { useEffect } from 'react';
 
-
-function CodeDescriptions({currentGame}: {currentGame: string}) {
-
-  if (!codesDescription[currentGame]) return <></>
-  return (
-    <>
-      <h3>Game codes for {currentGame}</h3>
-      <b>NOTE: </b><i>Inserted code makes you a cheater</i>
-      <ul>
-        {
-          codesDescription[currentGame].map(({code, description}) => 
-            <li key={`${currentGame}${code}${description}`}><b>{code}</b>: <i>{description}</i></li>)
-        }
-      </ul>
-    </>
-  )
-}
 
 
 function BrickGame() {
@@ -60,7 +42,6 @@ function BrickGame() {
               <div><b>Space</b> <i>Rotate</i></div>
               <div><b>Enter</b> <i>Start game, restart game after finished</i></div>
             </div>
-            <CodeDescriptions currentGame={currentGame} />
         </div>
   );
 }

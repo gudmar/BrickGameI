@@ -17,7 +17,7 @@ function NavSelect({ label, onSelect, items, value, disabled }: WidgetItemProps)
         </div>
         <div className={isNotDisabledMenu(styles.menu)}>
           {
-            items!.map((item) => <div className={styles.menuItem} onClick={onSelect}>{item}</div>)
+            items!.map((item) => <div className={`${styles.menuItem} ${value.toString() === item.toString() ? styles.selected : ''}`} onClick={onSelect}>{item}</div>)
           }
         </div>
       </div>
