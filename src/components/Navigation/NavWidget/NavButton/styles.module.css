@@ -17,6 +17,18 @@
     transition-timing-function: jump-start;
     transform: scale(1.2);
 }
+.disabled {
+    color: #aaa;
+    cursor: not-allowed;
+    font-family: Arial, Helvetica, sans-serif;
+    height: 1.5rem;
+    padding-left: 20px;
+    padding-right: 20px;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+}
+
 .container > .icon {
     transform: rotateZ(-90deg);
     transition-duration: 0.3s;
@@ -34,7 +46,4 @@
     width: 0.5rem;
     display: inline-block;
     position: relative;
-}
-.label{
-
 }

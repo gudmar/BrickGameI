@@ -27,13 +27,20 @@
     font-family: Arial, Helvetica, sans-serif;
     color: white;
     height: 1.5rem;
-    display: flex;
     padding-left: 20px;
     padding-right: 20px;
     transition: 0.3s;
     display: flex;
     align-items: center;
+}
 
+.headline-disabled {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #aaa;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    cursor: not-allowed;
 }
 
 .container:hover > .headline {
@@ -49,6 +56,30 @@
     transition-duration: 0.3s;
 }
 
+.disabled {
+    color: #aaa;
+    cursor: not-allowed;
+    font-family: Arial, Helvetica, sans-serif;
+    height: 1.5rem;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+}
+.disabled-container {
+    color: #aaa;
+    cursor: not-allowed;
+    font-family: Arial, Helvetica, sans-serif;
+    height: 1.5rem;
+    padding-left: 20px;
+    padding-right: 20px;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.disabled-hide {
+    display: none;
+}
 
 .container:hover > .headline > .icon {
     transform: rotateZ(0deg);
