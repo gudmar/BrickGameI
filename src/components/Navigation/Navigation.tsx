@@ -8,6 +8,7 @@ import NavButton from './NavWidget/NavButton/NavButton';
 import { COLOR_SCHEMES, useColorSchemeContext } from '../../context/colorShemeProvider';
 import { About } from '../About/About';
 import { Cheating } from '../Cheating/Cheating';
+import { GameControls } from '../GameControls/GameControls';
 
 const LevelSpeed = ['1', '2', '3', '4' ,'5', '6', '7', '8','9', '10']
 
@@ -17,6 +18,7 @@ function Navigation() {
   } = useGameState();
    const [isAboutOpen, setIsAboutOpen] = useState(false);
    const [isCheatingOpen, setIsCheatingOpen] = useState(false);
+   const [isGameControlOpen, setIsGameControlOpen] = useState(false);
    const {currentGame, setCartridgeByDescription} = useCartridgeController();
    const {currentColorScheme, setCurrentColorScheme} = useColorSchemeContext();
 
@@ -31,6 +33,7 @@ function Navigation() {
         <div className={styles.bar}>
           {isAboutOpen && <About isOpen={isAboutOpen} closeAbout={()=>setIsAboutOpen(false)}/>}
           {isCheatingOpen && <Cheating isOpen={isCheatingOpen} closeCheating={()=>setIsCheatingOpen(false)}/>}
+          {isGameControlOpen && <GameControls isOpen={isGameControlOpen} closeGameControls={()=>setIsGameControlOpen(false)}/>}
           <NavSelect
             label={'Game'}
             onSelect={setCartridge}
@@ -60,13 +63,17 @@ function Navigation() {
             disabled={isGameStarted}
           />
           <NavButton
+            label={'Cheating'}
+            onClick={() => {setIsCheatingOpen(true)}}
+          />
+          <NavButton
+            label={'Controls'}
+            onClick={() => {setIsGameControlOpen(true)}}
+          />
+          <NavButton
             label={'About'}
             onClick={() => {setIsAboutOpen(true)}}
             disabled={isGameStarted}
-          />
-          <NavButton
-            label={'Cheating'}
-            onClick={() => {setIsCheatingOpen(true)}}
           />
         </div>
   );

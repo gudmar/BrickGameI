@@ -1,0 +1,13 @@
+.code {
+    font-weight: bold;
+    color: yellow;
+}
+
+.description {
+    font-style: italic;
+    color: white;
+}
+
+.title {
+    color: orange;
+}
