@@ -29,7 +29,6 @@ export const useGameCodes = (listOfCodes:string[]) => {
     [])
 
     useEffect(() => {
-        console.log(matchedCode)
         if (matchedCode !== '') {
             matcher.clearBufor();
         }

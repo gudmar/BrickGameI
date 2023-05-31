@@ -53,7 +53,6 @@ export class Juggernaut {
             return devastationProces;
         });
         this.demolitionsQueue = orderedDevastations;
-        console.log(indexesForDemolition, this.demolitionsQueue)
     }
 
     getCopy(obj:any) { return JSON.parse(JSON.stringify(obj))}

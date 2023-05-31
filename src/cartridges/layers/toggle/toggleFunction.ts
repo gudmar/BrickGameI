@@ -25,11 +25,5 @@ export const spiral = (currentBrick: number, layerBrick: number) => {
 
 export const toggle = (currentBrick: number, layerBrick: number) => {
     return xor(currentBrick, layerBrick)
-    // console.log(currentBrick, layerBrick)
-    // // const and = currentBrick && layerBrick;
-    // const or = currentBrick || layerBrick;
-    // // if (and) return 0;
-    // if (or) return 1;
-    // return 0;
 }
     

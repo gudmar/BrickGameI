@@ -18,7 +18,6 @@ export class AnimatorOfDestruction{
     get isAnimating() { return this.visitedObject.isAnimating }
 
     tick(){
-        console.log(this.nrOfAnimationsSoFar)
         const isAnimationStopped = this.tryStopAnimation();
         if (isAnimationStopped) return;
         const pawnLayer = this.mergeBurningTankToBoard(this.visitedObject.pawnLayer, this.nextStateCalculator.playerTankCords, this.nrOfAnimationsSoFar % 2 === 0)
@@ -26,7 +25,6 @@ export class AnimatorOfDestruction{
         this.nrOfAnimationsSoFar++;
     }
     tryStopAnimation(){
-        console.log(this.nrOfAnimationsSoFar)
         if (this.nrOfAnimationsSoFar >= MAX_NR_OF_ANIMATIONS) {
             this.visitedObject.isAnimating = false;
             this.nrOfAnimationsSoFar = 0;
@@ -46,7 +44,6 @@ export class AnimatorOfDestruction{
         for(let rowIndex = startRow; rowIndex <= endRow; rowIndex++){
             for(let colIndex = startCol; colIndex <= endCol; colIndex++){
                 pawnLayer[rowIndex][colIndex] = fire[rowIndex - startRow][colIndex - startCol];
-                console.log(rowIndex - startRow, colIndex - startCol)
             }
         }
         return pawnLayer;

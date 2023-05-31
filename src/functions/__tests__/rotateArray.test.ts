@@ -23,7 +23,6 @@ describe('Testing rotateArray', () => {
     })
     it('Should properly rotate a 2 elements single column array', () => {
         const result = rotateArray([[1], [2]], 1);
-        console.log('RES', result)
         expect(result).toEqual([[2, 1]])
     })
     it('Should properly rotate a 4 elements single column array', () => {

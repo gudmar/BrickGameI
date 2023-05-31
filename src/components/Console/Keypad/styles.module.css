@@ -9,11 +9,13 @@
     height: 100%;
 }
 
-.pause { 
-    grid-area: pause; 
-    justify-content: start; 
-    place-items: start;
-    max-width: 50px;
+.controls { 
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+}
+.controls>*{
+    margin: 0.3rem;
 }
 
 .arrows { 

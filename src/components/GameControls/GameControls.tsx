@@ -26,7 +26,7 @@ export const GameControls = ({closeGameControls, isOpen}: {closeGameControls: ()
           </thead>
           <tbody>
             {controlsData.map(({key, description}) => (
-              <tr>
+              <tr key={key}>
                 <td className={`${styles.right} ${styles.bold}`}>{key}</td><td className={`${styles.left} ${styles.italic}`}>{description}</td>
               </tr>
             ))}

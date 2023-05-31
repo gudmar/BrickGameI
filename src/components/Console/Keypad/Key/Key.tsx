@@ -14,7 +14,6 @@ function Key({label, onClick, onMouseDown, onMouseUp, size, activator}: KeyProps
     const pressedClass = useGetKeyPressedMarkClass(activator)
     const {getClassNameForCurrentScheme} = useColorSchemeContext();
     const keyClass = getClassNameForCurrentScheme('key')  
-    useEffect(() => console.log(pressedClass), [pressedClass])
     return (
       <div className={styles.container}>
         <div className={styles.label}>{label}</div>

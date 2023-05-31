@@ -118,6 +118,7 @@ export class TankVisitor extends ContinuousMovementNestStateCalculator implement
         visitedObject.background = getEmptyBoard();
         visitedObject.pawnLayer = getEmptyBoard();
     }
+    spaceUp(){}
 
     setVisitorToNextStateOnTick(visitedObject:GameCreator, time: number) {
         this.moveOnTick(visitedObject, time);
