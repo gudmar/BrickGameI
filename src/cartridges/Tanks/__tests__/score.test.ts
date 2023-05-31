@@ -65,9 +65,7 @@ describe('Testing score in Tanks', () => {
         
         runFunctionTimes(() => {
             Bullet.moveAllBullets(tankInstance, visitedObjectMock);
-            console.log('cord', Bullet.instances[0]?.cords, visitedObjectMock.score)
         }, 19);
-        Tank.instances.forEach(t => console.log(t.cords, t.isPlacedOnBoard))
         expect(visitedObjectMock.score).toBe(10);
     })
     it('SHould not add points when enemy bullet hits wall', () => {

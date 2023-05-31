@@ -6,14 +6,15 @@ export class Clock {
     static instance: any; // [!!!] Type should be corrected
     private time!: number;
     private counter!: NodeJS.Timeout;
-    private INTERVAL: number = 1;
+    private INTERVAL: number = 20;
     protected callbacks!: {[key: string]: OnTick }
-    constructor() {
+    constructor(isLocalhost = true) {
         if (Clock.instance) return Clock.instance;
         this.time = 0;
         Clock.instance = this;
         this.callbacks = {};
         this.start();
+        this.INTERVAL = isLocalhost ? 1 : 20;
         return this;
     }
     get currentTime () { return this.time };

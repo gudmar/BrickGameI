@@ -26,8 +26,6 @@ function Navigation() {
    const setGameSpeed = (event: any) => { setSpeed(event.target.textContent) }
    const setCartridge = (event: any) => { setCartridgeByDescription(event.target.textContent)}
    const setColorScheme = (event: any) => {setCurrentColorScheme(event.target.textContent)}
-
-  useEffect(() => console.log(isCheatingOpen), [isCheatingOpen])
   
     return (
         <div className={styles.bar}>

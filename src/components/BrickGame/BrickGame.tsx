@@ -21,7 +21,6 @@ function BrickGame() {
   useKeyboard({ key: keys.DOWN, callback: cartridgeDown })
   const {getClassNameForCurrentScheme} = useColorSchemeContext();
   const currentClass = getClassNameForCurrentScheme('background')
-  useEffect(()=>console.log(currentClass), [currentClass])
 
     return (
         <div className={`root ${currentClass}`}>

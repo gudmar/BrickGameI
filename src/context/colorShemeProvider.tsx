@@ -29,7 +29,6 @@ const ColorSchemeContext = createContext(initialColorScheme)
 
 export const ColorSchemeProvider = ({children}: {children: React.ReactNode}) => {
     const [currentColorScheme, setCurrentColorScheme] = useState(GRAPHITE);
-    useEffect(() => console.log(currentColorScheme), [currentColorScheme])
     const getClassNameForCurrentScheme = (postfix: string) => {
         const currentSchemePrefix = getCurrentColorSchemeClassPrefix(currentColorScheme);
         return `${currentSchemePrefix}-${postfix}`

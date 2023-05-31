@@ -12,19 +12,33 @@ const onPauseDown = (e: React.MouseEvent<HTMLElement>) => {
 const onRotateDown = (e: React.MouseEvent<HTMLElement>) => {
   window.dispatchEvent(new KeyboardEvent(KEYDOWN, {key: keys.SPACE}))
 };
+const onGameStartDown = (e: React.MouseEvent<HTMLElement>) => {
+  window.dispatchEvent(new KeyboardEvent(KEYDOWN, {key: keys.ENTER}))
+};
+const onResetDown = (e: React.MouseEvent<HTMLElement>) => {
+  window.dispatchEvent(new KeyboardEvent(KEYDOWN, {key: keys.X}))
+};
 const onPauseUp = (e: React.MouseEvent<HTMLElement>) => {
   window.dispatchEvent(new KeyboardEvent(KEYUP, {key: keys.P}))
 };
 const onRotateUp = (e: React.MouseEvent<HTMLElement>) => {
   window.dispatchEvent(new KeyboardEvent(KEYUP, {key: keys.SPACE}))
 };
+const onGameStartUp = (e: React.MouseEvent<HTMLElement>) => {
+  window.dispatchEvent(new KeyboardEvent(KEYUP, {key: keys.ENTER}))
+};
+const onResetUp = (e: React.MouseEvent<HTMLElement>) => {
+  window.dispatchEvent(new KeyboardEvent(KEYUP, {key: keys.X}))
+};
 
 
 function Keypad() {
     return (
         <div className={styles.container}>
-          <div className={styles.pause}>
+          <div className={styles.controls}>
+            <Key activator={keys.ENTER} label="Start" size={KeySize.small} onMouseDown={onGameStartDown} onMouseUp={onGameStartUp}/>
             <Key activator={keys.P} label="Pause" size={KeySize.small} onMouseDown={onPauseDown} onMouseUp={onPauseUp}/>
+            <Key activator={keys.X} label="Reset" size={KeySize.small} onMouseDown={onResetDown} onMouseUp={onResetUp}/>
           </div>
           <div className={styles.arrows}><Arrows /></div>
           <div className={styles.rotate}>

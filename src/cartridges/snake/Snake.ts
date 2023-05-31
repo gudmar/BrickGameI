@@ -55,6 +55,8 @@ set foodCords(val: PawnCords) {
         this.initiateWithoutScore(visitedObject);
     }
 
+    spaceUp(){}
+
     levelFinished(visitedObject: GameCreator) {
         this.gameAnimator.curtainAnimation(visitedObject);
         if (visitedObject.level === 10) { visitedObject.level = 1 }
@@ -208,11 +210,9 @@ set foodCords(val: PawnCords) {
             break;
         case DONT_BUMP:
             this.noBoundries = true;
-            console.log('%cNo boundries game mode activated. This is not a cheat.', 'background-color: balck; color: white; padding: 2px; border-radius: 3px;')
             break;
         case BUMP:
             this.noBoundries = false;
-            console.log('%cNo boundries game mode disactivated. This is not a cheat.', 'background-color: balck; color: white; padding: 2px; border-radius: 3px;')
             break;
     
         }

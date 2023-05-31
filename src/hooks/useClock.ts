@@ -11,7 +11,7 @@ import { Speed } from "../types/types";
  * @param time time from clock
  * @param speed game current speed
  */
-export const divideTime = (time: number, speed?: Speed) => {
+export const divideTime = (time: number, speed?: Speed ) => {
     if (speed !== undefined && speed > 10) throw new Error(`Speed value: ${speed} is grater then 10`);
     if (speed !== undefined && speed < 1) throw new Error(`Speed value: ${speed} is less then 10`);
     if (!speed) return time;
@@ -32,13 +32,17 @@ const setDividedTime = ( currentTime: number, speed: Speed | undefined, setTimeF
 // const clock = new Clock();
 
 export const useTimer = (speed?:Speed) => {
-    const clock = new Clock(); // A singleton, will always be the same object, so no risk for deps
+    const isLocalhost = window.location.hostname === 'localhost';
+    const clock = new Clock(isLocalhost); // A singleton, will always be the same object, so no risk for deps
     const [time, setTime] = useState(clock.currentTime);
     useEffect(()=>{
-        const setDividedTimeFunction = setDividedTime(time, speed, setTime);
-        const removeEventListener = clock.addEventListener(setDividedTimeFunction);
-        // const uuid = clock.addEventListener(setDividedTimeFunction);
-        return removeEventListener;
+        // if (time % locationTimeDivider === 0) {
+            const setDividedTimeFunction = setDividedTime(time, speed, setTime);
+            // const setDividedTimeFunction = setDividedTime(time, speed, setTime);
+            const removeEventListener = clock.addEventListener(setDividedTimeFunction);
+            // const uuid = clock.addEventListener(setDividedTimeFunction);
+            return removeEventListener;
+        // }
     }, [time, speed, setTime])
     return time;  
 }

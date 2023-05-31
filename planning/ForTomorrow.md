@@ -5,6 +5,7 @@
 
 * Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
 
+- Sound ?   https://codepen.io/gregh/post/recreating-legendary-8-bit-games-music-with-web-audio-api
 + When game started it shuld NOT be possible to change anything in navigation
 - Game controlls in better way
 - Controll slowing down when arrow down pressed for too long
