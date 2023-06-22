@@ -7,6 +7,7 @@ import Display from './Display/Display';
 import { ConsoleArgs, OneToTen } from '../../types/types';
 import { useGameState } from '../../context/gameStateContext';
 import { useColorSchemeContext } from '../../context/colorShemeProvider';
+import { MusicPlayer } from './MusicPlayer';
 
 function Console({ 
   currentGame,
@@ -20,6 +21,7 @@ function Console({
   const stickerLabelSkin = getClassNameForCurrentScheme('stickerLabel');
     return (
         <div className={styles.table}>
+          <MusicPlayer />
           <div className={`${styles.housing} ${styles[housingClass]} ${styles.housingShadow}`}>
             <div className={styles.topBar}>
               <span className={`${styles.stickerLabel} ${styles[stickerLabelSkin]}`}> &gt;&gt;&gt; Brick Game &lt;&lt;&lt;</span>

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useGameState } from '../../../context/gameStateContext';
-import { useCartridge } from '../../../hooks/useCartridge';
 import { OneToTen } from '../../../types/types';
 import { DisplayProps } from '../brickInterfaces';
 import Dojo from './Dojo/Dojo';
@@ -30,7 +29,6 @@ function Display(
     isGameSelectionAllowed,
     isCheater,
   } = useGameState();
-  //  } = useCartridge(currentGameDescription);
    useEffect(() => {
       setIsGameSelectionAllowed(isGameSelectionAllowed || false);
    }, [setIsGameSelectionAllowed, isGameSelectionAllowed])

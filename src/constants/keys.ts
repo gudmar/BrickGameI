@@ -57,6 +57,7 @@ export const keyCodes = {
     Y: 'y',
     Z: 'z',
     Q: 'q',
+    V: 'v',
     _C:'C',
     _D: 'D',
     _E: 'E',
@@ -80,5 +81,6 @@ export const keyCodes = {
     _Y: 'Y',
     _Z: 'Z',
     _Q: 'Q',
+    _V: 'V',
     // Can add more if needed
 }

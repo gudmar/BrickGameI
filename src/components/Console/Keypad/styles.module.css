@@ -5,7 +5,7 @@
         "arrows . rotate"
     ;
     grid-template-rows: 1fr 5fr;
-    grid-template-columns: 5fr 1fr 2fr;
+    grid-template-columns: 5fr 0fr 1fr;
     height: 100%;
 }
 
@@ -24,3 +24,4 @@
 }
 
 .rotate { grid-area: rotate; }
+.rotate>* {margin-left: -2rem; margin-top: 2rem;}
