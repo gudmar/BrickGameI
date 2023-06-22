@@ -30,6 +30,12 @@ const onGameStartUp = (e: React.MouseEvent<HTMLElement>) => {
 const onResetUp = (e: React.MouseEvent<HTMLElement>) => {
   window.dispatchEvent(new KeyboardEvent(KEYUP, {key: keys.X}))
 };
+const onSoundDown = (e: React.MouseEvent<HTMLElement>) => {
+  window.dispatchEvent(new KeyboardEvent(KEYDOWN, {key: keys.V}))
+}
+const onSoundUp = (e: React.MouseEvent<HTMLElement>) => {
+  window.dispatchEvent(new KeyboardEvent(KEYUP, {key: keys.V}))
+}
 
 
 function Keypad() {
@@ -39,6 +45,7 @@ function Keypad() {
             <Key activator={keys.ENTER} label="Start" size={KeySize.small} onMouseDown={onGameStartDown} onMouseUp={onGameStartUp}/>
             <Key activator={keys.P} label="Pause" size={KeySize.small} onMouseDown={onPauseDown} onMouseUp={onPauseUp}/>
             <Key activator={keys.X} label="Reset" size={KeySize.small} onMouseDown={onResetDown} onMouseUp={onResetUp}/>
+            <Key activator={keys.V} label="Sound" size={KeySize.small} onMouseDown={onSoundDown} onMouseUp={onSoundUp}/>
           </div>
           <div className={styles.arrows}><Arrows /></div>
           <div className={styles.rotate}>

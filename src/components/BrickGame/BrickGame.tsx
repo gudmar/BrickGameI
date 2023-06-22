@@ -4,7 +4,6 @@ import Console from '../Console/Console';
 import { keys, useKeyboard } from '../../hooks/useKeyboard';
 import { useCartridgeController } from '../../context/cartridgeProvider';
 import { useColorSchemeContext } from '../../context/colorShemeProvider';
-import { useEffect } from 'react';
 
 
 
