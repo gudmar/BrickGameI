@@ -17,6 +17,28 @@ export enum BallDirections {
     upLeft, upRight, downRight, downLeft, gameLost,
 }
 
+export type Oscillators = 'sawtooth' | 'triangle' | 'sine' | 'square';
+
+
+export type TimeSignature = number | [number, number]
+
+export type MelodySettings = {
+    tempo?: number,
+    timeSignature?: TimeSignature,
+}
+
+
+
+export type NoteDescriptor = {
+    time: string | number,
+    note: string | number,
+    duration: string | number
+}
+export type Melody = {
+    instruments: {notes: NoteDescriptor[], oscillator?: Oscillators}[],
+    settings?: {timeSignature?: TimeSignature, tempo?: number}
+}
+
 
 // export type NextFigurePreview = number[][]
 export type NextFigurePreview = number[][]
