@@ -34,8 +34,16 @@ export type NoteDescriptor = {
     note: string | number,
     duration: string | number
 }
+
+export type ChordDescriptor = {
+    time: string | number,
+    note: (string | number)[],
+    duration: string | number,
+}
+
 export type Melody = {
-    instruments: {notes: NoteDescriptor[], oscillator?: Oscillators}[],
+    instruments?: {notes: NoteDescriptor[], oscillator?: Oscillators}[],
+    chords?: {notes: ChordDescriptor[], oscillator?: Oscillators}[],
     settings?: {timeSignature?: TimeSignature, tempo?: number}
 }
 
