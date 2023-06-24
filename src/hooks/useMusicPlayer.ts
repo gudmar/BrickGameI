@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { Tracks } from "../functions/Tracks";
-import { melody } from "../melodies/plasairDAmour";
+import { melody } from "../melodies/entertainer";
+// import { melody } from "../melodies/plasairDAmour";
 import { Melody } from "../types/types";
 import { keys, useKeyboard } from "./useKeyboard";
 
 const useTracks = ({
-    instruments, settings
+    instruments, settings, chords
 }: Melody) => {
     const [tracks, setTracks]: [any, any] = useState(null)
     useEffect(() => {
-        setTracks(new Tracks({instruments, settings}))
+        setTracks(new Tracks({instruments, settings, chords}))
     }, [])
     const play = () => {
         if (tracks) tracks.play();
