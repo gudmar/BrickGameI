@@ -22,7 +22,10 @@ export class Tracks {
     }
 
     createTracks() {
-        this.instruments?.forEach(({notes, oscillator}) => this.createTrack({
+        const soundSources = this.chords ? this.chords : this.instruments;
+        if (!soundSources) throw new Error('No sound sources defined')
+        console.log(soundSources)
+        soundSources.forEach(({notes, oscillator}) => this.createTrack({
             notes, 
             oscillator: oscillator as Oscillators
         }))
@@ -56,13 +59,21 @@ export class Tracks {
         })
         return track
     }
+    polySyncCreator(options: any){
+        const synth = new Tone.PolySynth().toDestination();
+        console.log(options)
+        synth.set(options)
+        console.log(synth)
+        return synth
+    }
     createChordsTrack({notes, oscillator}: {notes: any, oscillator: Oscillators}){
+
         const track = new Track({
             oscillator,
             tempo: this.tempo,
             timeSignature: this.timeSignature,
             notes,
-            instrument: Tone.PolySynth,
+            instrument: this.polySyncCreator.bind(this),
         })
         return track
     }
