@@ -9,8 +9,11 @@ export class Tracks {
     tracks: any[] = [];
     timeSignature: number | [number, number] = 4
     tempo: number = 150;
+    static instances: any[] = [];
 
     constructor({instruments, settings, chords}: Melody) {
+        console.log('In tracks creator')
+        Tracks.instances.push(this)
         if (!instruments && !chords) throw new Error('Instruments have to be defined')
         this.instruments = instruments
         this.chords = chords;
@@ -21,14 +24,20 @@ export class Tracks {
         this.createTracks();
     }
 
+    cancel(){
+        Tone.Transport.cancel();
+    }
+
     clear() {
         this.clearTracks();
         this.instruments = undefined;
         this.chords = undefined;
         this.settings = {}
+        this.clearTracks()
         this.tracks = [];
         this.timeSignature = 4;
         this.tempo = 150;
+        Tone.Transport.seconds = 0;
     }
 
     createTracks() {
