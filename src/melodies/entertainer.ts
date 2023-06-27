@@ -173,10 +173,10 @@ const entertainer = [
     {time: '37:2', note: ['D5'], duration: '2n'},
     
     {time: '38:0', note: ['C5'], duration: '2n.'},
-    {time: '38:0', note: [0], duration: '1n'},
+    {time: '38:2', note: [0], duration: '1n'},
 
     {time: '39:0', note: ['D6'], duration: '4n'},
-    {time: '39:0', note: [0], duration: '2n.'},
+    {time: '39:1', note: [0], duration: '2n.'},
     
 ]
 

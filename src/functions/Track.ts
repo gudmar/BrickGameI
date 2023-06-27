@@ -10,10 +10,12 @@ export class Track {
     track: any;
     instrument: any = Tone.Synth;
     sequence: any;
+    static instances: any[] = [];
 
     constructor({oscillator, tempo, timeSignature, notes, instrument}: {
         oscillator: Oscillators, timeSignature: number | [number, number], notes: any, tempo: number, instrument: any
     }) {
+        Track.instances.push(this);
         if (oscillator) this.oscillator = oscillator;
         if (tempo) this.tempo = tempo;
         if (timeSignature) this.timeSignature = timeSignature;
@@ -43,14 +45,24 @@ export class Track {
         // this.sequence.loop = true;
         this.sequence.loop = true;
         this.sequence.loopStart = 0;
-        this.sequence.loopEnd = 20000
+        
+        // this.sequence.loopEnd = 20000
+        this.sequence.loopEnd = this.getTimeOfLastNote();
+
         // this.sequence.loopStart(0)
         // this.sequence.loopEnd(8)
+    }
+
+    getTimeOfLastNote() {
+        const time = this.notes[this.notes.length - 1].time;
+        const [tact, ] = time.split(':');
+        return `${parseInt(tact) + 1}:${0}`
     }
 
     play() {
         this.sequence.start(0);
         Tone.Transport.start()
+        console.log('Track start')
     }
     stop() {
         // this.sequence.stop();
@@ -59,5 +71,7 @@ export class Track {
     clear() {
         Tone.Transport.stop();
         this.sequence.stop();
+        this.track.dispose();
+        // this.sequence = undefined;
     }
 }
