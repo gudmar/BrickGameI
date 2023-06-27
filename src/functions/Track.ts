@@ -21,28 +21,43 @@ export class Track {
         if (this.instrument) this.instrument = instrument;
         this.createTrack();
         this.createSequence();
+        console.log('Creating Track')
     }
 
+    
+
     createTrack() {
-        this.track = new this.instrument(
-            { oscillator: { type: this.oscillator } }
-        ).toDestination();
+        this.track = this.instrument({oscillator: {type: this.oscillator}}).toDestination();
         Tone.Transport.bpm.value = this.tempo;
         Tone.Transport.timeSignature = this.timeSignature;
     }
 
     createSequence() {
+
         this.sequence = new Tone.Part((time, note) => {
+                console.log(note)
                     this.track.triggerAttackRelease(note.note, note.duration, time)
             },
             this.notes
         );
+        // this.sequence.loop = true;
+        this.sequence.loop = true;
+        this.sequence.loopStart = 0;
+        this.sequence.loopEnd = 20000
+        // this.sequence.loopStart(0)
+        // this.sequence.loopEnd(8)
     }
 
     play() {
-        this.sequence.start(0); Tone.Transport.start()  
+        this.sequence.start(0);
+        Tone.Transport.start()
     }
     stop() {
-        this.sequence.stop(); Tone.Transport.stop()
+        // this.sequence.stop();
+        Tone.Transport.pause()
+    }
+    clear() {
+        Tone.Transport.stop();
+        this.sequence.stop();
     }
 }

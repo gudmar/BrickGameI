@@ -7,6 +7,7 @@ import { KeyReader } from './functions/KeyReader';
 import { CartridgeContextProvider } from './context/cartridgeProvider';
 import { GameStateProvider } from './context/gameStateContext';
 import { ColorSchemeProvider } from './context/colorShemeProvider';
+import { MusicProvider } from './context/musicProvider';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -17,7 +18,9 @@ root.render(
     <CartridgeContextProvider>
       <GameStateProvider>
         <ColorSchemeProvider>
-          <BrickGame />
+          <MusicProvider>
+            <BrickGame />
+          </MusicProvider>
         </ColorSchemeProvider>
       </GameStateProvider>
     </CartridgeContextProvider>

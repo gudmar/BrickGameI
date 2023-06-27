@@ -45,6 +45,8 @@ export type Melody = {
     instruments?: {notes: NoteDescriptor[], oscillator?: Oscillators}[],
     chords?: {notes: ChordDescriptor[], oscillator?: Oscillators}[],
     settings?: {timeSignature?: TimeSignature, tempo?: number}
+    name: string,
+    author: string,
 }
 
 

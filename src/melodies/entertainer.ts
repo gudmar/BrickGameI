@@ -1,46 +1,46 @@
 import { SAWTOOTH, TRIANGLE } from "../constants/constants"
-import { Melody, MelodySettings, Oscillators } from "../types/types"
+import { Melody, MelodySettings } from "../types/types"
 
 const entertainer = [
     {time: '0:0', note: ['D5'], duration: '4n'},
     {time: '0:1', note: ['E5'], duration: '4n'},
     {time: '0:2', note: ['C5'], duration: '4n'},
-    {time: '0:4', note: ['A4'], duration: '4n'},
+    {time: '0:3', note: ['A4'], duration: '2n'},
 
-    {time: '1:0', note: ['A4'], duration: '4n'},
-    {time: '1:2', note: ['B4'], duration: '4n'},
-    {time: '1:3', note: ['G4'], duration: '4n'},
-    {time: '1:4', note: [0], duration: '4n'},
+    // {time: '1:0', note: ['A4'], duration: '4n'},
+    {time: '1:1', note: ['B4'], duration: '4n'},
+    {time: '1:2', note: ['G4'], duration: '4n'},
+    // {time: '1:3', note: [0], duration: '4n'},
 
     {time: '2:0', note: ['D5'], duration: '4n'},
     {time: '2:1', note: ['E5'], duration: '4n'},
     {time: '2:2', note: ['C5'], duration: '4n'},
-    {time: '2:3', note: ['A4'], duration: '4n'},
+    {time: '2:3', note: ['A4'], duration: '2n'},
 
-    {time: '3:0', note: ['A4'], duration: '4n'},
-    {time: '3:0', note: ['B4'], duration: '4n'},
-    {time: '3:0', note: ['F4'], duration: '4n'},
-    {time: '3:0', note: [0], duration: '4n'},
+    // {time: '3:0', note: ['A4'], duration: '4n'},
+    {time: '3:1', note: ['B4'], duration: '4n'},
+    {time: '3:2', note: ['G4'], duration: '4n'},
+    // {time: '3:0', note: [0], duration: '4n'},
 
     {time: '4:0', note: ['D4'], duration: '4n'},
     {time: '4:1', note: ['E4'], duration: '4n'},
     {time: '4:2', note: ['C4'], duration: '4n'},
-    {time: '4:3', note: [0], duration: '4n'},
+    // {time: '4:3', note: [0], duration: '4n'},
 
-    //===========================================
+    //==========================================
 
-    {time: '5:0', note: [0], duration: '1n'},
+    // {time: '5:0', note: [0], duration: '1n'},
 
-    {time: '6:0', note: [0], duration: '1n'},
+    // {time: '6:0', note: [0], duration: '1n'},
 
     {time: '7:0', note: ['G5'], duration: '4n'},
-    {time: '7:1', note: [0], duration: '4n'},
+    // {time: '7:1', note: [0], duration: '4n'},
     {time: '7:2', note: ['D4'], duration: '4n'},
     {time: '7:3', note: ['D#4'], duration: '4n'},
 
-    {time: '8:0', note: ['E5'], duration: '4n'},
+    {time: '8:0', note: ['E4'], duration: '4n'},
     {time: '8:1', note: ['C5'], duration: '2n'},
-    {time: '8:3', note: ['E5'], duration: '4n'},
+    {time: '8:3', note: ['E4'], duration: '4n'},
 
     {time: '9:0', note: ['C5'], duration: '2n'},
     {time: '9:2', note: ['E4'], duration: '4n'},
@@ -58,9 +58,9 @@ const entertainer = [
     {time: '12:0', note: ['E5'], duration: '4n'},
     {time: '12:1', note: ['C5'], duration: '4n'},
     {time: '12:2', note: ['D5'], duration: '4n'},
-    {time: '12:3', note: ['E5'], duration: '4n'},
+    {time: '12:3', note: ['E5'], duration: '2n'},
 
-    {time: '13:0', note: ['E5'], duration: '4n'},
+    // {time: '13:0', note: ['E5'], duration: '4n'},
     {time: '13:1', note: ['B4'], duration: '4n'},
     {time: '13:2', note: ['D5'], duration: '2n'},
 
@@ -76,9 +76,9 @@ const entertainer = [
     {time: '16:1', note: ['C5'], duration: '2n'},
     {time: '16:3', note: ['E4'], duration: '4n'},
 
-    {time: '17:0', note: ['D5'], duration: '2n'},
-    {time: '17:2', note: ['E5'], duration: '4n'},
-    {time: '17:3', note: ['D5'], duration: '4n'},
+    {time: '17:0', note: ['C5'], duration: '2n'},
+    {time: '17:2', note: ['E4'], duration: '4n'},
+    {time: '17:3', note: ['C5'], duration: '4n'},
 
     {time: '18:0', note: ['C5'], duration: '1n'},
 
@@ -92,9 +92,9 @@ const entertainer = [
     {time: '20:0', note: ['F#4'], duration: '4n'},
     {time: '20:1', note: ['A4'], duration: '4n'},
     {time: '20:2', note: ['C5'], duration: '4n'},
-    {time: '20:3', note: ['E5'], duration: '4n'},
+    {time: '20:3', note: ['E5'], duration: '2n'},
 
-    {time: '21:0', note: ['E5'], duration: '4n'},
+    // {time: '21:0', note: ['E5'], duration: '4n'},
     {time: '21:1', note: ['D5'], duration: '4n'},
     {time: '21:2', note: ['C5'], duration: '4n'},
     {time: '21:3', note: ['A4'], duration: '4n'},
@@ -108,7 +108,7 @@ const entertainer = [
 
     {time: '24:0', note: ['E4'], duration: '4n'},
     {time: '24:1', note: ['C5'], duration: '4n'},
-    {time: '24:3', note: ['E5'], duration: '4n'},
+    {time: '24:3', note: ['E4'], duration: '4n'},
 
     //==========================================
 
@@ -126,9 +126,9 @@ const entertainer = [
     {time: '28:0', note: ['E5'], duration: '4n'},
     {time: '28:1', note: ['C5'], duration: '4n'},
     {time: '28:2', note: ['D5'], duration: '4n'},
-    {time: '28:3', note: ['E5'], duration: '4n'},
+    {time: '28:3', note: ['E5'], duration: '2n'},
 
-    {time: '29:0', note: ['E5'], duration: '4n'},
+    // {time: '29:0', note: ['E5'], duration: '4n'},
     {time: '29:1', note: ['B4'], duration: '4n'},
     {time: '29:2', note: ['D5'], duration: '2n'},
 
@@ -144,9 +144,9 @@ const entertainer = [
     {time: '32:0', note: ['E5'], duration: '4n'},
     {time: '32:1', note: ['C5'], duration: '4n'},
     {time: '32:2', note: ['D5'], duration: '4n'},
-    {time: '32:3', note: ['E5'], duration: '4n'},
+    {time: '32:3', note: ['E5'], duration: '2n'},
 
-    {time: '33:0', note: ['E5'], duration: '4n'},
+    // {time: '33:0', note: ['E5'], duration: '4n'},
     {time: '33:1', note: ['C5'], duration: '4n'},
     {time: '33:2', note: ['D5'], duration: '4n'},
     {time: '33:3', note: ['C5'], duration: '4n'},
@@ -154,11 +154,11 @@ const entertainer = [
     {time: '34:0', note: ['E5'], duration: '4n'},
     {time: '34:1', note: ['C5'], duration: '4n'},
     {time: '34:2', note: ['D5'], duration: '4n'},
-    {time: '34:3', note: ['E5'], duration: '4n'},
+    {time: '34:3', note: ['E5'], duration: '2n'},
 
     //=================================================
 
-    {time: '35:0', note: ['E5'], duration: '4n'},
+    // {time: '35:0', note: ['E5'], duration: '4n'},
     {time: '35:1', note: ['C5'], duration: '4n'},
     {time: '35:2', note: ['D5'], duration: '4n'},
     {time: '35:3', note: ['C5'], duration: '4n'},
@@ -166,9 +166,9 @@ const entertainer = [
     {time: '36:0', note: ['E5'], duration: '4n'},
     {time: '36:1', note: ['C5'], duration: '4n'},
     {time: '36:2', note: ['D5'], duration: '4n'},
-    {time: '36:3', note: ['E5'], duration: '4n'},
+    {time: '36:3', note: ['E5'], duration: '2n'},
 
-    {time: '37:0', note: ['E5'], duration: '4n'},
+    // {time: '37:0', note: ['E5'], duration: '4n'},
     {time: '37:1', note: ['B4'], duration: '4n'},
     {time: '37:2', note: ['D5'], duration: '2n'},
     
@@ -343,7 +343,7 @@ const entertainerBassLine = [
 
 const settings: MelodySettings = {
     timeSignature: 4,
-    tempo: 150,
+    tempo: 200,
 }
 
 export const melody: Melody = {
@@ -351,5 +351,7 @@ export const melody: Melody = {
         { notes: entertainer, oscillator: SAWTOOTH },
         { notes: entertainerBassLine, oscillator: TRIANGLE }
     ],
-    settings
+    settings,
+    name: 'Entertainer',
+    author: 'Scott Joplin'
 }
