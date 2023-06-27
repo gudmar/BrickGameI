@@ -351,5 +351,7 @@ export const melody: Melody = {
         { notes: entertainer, oscillator: SAWTOOTH },
         { notes: entertainerBassLine, oscillator: TRIANGLE }
     ],
-    settings
+    settings,
+    name: 'Entertainer',
+    author: 'Scott Joplin'
 }

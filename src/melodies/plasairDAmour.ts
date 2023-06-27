@@ -117,5 +117,7 @@ export const melody: Melody = {
         { notes: plasairDAmour, oscillator: SAWTOOTH },
         { notes: plasairDAmourBassLine, oscillator: TRIANGLE }
     ],
-    settings
+    settings,
+    name: 'Plassiar DAmour',
+    author: 'Giovanni Marini',
 }

@@ -21,6 +21,16 @@ export class Tracks {
         this.createTracks();
     }
 
+    clear() {
+        this.clearTracks();
+        this.instruments = undefined;
+        this.chords = undefined;
+        this.settings = {}
+        this.tracks = [];
+        this.timeSignature = 4;
+        this.tempo = 150;
+    }
+
     createTracks() {
         const soundSources = this.chords ? this.chords : this.instruments;
         if (!soundSources) throw new Error('No sound sources defined')
@@ -49,21 +59,23 @@ export class Tracks {
         const track = trackCreator({notes, oscillator})
         this.tracks.push(track);
     }
+    monoSynthCreator(options: any) {
+        const synth = new Tone.Synth(options)
+        return synth
+    }
     createSoloTrack({notes, oscillator}: {notes: any, oscillator: Oscillators}){
         const track = new Track({
             oscillator,
             tempo: this.tempo,
             timeSignature: this.timeSignature,
             notes,
-            instrument: Tone.Synth,
+            instrument: this.monoSynthCreator.bind(this),
         })
         return track
     }
     polySyncCreator(options: any){
         const synth = new Tone.PolySynth().toDestination();
-        console.log(options)
         synth.set(options)
-        console.log(synth)
         return synth
     }
     createChordsTrack({notes, oscillator}: {notes: any, oscillator: Oscillators}){
@@ -84,5 +96,9 @@ export class Tracks {
 
     stop(){
         this.tracks.forEach((track) => track.stop())
+    }
+
+    clearTracks() {
+        this.tracks.forEach((track) => track.clear())
     }
 }

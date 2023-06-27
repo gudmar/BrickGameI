@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './styles.module.css';
 import { useGameState } from '../../context/gameStateContext';
 import { useCartridgeController } from '../../context/cartridgeProvider';
@@ -9,6 +9,7 @@ import { COLOR_SCHEMES, useColorSchemeContext } from '../../context/colorShemePr
 import { About } from '../About/About';
 import { Cheating } from '../Cheating/Cheating';
 import { GameControls } from '../GameControls/GameControls';
+import { useMelody } from '../../context/musicProvider';
 
 const LevelSpeed = ['1', '2', '3', '4' ,'5', '6', '7', '8','9', '10']
 
@@ -21,11 +22,13 @@ function Navigation() {
    const [isGameControlOpen, setIsGameControlOpen] = useState(false);
    const {currentGame, setCartridgeByDescription} = useCartridgeController();
    const {currentColorScheme, setCurrentColorScheme} = useColorSchemeContext();
+   const {melodyNames, melody, setCurrentMelodyName} = useMelody();
 
    const setGameLevel = (event: any) => { setLevel(event.target.textContent) }
    const setGameSpeed = (event: any) => { setSpeed(event.target.textContent) }
    const setCartridge = (event: any) => { setCartridgeByDescription(event.target.textContent)}
    const setColorScheme = (event: any) => {setCurrentColorScheme(event.target.textContent)}
+   const setMelodyFromEvent = (event: any) => {setCurrentMelodyName(event.target.textContent)}
   
     return (
         <div className={styles.bar}>
@@ -58,6 +61,13 @@ function Navigation() {
             onSelect={setColorScheme}
             items={COLOR_SCHEMES}
             value={currentColorScheme}
+            disabled={isGameStarted}
+          />
+          <NavSelect
+            label={'Melodies'}
+            onSelect={setMelodyFromEvent}
+            items={melodyNames}
+            value={melody.name}
             disabled={isGameStarted}
           />
           <NavButton

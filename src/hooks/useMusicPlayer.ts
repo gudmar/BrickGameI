@@ -1,33 +1,27 @@
 import { useEffect, useState } from "react";
-import * as Tone from "tone";
-import { PolySynth } from "tone";
+import { useMelody } from "../context/musicProvider";
 import { Tracks } from "../functions/Tracks";
 import { melody } from "../melodies/entertainer";
 // import { melody } from "../melodies/plasairDAmour";
 import { Melody } from "../types/types";
 import { keys, useKeyboard } from "./useKeyboard";
 
-// class Tracks {
-//     synth = new PolySynth().toDestination();
-//     constructor(settings: any){
-//         this.synth.set({oscillator: {type: 'square'}})
-//     }
-
-//     play() {
-//         this.synth.triggerAttackRelease(['C4', 'E4', 'B4', ], 1, 1)
-//         Tone.Transport.start();
-//     }
-//     stop(){
-//         Tone.Transport.stop();
-//     }
-// }
-
-const useTracks = ({
-    instruments, settings, chords
-}: Melody) => {
+const useTracks = () => {
+    const { melody } = useMelody()
+    const { instruments, settings, chords, author, name } = melody;
     const [tracks, setTracks]: [any, any] = useState(null)
     useEffect(() => {
-        setTracks(new Tracks({instruments, settings, chords}))
+        if (tracks !== null){
+            tracks?.clear();
+            setTracks(new Tracks({instruments, settings, chords, author, name}))    
+        }
+    }, [melody, tracks, instruments, settings, chords, author, name])
+    
+    useEffect(() => {
+        setTracks(new Tracks({instruments, settings, chords, author, name}))
+        return () => {
+            tracks?.clear();
+        }
     }, [])
     const play = () => {
         if (tracks) tracks.play();
@@ -41,7 +35,7 @@ const useTracks = ({
 }
 
 export const useMusicPlayer = () => {
-    const {play, stop} = useTracks(melody)
+    const {play, stop} = useTracks()
     const [isPlaying, setIsPlaying] = useState(false)
     
     const togglePlay = () => {
