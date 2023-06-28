@@ -1,47 +1,37 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { melody as plassairDAmourMelody } from "../melodies/plasairDAmour";
-import { melody as entertainerMelody } from "../melodies/entertainer";
-import { Melody } from "../types/types";
+import React, { createContext, useContext } from 'react';
+import { useTracks, melodyNames, INITIAL_IS_PLAYING, START_MELODY } from '../hooks/useMusicPlayer';
 
-const melodies = [
-    plassairDAmourMelody,entertainerMelody
-]
-// type MelodyContext = {
-//     melody: Melody,
-//     melodyNames: string[],
-//     setMelody: () => {},
-// } 
-const melodyNames = melodies.map(({name}) => name);
 const MelodyContext = createContext({
-    melody: plassairDAmourMelody,
+    melody: START_MELODY,
     melodyNames,
-    setCurrentMelodyName: ((melodyName: string):void => {})
+    setCurrentMelodyName: ((melodyName: string):void => {}),
+    isPlaying: INITIAL_IS_PLAYING,
+    resetTrack: ():void=>{},
+    togglePlay: ():void=>{},
 })
 
+
+
 export const useMelody = () => {
-    const { melody, melodyNames, setCurrentMelodyName } = useContext(MelodyContext);
+    const { melody, melodyNames, setCurrentMelodyName, isPlaying, resetTrack, togglePlay } = useContext(MelodyContext);
     if (!melody) throw new Error('useMelody should be used inside musicProvider')
-    return {melody, melodyNames, setCurrentMelodyName}
+    return { melody, melodyNames, setCurrentMelodyName, isPlaying, resetTrack, togglePlay }
 }
 
 export const MusicProvider = ({children}: {children: React.ReactNode}) => {
-    const [currentMelody, setCurrentMelody] = useState(plassairDAmourMelody);
-    const [currentMelodyName, setCurrentMelodyName] = useState(plassairDAmourMelody.name);
-    useEffect(() => {
-        const melodyIndex = melodies.findIndex(({name}) => name === currentMelodyName)
-        if (melodyIndex === -1) throw new Error('Melody does not exist');
-        setCurrentMelody(melodies[melodyIndex])
-    }, [currentMelodyName])
-    useEffect(() => {
-        console.log(currentMelody)
-    }, [currentMelody])
-    // const setMelody = (melodyName: string):void => {
-    //     const melodyIndex = melodies.findIndex(({name}) => name === melodyName);
-    //     if (melodyIndex === -1) throw new Error('Melody does not exist');
-    //     setCurrentMelody(melodies[melodyIndex])
-    // }
+    const {
+        isPlaying, resetTrack, togglePlay, currentMelody, melodyNames, setCurrentMelodyName
+    } = useTracks();
+
     return (
-        <MelodyContext.Provider value={{ melody: currentMelody, melodyNames, setCurrentMelodyName }}>
+        <MelodyContext.Provider value={{
+            isPlaying,
+            resetTrack,
+            togglePlay,
+            melody: currentMelody,
+            melodyNames,
+            setCurrentMelodyName,
+        }}>
             {children}
         </MelodyContext.Provider>
     )
