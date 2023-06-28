@@ -9,6 +9,7 @@ import { cartridgeLibrary } from '../constants/cartridgeLibrary';
 import { flush } from '../functions/flush';
 import { KEY_UP } from '../functions/KeyReader';
 import { getInitialGameState } from '../constants/initialGameState';
+import { useMelody } from '../context/musicProvider';
 
 
 
@@ -50,13 +51,17 @@ const setCartridgeInstanceAccordingToDescription = (cartridgeDescription: string
 export const useCartridge = (cartridgeToUseDescription: string) => {
     const [initialCartridgeName] = useState(cartridgeToUseDescription);
     const [cartridgeInstance, setCartridgeInstance] = useState(getInitialCartridgeInstance(cartridgeToUseDescription));
+    const { resetTrack } = useMelody();
 
     useEffect(() => {
         setCartridgeInstanceAccordingToDescription(cartridgeToUseDescription, setCartridgeInstance)
     }, [cartridgeToUseDescription])
 
 
-    const resetConsole = () => setCartridgeInstanceAccordingToDescription(initialCartridgeName, setCartridgeInstance)
+    const resetConsole = () => {
+        resetTrack();
+        setCartridgeInstanceAccordingToDescription(initialCartridgeName, setCartridgeInstance)
+    }
 
 
     const [gameState, setGameState] = useState(getInitialGameState());

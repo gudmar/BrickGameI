@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import BrickGame from './components/BrickGame/BrickGame';
-import { KeyReader } from './functions/KeyReader';
 import { CartridgeContextProvider } from './context/cartridgeProvider';
 import { GameStateProvider } from './context/gameStateContext';
 import { ColorSchemeProvider } from './context/colorShemeProvider';
@@ -15,15 +14,17 @@ const root = ReactDOM.createRoot(
 // new KeyReader();
 root.render(
   <React.StrictMode>
+    <MusicProvider>
     <CartridgeContextProvider>
       <GameStateProvider>
         <ColorSchemeProvider>
-          <MusicProvider>
+          
             <BrickGame />
-          </MusicProvider>
+          
         </ColorSchemeProvider>
       </GameStateProvider>
     </CartridgeContextProvider>
+    </MusicProvider>
   </React.StrictMode>
 );
 

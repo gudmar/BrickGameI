@@ -99,6 +99,10 @@ export class Tracks {
         return track
     }
 
+    rewind() {
+        Tone.Transport.seconds = 0;
+    }
+
     play(){
         this.tracks.forEach((track) => track.play())
     }

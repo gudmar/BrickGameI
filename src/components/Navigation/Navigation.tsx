@@ -22,7 +22,7 @@ function Navigation() {
    const [isGameControlOpen, setIsGameControlOpen] = useState(false);
    const {currentGame, setCartridgeByDescription} = useCartridgeController();
    const {currentColorScheme, setCurrentColorScheme} = useColorSchemeContext();
-   const {melodyNames, melody, setCurrentMelodyName} = useMelody();
+   const {melodyNames, melody, setCurrentMelodyName, isPlaying} = useMelody();
 
    const setGameLevel = (event: any) => { setLevel(event.target.textContent) }
    const setGameSpeed = (event: any) => { setSpeed(event.target.textContent) }
@@ -68,7 +68,7 @@ function Navigation() {
             onSelect={setMelodyFromEvent}
             items={melodyNames}
             value={melody.name}
-            disabled={isGameStarted}
+            disabled={isPlaying}
           />
           <NavButton
             label={'Cheating'}
