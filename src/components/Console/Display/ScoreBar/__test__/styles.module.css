@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 0.8rem;
+    font-size: 0.76rem;
 }
 
 .hidden {
@@ -39,4 +39,9 @@
 .space {
     position: relative;
     height: 0.25rem;
+}
+
+.onOff {
+    display: flex;
+
 }

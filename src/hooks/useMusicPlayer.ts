@@ -4,6 +4,7 @@ import { keys, useKeyboard } from "./useKeyboard";
 import { melody as plassairDAmourMelody } from "../melodies/plasairDAmour";
 import { melody as entertainerMelody } from "../melodies/entertainer";
 
+
 export const START_MELODY = plassairDAmourMelody;
 export const INITIAL_IS_PLAYING = false;
 
@@ -35,6 +36,11 @@ export const useTracks = () => {
             tracks?.clear();
         }
     }, [currentMelody])
+
+    useEffect(() => {
+        if (isPlaying) { play() }
+        else {stop()}
+    }, [isPlaying])
 
     const play = () => {
         if (tracks) {
