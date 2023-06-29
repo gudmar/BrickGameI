@@ -1,10 +1,14 @@
 .bar {
-    height: 1.5rem;
+    /* height: 1.5rem; */
+    height: 100vh;
+    width: 20%;
+    position: absolute;
     background-color: black;
     color: white;
     padding: 5px;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: 700;
-    width: 100%;
+    /* width: 100%; */
     display: flex;
+    flex-direction: column;
 }
