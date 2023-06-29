@@ -4,14 +4,14 @@ import { WidgetItemProps } from '../WidgetPropsInterface';
 
 function NavSelect({ label, onSelect, items, value, disabled }: WidgetItemProps) {
   const isExpandable = !items ? false : items.length > 0;
-  const isNotDisabled = (classIfNotDisabled: string) => disabled ? styles.disabled : classIfNotDisabled;
+  const isNotDisabled = (classIfNotDisabled: string, classIfDisabled: string = styles.disabled) => disabled ? classIfDisabled : classIfNotDisabled;
   const isNotDisabledContainer = () => disabled ? styles['disabled-container'] : styles.container;
   const isNotDisabledHeadline = () => disabled ? styles['headline-disabled'] : styles.headline;
   const isNotDisabledMenu = (classIfNotDisabled: string) => disabled ? styles['disabled-hide'] : classIfNotDisabled
     return (
       <div className={isNotDisabledContainer()}>
         <div className={isNotDisabledHeadline()}>
-          <>{isExpandable && <div className = { isNotDisabled(styles.icon)}><ExpandIcon variant='white'/></div>}</>
+          <>{isExpandable && <div className = { isNotDisabled(styles.icon, styles['disabled-icon'])}><ExpandIcon variant='white'/></div>}</>
           <>{isExpandable && <span className={isNotDisabled(styles.space)}></span>}</>
           <span className='name'>{`${label} :`}</span><span className={isNotDisabled(styles.value)}>{value}</span>
         </div>

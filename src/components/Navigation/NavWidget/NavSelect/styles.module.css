@@ -1,12 +1,19 @@
 .container:hover > .menu {
-    visibility: visible;
+    /* visibility: visible; */
+    opacity: 1;
+    position: relative;
 }
 .menu{
-    position: relative;
+    position: absolute;
+    /* width: 100%; */
     left: 1rem;
-    background-color: #333;
-    visibility: hidden;
+    /* background-color: #333; */
+    /* visibility: hidden; */
+    opacity: 0;
     z-index: 5;
+}
+.menu:hover{
+    position: relative;
 }
 .menuItem{
     padding-top: 0.25rem;
@@ -75,6 +82,17 @@
     display: flex;
     align-items: center;
 }
+.disabled-icon {
+    color: #aaa;
+    cursor: not-allowed;
+    font-family: Arial, Helvetica, sans-serif;
+    height: 1.5rem;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    transform: rotateZ(-90deg);
+}
+
 .disabled-container {
     color: #aaa;
     cursor: not-allowed;
