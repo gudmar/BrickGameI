@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useGameState } from '../../../context/gameStateContext';
+import { useMelody } from '../../../context/musicProvider';
 import { OneToTen } from '../../../types/types';
 import { DisplayProps } from '../brickInterfaces';
 import Dojo from './Dojo/Dojo';
@@ -29,6 +30,7 @@ function Display(
     isGameSelectionAllowed,
     isCheater,
   } = useGameState();
+  const { isPlaying } = useMelody();
    useEffect(() => {
       setIsGameSelectionAllowed(isGameSelectionAllowed || false);
    }, [setIsGameSelectionAllowed, isGameSelectionAllowed])
@@ -50,6 +52,7 @@ function Display(
               isAnimating={isAnimating}
               isGameStarted={isGameStarted}
               isCheater={isCheater}
+              isPlaying = {isPlaying}
             />
           </div>
         </div>

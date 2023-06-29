@@ -1,5 +1,7 @@
 import { NextFigure, NextFigurePreview, OneToTen } from '../../../../../types/types';
 import { getDigits } from '../../../../Digit/Digits';
+import NoSoundIcon from '../../../../Icons/SoundOffIcon';
+import SoundIcon from '../../../../Icons/SoundOnIcon';
 import { NextFigureDisplay } from '../../NextFigure/NextFigureDisplay';
 import styles from './styles.module.css';
 
@@ -14,11 +16,12 @@ interface ScoreBarProps {
   nextFigure: NextFigurePreview,
   isAnimating: boolean,
   isCheater?: boolean,
+  isPlaying: boolean,
 }
 
 function ScoreBar(
   {
-    score, level, speed, isGameOver, isGameWon, isGameStarted, isAnimating, isPaused, nextFigure, isCheater
+    score, level, speed, isGameOver, isGameWon, isGameStarted, isAnimating, isPaused, nextFigure, isCheater, isPlaying
   }: ScoreBarProps) {
   const shouldTurnOffScoreBar = () => {
     if (isAnimating) return true;
@@ -74,12 +77,27 @@ function ScoreBar(
             isVisible={isCheater}
             isOff={shouldTurnOffScoreBar()}
           />
-
+          <OnOff
+            onIcon={
+              <SoundIcon variant={isPlaying? 'On' : 'Off'} />
+            }
+            offIcon={<NoSoundIcon variant={isPlaying? 'On' : 'Off'} />}
+            isOn={isPlaying}
+          />
         </div>
   );
 }
 
 export default ScoreBar;
+
+function OnOff({onIcon, offIcon, isOn}: {onIcon:any, offIcon: any, isOn: boolean}) {
+  return (
+    <div className={styles.onOff}>
+      <div className={isOn?styles.visible:styles.hidden}>{onIcon}</div>
+      <div className={isOn?styles.hidden:styles.visible}>{offIcon}</div>
+    </div>
+  )
+}
 
 function Band({label, isVisible, isOff}: {isOff: boolean, label: string, isVisible?:boolean}){
  return (
