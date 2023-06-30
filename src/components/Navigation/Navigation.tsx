@@ -14,9 +14,11 @@ import { useMelody } from '../../context/musicProvider';
 const LevelSpeed = ['1', '2', '3', '4' ,'5', '6', '7', '8','9', '10']
 
 function Navigation() {
+
   const {
     level, speed, setLevel, setSpeed, isGameStarted,
   } = useGameState();
+   const [currentlyOpen, setCurrentlyOpen] = useState('');
    const [isAboutOpen, setIsAboutOpen] = useState(false);
    const [isCheatingOpen, setIsCheatingOpen] = useState(false);
    const [isGameControlOpen, setIsGameControlOpen] = useState(false);
@@ -29,47 +31,46 @@ function Navigation() {
    const setCartridge = (event: any) => { setCartridgeByDescription(event.target.textContent)}
    const setColorScheme = (event: any) => {setCurrentColorScheme(event.target.textContent)}
    const setMelodyFromEvent = (event: any) => {setCurrentMelodyName(event.target.textContent)}
-  
+
+   const selectWidgets = [
+    {
+      label: 'Game', onSelect: setCartridge, items: CARTRIDGE_ORDER, value: currentGame, disabled: isGameStarted,
+    },
+    {
+      label: 'Speed', onSelect: setGameSpeed, items: LevelSpeed, value: speed, disabled: isGameStarted,
+    },
+    {
+      label: 'Level', onSelect: setGameLevel, items: LevelSpeed, value: level, disabled: isGameStarted,
+    },
+    {
+      label: 'Skin', onSelect: setColorScheme, items: COLOR_SCHEMES, value: currentColorScheme, disabled: isGameStarted,
+    },
+    {
+      label: 'Melodies', onSelect: setMelodyFromEvent, items: melodyNames, value: melody.name, disabled: isPlaying
+    }
+  ];
+
     return (
         <div className={styles.bar}>
           {isAboutOpen && <About isOpen={isAboutOpen} closeAbout={()=>setIsAboutOpen(false)}/>}
           {isCheatingOpen && <Cheating isOpen={isCheatingOpen} closeCheating={()=>setIsCheatingOpen(false)}/>}
           {isGameControlOpen && <GameControls isOpen={isGameControlOpen} closeGameControls={()=>setIsGameControlOpen(false)}/>}
-          <NavSelect
-            label={'Game'}
-            onSelect={setCartridge}
-            items={CARTRIDGE_ORDER}
-            value={currentGame}
-            disabled={isGameStarted}
-          />
-          <NavSelect
-            label={'Speed'}
-            onSelect={setGameSpeed}
-            items={LevelSpeed}
-            value={speed}
-            disabled={isGameStarted}
-          />
-          <NavSelect
-            label={'Level'}
-            onSelect={setGameLevel}
-            items={LevelSpeed}
-            value={level}
-            disabled={isGameStarted}
-          />
-          <NavSelect
-            label={'Skin'}
-            onSelect={setColorScheme}
-            items={COLOR_SCHEMES}
-            value={currentColorScheme}
-            disabled={isGameStarted}
-          />
-          <NavSelect
-            label={'Melodies'}
-            onSelect={setMelodyFromEvent}
-            items={melodyNames}
-            value={melody.name}
-            disabled={isPlaying}
-          />
+          {
+            selectWidgets.map(({label, onSelect, items, value, disabled}) => <NavSelect
+                label={label}
+                onSelect={onSelect}
+                items={items}
+                value={value}
+                disabled={disabled}
+                isOpen={label === currentlyOpen}
+                setOpen={() => {
+                    setCurrentlyOpen(currentlyOpen === label ? '' : label)
+                  }
+                }
+                key={label}
+              />)
+          }          
+          <hr/>
           <NavButton
             label={'Cheating'}
             onClick={() => {setIsCheatingOpen(true)}}

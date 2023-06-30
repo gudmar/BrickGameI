@@ -1,15 +1,54 @@
 
-* speed is too slow,
+DEPLOYMENT
+* No sound before next track is manualy loaded
+ - Bug visible when bulded version launched locally
 
-* Enter on existing game restarts the game, but is this an issue?
+* Poor UX related to menu
+  New Menu
+    - Select section clickable, max one section may be selected
+    - after selecting next section, previous shrinks back
+    - after selecting a section, selected section expands
+    - Click on expanded - shrinks it down
+    - hovered options highlight, but don't poor over menu boundries
+    - hamburger button on smaller screens, to hide / expand menu or a drawer of some kind
+    - selected option is displayed, but under selector
+    - click on a button (not selector) hides component
+  How to do
+    State
+      - selected option (passed to all select components) (if null, no select component will expand)
+      - isOpen (indicates if whole menu is opened)
+      - isMobile (indicates if device is small and should open/close menu)
+    Structure
+      - Navigation
+          - NavSelect
+              - props:
+                  - label
+                  - items
+                  - value (nameOfSelectedOption (to show))
+                  - nameOfSelectedSelect (to expand)
+                  - disabled
+                  - onSelect (on selection of new value)
+          - NavButton
+              - props
+                - label
+                - onClick
+                - disabled
 
-* Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
 
-- Sound ?   https://codepen.io/gregh/post/recreating-legendary-8-bit-games-music-with-web-audio-api
+
+ARCHAIVE
+
++ speed is too slow,
+
++ Enter on existing game restarts the game, but is this an issue?
+
++ Work on initial animations. Perhaps should switch backgrounds, to imitate movement, at the moment they are not to clear with toggling etc,
+
++ Sound ?   https://codepen.io/gregh/post/recreating-legendary-8-bit-games-music-with-web-audio-api
 + When game started it shuld NOT be possible to change anything in navigation
-- Game controlls in better way
-- Controll slowing down when arrow down pressed for too long
-- Game in navigation changes width when switched from Snake to longer names
++ Game controlls in better way
++ Controll slowing down when arrow down pressed for too long
++ Game in navigation changes width when switched from Snake to longer names
 + Correct order of games,
 + implement some menu outside tetris to switch games
 + All games should react to key up with the same manner, no delay.
@@ -26,7 +65,7 @@ BUG tetris:
 If attempt to divide acceleration probliem occures, if no acceleration, no occures
 + UPDATE: Problem occures both: with division and witout
 
-- Anti-tetris
+- Anti-tetris -> NOT going to do
 
 
 ************
