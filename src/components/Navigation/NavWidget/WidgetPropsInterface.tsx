@@ -13,9 +13,11 @@ export interface WidgetProps {
   export interface WidgetItemProps {
     label: string,
     onSelect: (e: React.MouseEvent<HTMLElement>) => void,
+    setOpen: () => void,
     items?: String[],
     value: string | number,
     disabled?: boolean,
+    isOpen: boolean,
   }
 
   export interface NavigationButtonInterface {
