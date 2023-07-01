@@ -1,11 +1,25 @@
 import styles from './styles.module.css';
 import ExpandIcon from '../../../Icons/ExpandIcon'
 import { WidgetItemProps } from '../WidgetPropsInterface';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 
 const NavSelect = ({ label, onSelect, setOpen, items, value, disabled, isOpen }: WidgetItemProps) => {
-  useEffect(() => {console.log('opening', label)}, [isOpen, label])
+  const menuRef= useRef<HTMLInputElement>(null)
+  const [shutterHeight, setShutterHeight] = useState('0px')
+  useEffect(() => {console.log('height', shutterHeight)}, [shutterHeight])
+  useEffect(() => {
+    console.log(menuRef, isOpen)
+    if (menuRef?.current) {
+      if (isOpen) {
+        const menuHeight = menuRef.current!.getBoundingClientRect().height;
+        console.log(menuRef.current!.getBoundingClientRect())
+        setShutterHeight(menuHeight + 'px');
+      } else {
+        setShutterHeight('0px');
+      }
+    }
+  }, [isOpen])
   return (
     <div className={styles.container}>
       <div className={`${styles.headline} ${disabled ? styles.disabled : ''}`} onClick={() => {if (!disabled) setOpen() }}>
@@ -18,7 +32,9 @@ const NavSelect = ({ label, onSelect, setOpen, items, value, disabled, isOpen }:
         <div className={styles.label}>{label}</div>
       </div>
       <div className={styles.value}>{value}</div>
-      <div className={`${styles.menu} ${isOpen ? styles['menu-open'] : ''}`}>
+      {/* <div className={`${styles.menu} ${isOpen ? styles['menu-open'] : ''}`}> */}
+      <div className={`${styles.shutter}`} style={{ height:shutterHeight }}>
+        <div className={styles.menu} ref={menuRef}>
         {
           items!.map(
             (item) => 
@@ -34,7 +50,9 @@ const NavSelect = ({ label, onSelect, setOpen, items, value, disabled, isOpen }:
               >{item}</div>
           )
         }
-      </div>
+        </div>
+        </div>
+      {/* </div> */}
     </div>
   )
 }
