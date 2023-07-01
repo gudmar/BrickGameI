@@ -5,6 +5,20 @@
 
 .menu{
     position: absolute;
+    height: auto;
+    transition-duration: 0.3s;
+    width: 100%;
+}
+
+.shutter{
+    position: relative;
+    height: 0;
+    overflow: hidden;
+    transition-duration: 0.3s;
+}
+
+/* .menu{
+    position: absolute;
     padding-top: 0.5rem;
     height: 0;
     overflow: hidden;
@@ -15,7 +29,7 @@
     position: relative;
     height: auto;
     transition-duration: 0.3s;
-}
+} */
 
 .headline {
     display: flex;
