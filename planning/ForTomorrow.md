@@ -2,6 +2,8 @@
 DEPLOYMENT
 * No sound before next track is manualy loaded
  - Bug visible when bulded version launched locally
+ - reload page works, but no possibility to remember state between auto reloads. remembering in URL would be needed, or some fancy usage of local storage
+ - switching songs on component initial load does not work
 
 * Poor UX related to menu
   New Menu

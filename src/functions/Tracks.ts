@@ -65,6 +65,7 @@ export class Tracks {
     createTrack({notes, oscillator}: {notes: any, oscillator: Oscillators}){
         const trackCreator = this.chords?.length ? this.createChordsTrack.bind(this) :
             this.createSoloTrack.bind(this);
+        console.log('Creating track', trackCreator)
         const track = trackCreator({notes, oscillator})
         this.tracks.push(track);
     }
