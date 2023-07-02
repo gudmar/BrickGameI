@@ -42,6 +42,7 @@ export class Track {
             },
             this.notes
         );
+        console.log('Created sequence', this.sequence)
         // this.sequence.loop = true;
         this.sequence.loop = true;
         this.sequence.loopStart = 0;

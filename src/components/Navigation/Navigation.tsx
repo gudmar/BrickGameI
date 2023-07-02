@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styles from './styles.module.css';
 import { useGameState } from '../../context/gameStateContext';
 import { useCartridgeController } from '../../context/cartridgeProvider';
@@ -10,6 +10,7 @@ import { About } from '../About/About';
 import { Cheating } from '../Cheating/Cheating';
 import { GameControls } from '../GameControls/GameControls';
 import { useMelody } from '../../context/musicProvider';
+import MenuIcon from '../Icons/MenuIcon';
 
 const LevelSpeed = ['1', '2', '3', '4' ,'5', '6', '7', '8','9', '10']
 
@@ -18,6 +19,7 @@ function Navigation() {
   const {
     level, speed, setLevel, setSpeed, isGameStarted,
   } = useGameState();
+   const [isMenuOpen, setIsMenuOpen] = useState(false);
    const [currentlyOpen, setCurrentlyOpen] = useState('');
    const [isAboutOpen, setIsAboutOpen] = useState(false);
    const [isCheatingOpen, setIsCheatingOpen] = useState(false);
@@ -31,6 +33,11 @@ function Navigation() {
    const setCartridge = (event: any) => { setCartridgeByDescription(event.target.textContent)}
    const setColorScheme = (event: any) => {setCurrentColorScheme(event.target.textContent)}
    const setMelodyFromEvent = (event: any) => {setCurrentMelodyName(event.target.textContent)}
+
+   const toggleMenuVisibility = () => {
+    console.log('toggle menu', isMenuOpen)
+    setIsMenuOpen(!isMenuOpen);
+   }
 
    const selectWidgets = [
     {
@@ -51,10 +58,17 @@ function Navigation() {
   ];
 
     return (
-        <div className={styles.bar}>
+      
+        
+        <div className={`${styles.bar} ${isMenuOpen ? styles['menu-open'] : styles['menu-close']}`}>
           {isAboutOpen && <About isOpen={isAboutOpen} closeAbout={()=>setIsAboutOpen(false)}/>}
           {isCheatingOpen && <Cheating isOpen={isCheatingOpen} closeCheating={()=>setIsCheatingOpen(false)}/>}
           {isGameControlOpen && <GameControls isOpen={isGameControlOpen} closeGameControls={()=>setIsGameControlOpen(false)}/>}
+          <div className={styles.inline}>
+            <h3>Menu</h3>
+              <div className={styles['button-wrapper']} onClick={toggleMenuVisibility}> { MenuIcon('white') } </div>
+          </div>
+          <div className={styles.drawer}>
           {
             selectWidgets.map(({label, onSelect, items, value, disabled}) => <NavSelect
                 label={label}
@@ -84,7 +98,9 @@ function Navigation() {
             onClick={() => {setIsAboutOpen(true)}}
             disabled={isGameStarted}
           />
+          </div>
         </div>
+      
   );
 }
 

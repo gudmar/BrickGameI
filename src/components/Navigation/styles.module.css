@@ -12,7 +12,57 @@
     display: flex;
     flex-direction: column;
 }
+.drawer{
+    overflow: hidden;
+}
 
 hr {
     width: 70%;
+}
+.inline{
+    display: flex;
+    width: 100%;
+    justify-content: space-between
+}
+.bigIcon svg{
+    width: 2rem;
+    height: 2rem;
+}
+
+.menu-with-button {
+    display: flex;
+}
+
+.button-wrapper {
+    position: absolute;
+    right: -3rem;
+    background-color: black;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    padding: 0.125rem;
+    transition-duration: 0.3s;
+    cursor: pointer;
+}
+.button-wrapper::before{
+    content: 'o';
+    position: absolute;
+    right: 3rem;
+    background-color: black;
+    color: black;
+    height: 54px;
+    width: 54px;
+    top: 0px;
+}
+.button-wrapper:hover {
+    right: -4rem;
+    transition-duration: 0.3s;
+}
+
+.menu-open {
+    width: 100px;
+    transition-duration: 0.5s;
+}
+.menu-close {
+    width: 0px;
+    transition-duration: 0.5s;
 }
