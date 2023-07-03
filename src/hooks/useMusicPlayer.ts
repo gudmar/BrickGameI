@@ -5,6 +5,7 @@ import { melody as plassairDAmourMelody } from "../melodies/plasairDAmour";
 import { melody as entertainerMelody } from "../melodies/entertainer";
 
 
+// export const START_MELODY = plassairDAmourMelody;
 export const START_MELODY = plassairDAmourMelody;
 export const INITIAL_IS_PLAYING = false;
 
@@ -17,34 +18,23 @@ const nullishMelody = {
     instruments: [], settings: {}, chords: [], author: '', name: ''
 }
 
+const TIME_TO_START_TONEJS_= 3000; // after this time no problems with starting tone.js on production. Without, music does not play
 
 export const useTracks = () => {
     const [tracks, setTracks]: [any, any] = useState(null)
     const [isPlaying, setIsPlaying] = useState(INITIAL_IS_PLAYING)
+    const [isSoundReady, setIsSoundReady] = useState(false);
     const [currentMelodyName, setCurrentMelodyName] = useState('');
-    const [nrOfSwitches, setNrOfSwitches] = useState(0)
-    // const [currentMelodyName, setCurrentMelodyName] = useState(START_MELODY.name);
-    // const [currentMelody, setCurrentMelody] = useState(START_MELODY);
     const [currentMelody, setCurrentMelody]: [any, any] = useState(nullishMelody);
 
     useEffect(() => {
-        setCurrentMelodyName(START_MELODY.name)
+        setTimeout(() => {
+            setCurrentMelodyName(START_MELODY.name)
+            setIsSoundReady(true)
+        }, TIME_TO_START_TONEJS_)
+        // setCurrentMelodyName(START_MELODY.name)
 
     }, [])
-
-    useEffect(() => {
-        if (nrOfSwitches < 3) {
-            setNrOfSwitches(nrOfSwitches + 1);
-            setCurrentMelodyName(melodies[nrOfSwitches % melodies.length].name)
-        }
-    }, [nrOfSwitches])
-
-    useEffect(() => {
-        console.log('melody', currentMelody)
-    }, [currentMelody])
-    useEffect(() => {
-        console.log('name', currentMelodyName)
-    }, [currentMelodyName])
     
     const { instruments, settings, chords, author, name } = currentMelody;
 
@@ -106,5 +96,6 @@ useKeyboard({ key: keys.V, callback: togglePlay})
     return {
         isPlaying, resetTrack, togglePlay, 
         currentMelody, melodyNames, setCurrentMelodyName,
+        isSoundReady
     }
 }

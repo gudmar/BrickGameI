@@ -7,4 +7,5 @@ export interface KeyProps {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   activator: string,
   size: KeySize;
+  disabled?: boolean;
 }

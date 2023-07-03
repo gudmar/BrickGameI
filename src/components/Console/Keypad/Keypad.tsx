@@ -1,6 +1,7 @@
 import React from 'react';
 import { KEYDOWN, KEYUP } from '../../../constants/keys';
 import { keys } from '../../../hooks/useKeyboard';
+import { useTracks } from '../../../hooks/useMusicPlayer';
 import Arrows from './Arrows/Arrows';
 import Key from './Key/Key';
 import { KeySize } from './Key/KeyInterfaces';
@@ -39,13 +40,15 @@ const onSoundUp = (e: React.MouseEvent<HTMLElement>) => {
 
 
 function Keypad() {
+    const { isSoundReady } = useTracks();
     return (
         <div className={styles.container}>
           <div className={styles.controls}>
             <Key activator={keys.ENTER} label="Start" size={KeySize.small} onMouseDown={onGameStartDown} onMouseUp={onGameStartUp}/>
             <Key activator={keys.P} label="Pause" size={KeySize.small} onMouseDown={onPauseDown} onMouseUp={onPauseUp}/>
             <Key activator={keys.X} label="Reset" size={KeySize.small} onMouseDown={onResetDown} onMouseUp={onResetUp}/>
-            <Key activator={keys.V} label="Sound" size={KeySize.small} onMouseDown={onSoundDown} onMouseUp={onSoundUp}/>
+            {/* <Key disabled={true} activator={keys.V} label="Sound" size={KeySize.small} onMouseDown={onSoundDown} onMouseUp={onSoundUp}/> */}
+            <Key disabled={!isSoundReady} activator={keys.V} label="Sound" size={KeySize.small} onMouseDown={onSoundDown} onMouseUp={onSoundUp}/>
           </div>
           <div className={styles.arrows}><Arrows /></div>
           <div className={styles.rotate}>
