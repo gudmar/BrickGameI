@@ -10,14 +10,20 @@ const getSizeClass = (size: KeySize) => {
   return styles.big;
 }
 
-function Key({label, onClick, onMouseDown, onMouseUp, size, activator}: KeyProps) {
+function Key({label, onClick, onMouseDown, onMouseUp, size, activator, disabled}: KeyProps) {
+    useEffect(() => console.log('Disabled', disabled), [disabled])
     const pressedClass = useGetKeyPressedMarkClass(activator)
     const {getClassNameForCurrentScheme} = useColorSchemeContext();
     const keyClass = getClassNameForCurrentScheme('key')  
     return (
       <div className={styles.container}>
         <div className={styles.label}>{label}</div>
-        <div className={`${styles.edge} ${pressedClass} ${styles[keyClass]}  ${getSizeClass(size)} ${keyClass}`} onClick={onClick} onMouseDown={onMouseDown} onMouseUp={onMouseUp} ></div>
+        <div 
+          className={`${styles.edge} ${pressedClass} ${styles[keyClass]}  ${getSizeClass(size)} ${keyClass} ${disabled ? styles.disabled : ''}`}
+          onClick={(e) => { if (!disabled && onClick) onClick(e); } }
+          onMouseDown={(e) => {if (!disabled) onMouseDown(e)}}
+          onMouseUp={(e) => { if (!disabled) onMouseUp(e) }} 
+          ></div>
       </div>
   );
 }

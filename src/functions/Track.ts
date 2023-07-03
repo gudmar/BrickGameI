@@ -10,6 +10,7 @@ export class Track {
     track: any;
     instrument: any = Tone.Synth;
     sequence: any;
+    static debugMode: boolean = false;
     static instances: any[] = [];
 
     constructor({oscillator, tempo, timeSignature, notes, instrument}: {
@@ -23,10 +24,9 @@ export class Track {
         if (this.instrument) this.instrument = instrument;
         this.createTrack();
         this.createSequence();
-        console.log('Creating Track')
     }
 
-    
+    turnOnDebug() {Track.debugMode = true;}
 
     createTrack() {
         this.track = this.instrument({oscillator: {type: this.oscillator}}).toDestination();
@@ -37,21 +37,14 @@ export class Track {
     createSequence() {
 
         this.sequence = new Tone.Part((time, note) => {
-                console.log(note)
+                if (Track.debugMode) console.log(note)
                     this.track.triggerAttackRelease(note.note, note.duration, time)
             },
             this.notes
         );
-        console.log('Created sequence', this.sequence)
-        // this.sequence.loop = true;
         this.sequence.loop = true;
         this.sequence.loopStart = 0;
-        
-        // this.sequence.loopEnd = 20000
         this.sequence.loopEnd = this.getTimeOfLastNote();
-
-        // this.sequence.loopStart(0)
-        // this.sequence.loopEnd(8)
     }
 
     getTimeOfLastNote() {
@@ -63,16 +56,13 @@ export class Track {
     play() {
         this.sequence.start(0);
         Tone.Transport.start()
-        console.log('Track start')
     }
     stop() {
-        // this.sequence.stop();
         Tone.Transport.pause()
     }
     clear() {
         Tone.Transport.stop();
         this.sequence.stop();
         this.track.dispose();
-        // this.sequence = undefined;
     }
 }

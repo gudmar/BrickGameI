@@ -12,7 +12,6 @@ export class Tracks {
     static instances: any[] = [];
 
     constructor({instruments, settings, chords}: Melody) {
-        console.log('In tracks creator')
         Tracks.instances.push(this)
         if (!instruments && !chords) throw new Error('Instruments have to be defined')
         this.instruments = instruments
@@ -43,7 +42,6 @@ export class Tracks {
     createTracks() {
         const soundSources = this.chords ? this.chords : this.instruments;
         if (!soundSources) throw new Error('No sound sources defined')
-        console.log(soundSources)
         soundSources.forEach(({notes, oscillator}) => this.createTrack({
             notes, 
             oscillator: oscillator as Oscillators
@@ -65,7 +63,6 @@ export class Tracks {
     createTrack({notes, oscillator}: {notes: any, oscillator: Oscillators}){
         const trackCreator = this.chords?.length ? this.createChordsTrack.bind(this) :
             this.createSoloTrack.bind(this);
-        console.log('Creating track', trackCreator)
         const track = trackCreator({notes, oscillator})
         this.tracks.push(track);
     }
