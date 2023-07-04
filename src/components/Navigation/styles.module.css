@@ -1,6 +1,6 @@
 .bar {
     /* height: 1.5rem; */
-    height: 100vh;
+    height: 99vh;
     width: 20%;
     position: absolute;
     background-color: black;
@@ -59,7 +59,7 @@ hr {
 }
 
 .menu-open {
-    width: 100px;
+    width: 200px;
     transition-duration: 0.5s;
 }
 .menu-close {
